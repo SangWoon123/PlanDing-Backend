@@ -55,12 +55,10 @@ jobs:
 
     - name: Gradle 권한 부여
       run: |
-        cd todo-back
         chmod +x gradlew
 
     - name: Gradle로 빌드 실행
       run: |
-        cd planding
         ./gradlew bootjar
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
