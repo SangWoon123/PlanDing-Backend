@@ -20,9 +20,9 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void updateRefreshToken(String username, String refreshToken) {
+    public void updateRefreshToken(String email, String refreshToken) {
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoSuchElementException::new);
 
         RefreshToken findRefreshToken = refreshTokenRepository.findByUser(user)
@@ -38,7 +38,7 @@ public class RefreshTokenService {
         }
 
         findRefreshToken.update(refreshToken);
-        log.info("User: {}의 리프레시 토큰 업데이트 완료", user);
+        log.debug("User: {}의 리프레시 토큰 업데이트 완료", user);
     }
 
 }

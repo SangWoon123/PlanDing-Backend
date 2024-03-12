@@ -17,6 +17,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String email;
+
     private String profileImage;
 
     private String username;
@@ -31,8 +33,8 @@ public class User {
 
     private String code;
 
-    public String createCode(){
+    public static String createCode(){
         String c= UUID.randomUUID().toString();
-        return this.code = "#" + c.substring(0,4);
+        return "#" + c.substring(0,4);
     }
 }

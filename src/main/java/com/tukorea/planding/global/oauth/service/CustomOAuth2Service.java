@@ -44,7 +44,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
                 Collections.singleton(new SimpleGrantedAuthority(createdUser.getRole().getAuthority())),
                 attributes,
                 extractAttributes.getNameAttributeKey(),
-                createdUser.getUsername(),
+                createdUser.getEmail(),
                 createdUser.getRole()
         );
 
@@ -58,7 +58,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
             return saveUser(attributes, socialType);
         }
 
-        log.info("기존 유저 유저 [email = " + findUser.getUsername() + "]");
+        log.info("기존 유저 유저 [email = " + findUser.getEmail() + "]");
         return findUser;
     }
     private User saveUser(OAuthAttributes attributes, SocialType socialType) {

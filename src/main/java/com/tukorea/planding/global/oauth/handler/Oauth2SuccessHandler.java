@@ -4,6 +4,7 @@ import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.TokenService;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
 import com.tukorea.planding.user.dao.UserRepository;
+import com.tukorea.planding.user.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,6 +43,7 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         tokenService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
         refreshTokenService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
+
 
 //        String url=makeRedirectUrl(accessToken,refreshToken);
 //        getRedirectStrategy().sendRedirect(request,response,url);

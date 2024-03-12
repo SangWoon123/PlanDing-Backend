@@ -4,6 +4,9 @@ package com.tukorea.planding.global.jwt.token;
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.TokenService;
 import com.tukorea.planding.global.oauth.details.CustomUserDetailsService;
+import com.tukorea.planding.user.dao.UserRepository;
+import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.user.dto.UserInfo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,12 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -25,8 +29,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final CustomUserDetailsService customUserDetailsService;
     private final RefreshTokenService refreshTokenService;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -55,34 +59,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             checkAccessToken(accessToken);
         }
 
-        // 헤더에서 추출한 token값이 맞는지 검증로직
-        Authentication authentication = getAuthentication(accessToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String email = tokenService.resolveSubject(accessToken);
+        log.info(email);
+        saveAuthentication(userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다.")));
 
-        // 리프레시 토큰이 만료되었다면 새로운 액세스 ,리프레시 토큰 생성
-        // 그렇지않으면 액세스토큰 검증 이후
+
         filterChain.doFilter(request, response);
     }
 
-    private Authentication getAuthentication(String token) {
-        String email = tokenService.resolveSubject(token);
-
-        if (email != null) {
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        }
-        return null;
+    private Authentication getAuthentication(UserInfo userInfo) {
+        return new UsernamePasswordAuthenticationToken(userInfo, null, List.of(new SimpleGrantedAuthority(userInfo.getRole().getAuthority())));
     }
 
     private void checkAccessToken(String accessToken) {
-        log.info("Access 토큰 확인 및 검증");
+        log.debug("Access 토큰 확인 및 검증");
         tokenService.validateToken(accessToken);
-        log.info("유효한 토큰입니다.");
+        log.debug("유효한 토큰입니다.");
     }
 
     private void checkRefreshTokenAndRegeneratedToken(String refreshToken,
                                                       HttpServletResponse response) {
-        log.info("Refresh 토큰 확인 및 검증");
+        log.debug("Refresh 토큰 확인 및 검증");
 
         tokenService.validateToken(refreshToken);
         String email = tokenService.resolveSubject(refreshToken);
@@ -92,5 +90,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         tokenService.sendAccessAndRefreshToken(response, newAccessToken, newRefreshToken);
         refreshTokenService.updateRefreshToken(email, newRefreshToken);
+    }
+
+    private void saveAuthentication(User user) {
+        log.info("Authentication context에 저장");
+        UserInfo userInfo = UserInfo.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .profileImage(user.getProfileImage())
+                .role(user.getRole())
+                .code(user.getCode())
+                .build();
+        Authentication authentication = getAuthentication(userInfo);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
