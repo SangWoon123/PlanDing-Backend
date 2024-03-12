@@ -39,6 +39,7 @@ jobs:
       
     - name: Make application.yml
       run: |
+          ls
           cd planding
           cd ./src/main
           cd ./resources
