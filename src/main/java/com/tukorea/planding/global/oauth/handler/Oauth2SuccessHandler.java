@@ -49,10 +49,10 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        getRedirectStrategy().sendRedirect(request,response,url);
     }
 
-//    private String makeRedirectUrl(String accessToken,String refreshToken) {
-//        return UriComponentsBuilder.fromUriString("http://localhost:9000/home/redirect")
-//                .queryParam("accessToken",accessToken)
-//                .queryParam("refreshToken",refreshToken)
-//                .build().toUriString();
-//    }
+    private String makeRedirectUrl(String accessToken,String refreshToken) {
+        return UriComponentsBuilder.fromUriString("http://localhost:5173/login")
+                .queryParam("accessToken",accessToken)
+                .queryParam("refreshToken",refreshToken)
+                .build().toUriString();
+    }
 }
