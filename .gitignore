@@ -36,3 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 application.yml
+application-oauth.yml
+application-jwt.yml
