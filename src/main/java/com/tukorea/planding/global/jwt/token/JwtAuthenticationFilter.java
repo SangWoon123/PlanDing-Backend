@@ -20,8 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -43,10 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String accessToken = tokenService.extractAccessToken(request).orElse(null);
         String refreshToken = tokenService.extractRefreshToken(request).orElse(null);
-
-        if (accessToken != null) {
-
-        }
 
         if (accessToken == null) {
             log.warn("엑세스 코드가 없는 요청");
@@ -112,10 +110,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/swagger", "/swagger-ui.html", "/swagger-ui/**",
-                "/api-docs", "/api-docs/**",
-                "/v3/api-docs/**", "/login/**", "/auth/**", "/oauth2/**",
-                "/", "/error", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js"};
+        String[] excludePath = {
+                "/login", "/login/**", "/swagger-ui/**",
+                "**.html", "**.css", "**.js",
+                "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**"
+        };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
