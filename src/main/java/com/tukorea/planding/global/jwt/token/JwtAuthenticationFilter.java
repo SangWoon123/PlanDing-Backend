@@ -3,7 +3,6 @@ package com.tukorea.planding.global.jwt.token;
 
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.TokenService;
-import com.tukorea.planding.global.oauth.details.CustomUserDetailsService;
 import com.tukorea.planding.user.dao.UserRepository;
 import com.tukorea.planding.user.domain.User;
 import com.tukorea.planding.user.dto.UserInfo;
@@ -21,7 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -36,13 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getRequestURI().equals("/login")) {
-            filterChain.doFilter(request, response); // "/login" 요청이 들어오면, 다음 필터 호출
-            return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
-        }
         String accessToken = tokenService.extractAccessToken(request).orElse(null);
         String refreshToken = tokenService.extractRefreshToken(request).orElse(null);
-
 
         if (accessToken == null) {
             log.warn("엑세스 코드가 없는 요청");
@@ -104,5 +101,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .build();
         Authentication authentication = getAuthentication(userInfo);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {
+                "/login", "/login/**", "/swagger-ui/**",
+                "**.html", "**.css", "**.js",
+                "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**"
+        };
+        String path = request.getRequestURI();
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }
