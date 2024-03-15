@@ -22,6 +22,9 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOAuth2Service customOAuth2Service;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
+    private final String[] PUBLIC_URL = {
+            "/swagger-resources/**", "/v3/api-docs/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html",
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,11 +33,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(
-                                "/", "/swagger-ui/**",
-                                "**.html", "**.css", "**.js",
-                                "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**"
-                        ).permitAll()
+                        .requestMatchers(PUBLIC_URL).permitAll()
+                        .requestMatchers("/oauth2/**", "/login", "/api/v1/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
