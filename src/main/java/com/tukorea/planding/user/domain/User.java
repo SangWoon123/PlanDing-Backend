@@ -1,5 +1,6 @@
 package com.tukorea.planding.user.domain;
 
+import com.tukorea.planding.global.audit.BaseEntityTime;
 import com.tukorea.planding.global.oauth.details.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntityTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
