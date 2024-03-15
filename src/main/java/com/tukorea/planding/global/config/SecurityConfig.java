@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers(PUBLIC_URL).permitAll()
-                        .requestMatchers("/oauth2/**", "/login", "/api/v1/**").permitAll()
+                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/profile",
+                                "/oauth2/**", "/login", "/api/v1/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
