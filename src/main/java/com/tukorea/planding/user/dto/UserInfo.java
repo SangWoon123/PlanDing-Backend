@@ -1,6 +1,7 @@
 package com.tukorea.planding.user.dto;
 
 import com.tukorea.planding.global.oauth.details.Role;
+import com.tukorea.planding.user.domain.User;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
@@ -21,4 +22,5 @@ public class UserInfo {
     private Role role;
 
     private String code;
+
 }
