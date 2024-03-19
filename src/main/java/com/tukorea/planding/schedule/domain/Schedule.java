@@ -42,10 +42,6 @@ public class Schedule extends BaseEntityTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "grouproom_id", nullable = false)
-//    private GroupRoom groupRoom; // 해당 일정이 속한 그룹방
-
     public void updateTitleAndContent(Optional<String> title, Optional<String> content) {
         title.ifPresent(value -> this.title = value);
         content.ifPresent(value -> this.content = value);

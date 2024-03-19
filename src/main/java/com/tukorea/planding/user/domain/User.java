@@ -3,6 +3,8 @@ package com.tukorea.planding.user.domain;
 import com.tukorea.planding.global.audit.BaseEntityTime;
 import com.tukorea.planding.global.oauth.details.Role;
 //import com.tukorea.planding.group.domain.GroupRoom;
+import com.tukorea.planding.group.domain.GroupRoom;
+import com.tukorea.planding.group.domain.UserGroupMembership;
 import com.tukorea.planding.schedule.domain.Schedule;
 import com.tukorea.planding.user.dto.UserInfo;
 import jakarta.persistence.*;
@@ -39,6 +41,21 @@ public class User extends BaseEntityTime {
 
     @OneToMany(mappedBy = "user")
     private List<Schedule> schedules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
+
+    // 연관 관계 편의 메서드
+    public void joinGroupRoom(GroupRoom groupRoom) {
+        UserGroupMembership membership = UserGroupMembership.builder()
+                .user(this)
+                .groupRoom(groupRoom)
+                .build();
+        this.groupMemberships.add(membership);
+        groupRoom.getGroupMemberships().add(membership);
+    }
+
+
 
 
 
