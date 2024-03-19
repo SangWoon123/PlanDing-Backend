@@ -88,7 +88,7 @@ class GroupRoomServiceTest {
     }
 
     @Test
-    @DisplayName("서비스 코드 inviteGorupRomm 테스트")
+    @DisplayName("서비스 코드 inviteGorupRoom 테스트")
     public void inviteGroupService() {
         User userA = User.builder()
                 .email("userA")

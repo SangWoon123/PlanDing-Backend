@@ -35,30 +35,32 @@ public class GroupRoomService {
     }
 
     //    @Transactional
-    public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestGroupRoom invitedUser) {
-        RequestGroupRoom checking = RequestGroupRoom.checking(invitedUser);
+    public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestGroupRoom invitedUserInfo) {
+        RequestGroupRoom checking = RequestGroupRoom.checking(invitedUserInfo);
 
         User invitingUser = userRepository.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        GroupRoom groupRoom = groupRoomRepository.findByGroupCode(invitedUser.getInviteGroupCode())
+        GroupRoom groupRoom = groupRoomRepository.findByGroupCode(invitedUserInfo.getInviteGroupCode())
                 .orElseThrow(() -> new IllegalArgumentException("GroupRoom Not Found"));
 
         validInvitePermission(groupRoom,invitingUser);
 
-        if (checking.getUserCode() == null) {
-            groupRoom.addUser(userRepository.findByEmail(checking.getUserEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("InvitedUser not found")));
-
-            return ResponseGroupRoom.from(groupRoom);
-        }
-
-        groupRoom.addUser(userRepository.findByCode(checking.getUserCode())
-                .orElseThrow(() -> new UsernameNotFoundException("InvitedUser not found")));
+        User invitedUser = findUserByRequest(checking);
+        groupRoom.addUser(invitedUser);
 
         return ResponseGroupRoom.from(groupRoom);
     }
 
+    private User findUserByRequest(RequestGroupRoom checking) {
+        if (checking.getUserCode() == null) {
+            return userRepository.findByEmail(checking.getUserEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("InvitedUser not found"));
+        } else {
+            return userRepository.findByCode(checking.getUserCode())
+                    .orElseThrow(() -> new UsernameNotFoundException("InvitedUser not found"));
+        }
+    }
     private void validInvitePermission(GroupRoom groupRoom, User invitingUser){
         if (!groupRoom.getOwner().equals(invitingUser.getCode())) {
             throw new IllegalArgumentException("User does not have permission to invite this groupRoom");
