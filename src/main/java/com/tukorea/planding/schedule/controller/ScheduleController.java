@@ -1,5 +1,7 @@
 package com.tukorea.planding.schedule.controller;
 
+import com.tukorea.planding.common.CommonResponse;
+import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.schedule.dto.RequestSchedule;
 import com.tukorea.planding.schedule.dto.ResponseSchedule;
 import com.tukorea.planding.schedule.service.ScheduleService;
@@ -20,9 +22,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping()
-    public ResponseEntity<ResponseSchedule> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestSchedule requestSchedule) {
+    public CommonResponse<ResponseSchedule> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestSchedule requestSchedule) {
         ResponseSchedule response = scheduleService.createSchedule(userInfo, requestSchedule);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return CommonUtils.success(response);
     }
 
     @DeleteMapping("/{id}")
