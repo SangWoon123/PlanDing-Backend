@@ -45,8 +45,8 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshTokenService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 
 
-//        String url=makeRedirectUrl(accessToken,refreshToken);
-//        getRedirectStrategy().sendRedirect(request,response,url);
+        String url=makeRedirectUrl(accessToken,refreshToken);
+        getRedirectStrategy().sendRedirect(request,response,url);
     }
 
     private String makeRedirectUrl(String accessToken,String refreshToken) {

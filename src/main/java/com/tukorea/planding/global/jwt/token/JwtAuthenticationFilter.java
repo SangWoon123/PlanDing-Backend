@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String accessToken = tokenService.extractAccessToken(request).orElse(null);
         String refreshToken = tokenService.extractRefreshToken(request).orElse(null);
 
@@ -106,9 +105,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String[] excludePath = {
-                "/login", "/login/**", "/swagger-ui/**",
-                "**.html", "**.css", "**.js",
-                "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**"
+                "/oauth2/**", "/login", "/login/**", "/swagger-ui/**",
+                "/v3/api-docs/**", "/swagger-ui/index.html",
+                "/swagger-ui/swagger-ui-standalone-preset.js", "/swagger-ui/swagger-initializer.js",
+                "/swagger-ui/swagger-ui-bundle.js", "/swagger-ui/swagger-ui.css",
+                "/swagger-ui/index.css", "/swagger-ui/favicon-32x32.png",
+                "/swagger-ui/favicon-16x16.png",
+                "/api-docs/json/swagger-config", "/api-docs/json",
+                "/v3/api-docs/swagger-config", "/v3/api-docs",
         };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
