@@ -27,10 +27,10 @@ public class GroupRoomController {
         return CommonUtils.success(responseGroupRoom);
     }
 
-//    @Operation(summary = "다른유저 그룹으로 초대")
-//    @PostMapping()
-//    public CommonResponse<ResponseGroupRoom> inviteGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestGroupRoom invitedUser){
-//        ResponseGroupRoom responseGroupRoom = groupRoomService.inviteGroupRoom(userInfo, invitedUser);
-//        return CommonUtils.success(responseGroupRoom);
-//    }
+    @Operation(summary = "다른유저 그룹으로 초대")
+    @PostMapping("/invite")
+    public CommonResponse<ResponseGroupRoom> inviteGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestGroupRoom invitedUser){
+        ResponseGroupRoom responseGroupRoom = groupRoomService.inviteGroupRoom(userInfo, invitedUser);
+        return CommonUtils.success(responseGroupRoom);
+    }
 }
