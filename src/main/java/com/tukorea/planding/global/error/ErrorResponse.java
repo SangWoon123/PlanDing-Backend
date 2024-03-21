@@ -1,4 +1,4 @@
-package com.tukorea.planding.common;
+package com.tukorea.planding.global.error;
 
 public class ErrorResponse {
     private String message;
