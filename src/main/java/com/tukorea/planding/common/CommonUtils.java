@@ -1,5 +1,7 @@
 package com.tukorea.planding.common;
 
+import com.tukorea.planding.global.error.ErrorResponse;
+
 public class CommonUtils {
     public static <T> CommonResponse<T> success(T data) {
         return new CommonResponse<>(true, data, null);

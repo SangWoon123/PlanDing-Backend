@@ -1,5 +1,6 @@
 package com.tukorea.planding.common;
 
+import com.tukorea.planding.global.error.ErrorResponse;
 import lombok.Getter;
 
 @Getter
