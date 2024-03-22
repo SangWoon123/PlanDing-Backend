@@ -4,6 +4,7 @@ package com.tukorea.planding.global.jwt.token.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -82,7 +83,7 @@ public class TokenService {
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
+        setRefreshCookie(response, refreshToken);
     }
 
     public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
@@ -93,6 +94,14 @@ public class TokenService {
     public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
         log.info("Refresh Token 헤더 설정");
         response.setHeader(refreshHeader, BEARER + refreshToken);
+    }
+
+    public void setRefreshCookie(HttpServletResponse response,String refreshToken){
+        Cookie cookie = new Cookie("Authorization", BEARER+refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge((int) refreshExpiration);
+        cookie.setHttpOnly(true); // 자바스크립트에서 쿠키 접근 불가 설정
+        response.addCookie(cookie);
     }
 
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
