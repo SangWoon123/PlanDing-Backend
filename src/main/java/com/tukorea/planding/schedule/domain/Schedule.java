@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -42,9 +41,15 @@ public class Schedule extends BaseEntityTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void updateTitleAndContent(Optional<String> title, Optional<String> content) {
-        title.ifPresent(value -> this.title = value);
-        content.ifPresent(value -> this.content = value);
+    public void update(String title, String content, LocalTime startTime, LocalTime endTime) {
+        Optional.ofNullable(title).ifPresent(value -> this.title = value);
+        Optional.ofNullable(content).ifPresent(value -> this.content = value);
+
+        if (startTime != null && endTime != null && startTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("startTime은 endTime보다 빨라야 합니다.");
+        }
+        Optional.ofNullable(startTime).ifPresent(value -> this.startTime = value);
+        Optional.ofNullable(endTime).ifPresent(value -> this.endTime = value);
     }
 
     public void toggleComplete() {
@@ -53,5 +58,10 @@ public class Schedule extends BaseEntityTime {
             return;
         }
         this.complete = true;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        user.getSchedules().add(this);
     }
 }

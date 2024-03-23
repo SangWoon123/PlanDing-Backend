@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 
 @Getter
 @Builder
@@ -29,5 +30,9 @@ public class ResponseSchedule {
                 .endTime(schedule.getEndTime())
                 .complete(schedule.isComplete())
                 .build();
+    }
+
+    public static Comparator<ResponseSchedule> getComparatorByStartTime() {
+        return Comparator.comparing(schedule -> schedule.getStartTime());
     }
 }
