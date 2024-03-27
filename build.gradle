@@ -24,15 +24,14 @@ repositories {
 dependencies {
     //swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
-
     // actuator
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '3.2.0'
-
-
     //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5" // 추가
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5" // 추가
+    // websocket
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '3.2.4'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
