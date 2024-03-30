@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(request -> CorsUtils.isPreFlightRequest(request)).permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(PUBLIC_URL).permitAll()
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/profile",
                                 "/oauth2", "/oauth2/**", "/login", "/login/**", "/api/v1/**").permitAll()

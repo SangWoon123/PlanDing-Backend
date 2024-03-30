@@ -22,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if(request.getRequestURI().startsWith("/api/v1/ws")) {
+            log.info("웹소켓 인증이 필요하지 않는 API");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = tokenService.extractAccessToken(request).orElse(null);
         String refreshToken = tokenService.extractRefreshToken(request).orElse(null);
 
