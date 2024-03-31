@@ -48,4 +48,9 @@ public class GroupRoom {
         user.getGroupMemberships().add(membership);
     }
 
+    // 스케줄을 그룹룸에 추가하는 메서드
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+    }
+
 }
