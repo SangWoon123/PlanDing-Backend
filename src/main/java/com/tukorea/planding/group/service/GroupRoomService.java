@@ -51,16 +51,21 @@ public class GroupRoomService {
     public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestInviteGroupRoom invitedUserInfo) {
         RequestInviteGroupRoom checking = RequestInviteGroupRoom.checking(invitedUserInfo);
 
+        // 초대하는 유저가 존재하는지 체크하는 로직
         User invitingUser = userRepository.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(invitedUserInfo.getInviteGroupCode())
                 .orElseThrow(() -> new IllegalArgumentException("GroupRoom Not Found"));
 
+        // 초대하는 유저가 방장인지 체크하는 로직
         validInvitePermission(groupRoom, invitingUser);
 
         User invitedUser = findUserByRequest(checking);
         groupRoom.addUser(invitedUser);
+
+        // 중간테이블에 유저, 그룹 정보 저장
+        userGroupMembershipRepository.saveAll(groupRoom.getGroupMemberships());
 
         return ResponseGroupRoom.from(groupRoom);
     }

@@ -24,28 +24,39 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
     @Operation(summary = "스케줄 생성")
     @PostMapping()
     public CommonResponse<ResponseSchedule> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestSchedule requestSchedule) {
         ResponseSchedule response = scheduleService.createSchedule(userInfo, requestSchedule);
         return CommonUtils.success(response);
     }
+
     @Operation(summary = "스케줄 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseSchedule> deleteSchedule(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long id) {
         scheduleService.deleteSchedule(userInfo, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @Operation(summary = "개인 스케줄 하루치 날짜로 가져오기")
     @GetMapping("/{date}")
     public CommonResponse<List<ResponseSchedule>> getSchedule(@PathVariable(name = "date") LocalDate date, @AuthenticationPrincipal UserInfo userInfo) {
         List<ResponseSchedule> responseSchedule = scheduleService.getSchedule(date, userInfo);
         return CommonUtils.success(responseSchedule);
     }
+
+    @Operation(summary = "그룹 스케줄 작성 목록 조회")
+    @GetMapping("/groupRoom/{groupRoomId}")
+    public CommonResponse<List<ResponseSchedule>> getSchedulesByGroupRoom(@PathVariable Long groupRoomId, @AuthenticationPrincipal UserInfo userInfo) {
+        List<ResponseSchedule> responseSchedules = scheduleService.getSchedulesByGroupRoom(groupRoomId, userInfo);
+        return CommonUtils.success(responseSchedules);
+    }
+
     @Operation(summary = "스케줄 title,content,startTime,endTime 수정 (* 수정필요)")
     @PatchMapping("/{schedule_id}")
-    public CommonResponse<ResponseSchedule> updateSchedule(@PathVariable(name = "schedule_id")Long id, @RequestBody RequestSchedule requestSchedule, @AuthenticationPrincipal UserInfo userInfo){
-        ResponseSchedule responseSchedule=scheduleService.updateSchedule(id,requestSchedule,userInfo);
+    public CommonResponse<ResponseSchedule> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody RequestSchedule requestSchedule, @AuthenticationPrincipal UserInfo userInfo) {
+        ResponseSchedule responseSchedule = scheduleService.updateSchedule(id, requestSchedule, userInfo);
         return CommonUtils.success(responseSchedule);
     }
 

@@ -10,4 +10,6 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByDateAndUser(LocalDate date, User user);
+
+    List<Schedule> findByGroupRoomId(Long groupRoomId);
 }
