@@ -5,10 +5,7 @@ import com.tukorea.planding.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -18,7 +15,7 @@ import java.util.UUID;
 public class GroupRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -31,8 +28,8 @@ public class GroupRoom {
     @OneToMany(mappedBy = "groupRoom")
     private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private final Set<Schedule> schedules = new HashSet<>(); // 그룹 일정들
+    @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Schedule> schedules = new ArrayList<>();
 
     @PrePersist
     public void generateRoomCode() {
@@ -51,6 +48,9 @@ public class GroupRoom {
     // 스케줄을 그룹룸에 추가하는 메서드
     public void addSchedule(Schedule schedule) {
         this.schedules.add(schedule);
+//        if (schedule.getGroupRoom() != this) {
+//            schedule.setGroupRoom(this);
+//        }
     }
 
 }
