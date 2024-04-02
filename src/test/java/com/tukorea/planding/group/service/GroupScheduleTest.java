@@ -12,13 +12,11 @@ import com.tukorea.planding.schedule.dto.ResponseSchedule;
 import com.tukorea.planding.schedule.service.ScheduleService;
 import com.tukorea.planding.user.dao.UserRepository;
 import com.tukorea.planding.user.domain.User;
-import com.tukorea.planding.user.dto.UserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +24,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@TestPropertySource(locations = "classpath:application-test.yml")
 public class GroupScheduleTest {
 
     private static final String TEST_EMAIL = "test@";
@@ -127,7 +125,7 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //then
-        List<ResponseSchedule> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userA));
+        List<ResponseSchedule> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userB));
 
         assertNotNull(result);
         assertEquals(result.get(0).getTitle(),requestSchedule.getTitle());
@@ -139,7 +137,31 @@ public class GroupScheduleTest {
     @Test
     @DisplayName("실패: 유저 A가 작성한 스케줄 외부 유저C가 조회시")
     public void createGroupScheduleFailTest() {
+        //given
+        User userA = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
 
+        User userC = createUserAndSave("testC", "codeC");
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // when
+        groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        //then
+        assertThrows(AccessDeniedException.class,()->scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
     }
 
     private User createUserAndSave(String email, String userCode) {
@@ -148,17 +170,5 @@ public class GroupScheduleTest {
                 .code(userCode)
                 .build();
         return userRepository.save(user);
-    }
-
-    private Schedule createAndSaveSchedule(User user, String title, String content, LocalTime startTime, LocalTime endTime, LocalDate date) {
-        Schedule schedule = Schedule.builder()
-                .user(user)
-                .date(date)
-                .title(title)
-                .content(content)
-                .startTime(startTime)
-                .endTime(endTime)
-                .build();
-        return scheduleRepository.save(schedule);
     }
 }

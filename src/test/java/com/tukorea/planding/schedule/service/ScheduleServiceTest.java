@@ -1,9 +1,6 @@
 package com.tukorea.planding.schedule.service;
 
 import com.tukorea.planding.group.dao.GroupRoomRepository;
-import com.tukorea.planding.group.domain.GroupRoom;
-import com.tukorea.planding.group.dto.RequestCreateGroupRoom;
-import com.tukorea.planding.group.dto.ResponseGroupRoom;
 import com.tukorea.planding.group.service.GroupRoomService;
 import com.tukorea.planding.group.service.GroupScheduleService;
 import com.tukorea.planding.schedule.dao.ScheduleRepository;
