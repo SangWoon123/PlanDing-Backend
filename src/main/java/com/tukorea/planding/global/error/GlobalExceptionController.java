@@ -8,15 +8,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionController {
-    @ExceptionHandler(value = { IllegalArgumentException.class })
-    protected CommonResponse<?> handleIllegalArgumentException(RuntimeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "400");
-        return CommonUtils.fail(errorResponse);
-    }
-
-    @ExceptionHandler(value = { UsernameNotFoundException.class })
-    protected CommonResponse<?> handlerUsernameNotFoundException(RuntimeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "400");
+    @ExceptionHandler(value = { BusinessException.class })
+    protected CommonResponse<?> handleBusinessException(BusinessException ex) {
+        final ErrorCode errorCode = ex.getErrorCode();
+        final ErrorResponse errorResponse = ErrorResponse.of(errorCode);
         return CommonUtils.fail(errorResponse);
     }
 }
