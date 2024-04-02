@@ -128,10 +128,10 @@ public class GroupScheduleTest {
         List<ResponseSchedule> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userB));
 
         assertNotNull(result);
-        assertEquals(result.get(0).getTitle(),requestSchedule.getTitle());
-        assertEquals(result.get(0).getContent(),requestSchedule.getContent());
-        assertEquals(result.get(0).getStartTime(),requestSchedule.getStartTime());
-        assertEquals(result.get(0).getEndTime(),requestSchedule.getEndTime());
+        assertEquals(result.get(0).getTitle(), requestSchedule.getTitle());
+        assertEquals(result.get(0).getContent(), requestSchedule.getContent());
+        assertEquals(result.get(0).getStartTime(), requestSchedule.getStartTime());
+        assertEquals(result.get(0).getEndTime(), requestSchedule.getEndTime());
     }
 
     @Test
@@ -161,8 +161,248 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //then
-        assertThrows(AccessDeniedException.class,()->scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
+        assertThrows(AccessDeniedException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
     }
+
+    @Test
+    @DisplayName("성공: 유저 A가 작성한 스케줄 수정")
+    public void update1() {
+        User user = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+
+        RequestSchedule updateSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title("update")
+                .content("update")
+                .date(TEST_DATE)
+                .build();
+
+        //when
+        scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(user));
+
+        //then
+        Schedule result = scheduleRepository.findById(groupSchedule.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+
+        assertEquals(result.getTitle(), "update");
+        assertEquals(result.getContent(), "update");
+    }
+
+    @Test
+    @DisplayName("성공: 같은 그룹방 유저B가 수정")
+    public void update2() {
+        //given
+        User userA = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        User userB = createUserAndSave("testB", "codeB");
+
+        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+                .builder()
+                .inviteGroupCode(groupRoom.getCode())
+                .userCode(userB.getCode())
+                .build();
+
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+
+        RequestSchedule updateSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title("update")
+                .content("update")
+                .date(TEST_DATE)
+                .build();
+
+        //when
+        scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userB));
+
+        //then
+        Schedule result = scheduleRepository.findById(groupSchedule.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+
+        assertEquals(result.getTitle(), "update");
+        assertEquals(result.getContent(), "update");
+    }
+
+    @Test
+    @DisplayName("실패: 외부 유저C가 수정")
+    public void update3() {
+        User user = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        User userC = createUserAndSave("testC", "codeC");
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+
+        RequestSchedule updateSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title("update")
+                .content("update")
+                .date(TEST_DATE)
+                .build();
+
+        //when
+        assertThrows(AccessDeniedException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
+    }
+
+    @Test
+    @DisplayName("성공: 유저 A가 작성한 스케줄 삭제")
+    public void delete1() {
+        User user = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(user));
+
+
+        assertThrows(IllegalArgumentException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId())));
+    }
+
+    @Test
+    @DisplayName("성공: 같은 그룹방 유저 B가 삭제")
+    public void delete2() {
+        //given
+        User userA = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        User userB = createUserAndSave("testB", "codeB");
+
+        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+                .builder()
+                .inviteGroupCode(groupRoom.getCode())
+                .userCode(userB.getCode())
+                .build();
+
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        //when
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userB));
+        //then
+        assertThrows(IllegalArgumentException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId())));
+    }
+
+    @Test
+    @DisplayName("실패: 외부 유저 C가 수정")
+    public void delete3() {
+        User user = createUserAndSave(TEST_EMAIL, "code");
+        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+                .builder()
+                .title("group_name")
+                .build());
+
+        User userC = createUserAndSave("testC", "codeC");
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        RequestSchedule requestSchedule = RequestSchedule.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(TEST_TITLE)
+                .content(TEST_CONTENT)
+                .date(TEST_DATE)
+                .build();
+
+        // 스케줄 생성
+        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+
+        //when
+        assertThrows(AccessDeniedException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userC)));
+    }
+
 
     private User createUserAndSave(String email, String userCode) {
         User user = User.builder()
