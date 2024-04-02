@@ -30,8 +30,7 @@ public class ScheduleService {
     private final UserGroupMembershipRepository userGroupMembershipRepository;
 
     public ResponseSchedule createSchedule(UserInfo userInfo, RequestSchedule requestSchedule) {
-        User user = userRepository.findByEmail(userInfo.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = validateUserByEmail(userInfo.getEmail());
 
         Schedule newSchedule = Schedule.builder()
                 .user(user)
@@ -49,9 +48,7 @@ public class ScheduleService {
     }
 
     public void deleteSchedule(UserInfo userInfo, Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + scheduleId));
-
+        Schedule schedule = findScheduleById(scheduleId);
         User user = schedule.getUser();
 
         if (!user.getEmail().equals(userInfo.getEmail())) {
@@ -62,8 +59,7 @@ public class ScheduleService {
     }
 
     public List<ResponseSchedule> getSchedule(LocalDate date, UserInfo userInfo) {
-        User user = userRepository.findByEmail(userInfo.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = validateUserByEmail(userInfo.getEmail());
 
         List<Schedule> schedules = scheduleRepository.findByDateAndUser(date, user);
 
@@ -76,10 +72,8 @@ public class ScheduleService {
     }
 
     public ResponseSchedule updateSchedule(Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
-        User user = userRepository.findByEmail(userInfo.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + scheduleId));
+        User user = validateUserByEmail(userInfo.getEmail());
+        Schedule schedule = findScheduleById(scheduleId);
 
         if (!schedule.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("You are not the owner of this Schedule");
@@ -113,9 +107,7 @@ public class ScheduleService {
             throw new AccessDeniedException("사용자는 이 그룹룸에 접근할 권한이 없습니다.");
         }
 
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + scheduleId));
-
+        Schedule schedule = findScheduleById(scheduleId);
         schedule.update(requestSchedule.getTitle(), requestSchedule.getContent(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
 
         return ResponseSchedule.from(schedule);
@@ -127,4 +119,15 @@ public class ScheduleService {
         }
         scheduleRepository.deleteById(scheduleId);
     }
+
+    private User validateUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private Schedule findScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + scheduleId));
+    }
+
 }
