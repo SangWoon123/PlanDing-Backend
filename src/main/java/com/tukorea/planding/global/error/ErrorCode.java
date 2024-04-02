@@ -17,7 +17,7 @@ public enum ErrorCode {
      * Schedule Error
      */
     SCHEDULE_NOT_FOUND(1002, "해당 스케줄은 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    UNAUTHORIZED_SCHEDULE_DELETION(1004, "본 사용자는 스케줄을 삭제할 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED_SCHEDULE(1004, "본 사용자는 스케줄에 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
 
     /**
      * Group Error
