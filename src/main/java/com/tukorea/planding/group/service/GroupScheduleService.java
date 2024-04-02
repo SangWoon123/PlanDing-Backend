@@ -37,6 +37,7 @@ public class GroupScheduleService {
                 .startTime(requestSchedule.getStartTime())
                 .endTime(requestSchedule.getEndTime())
                 .complete(false)
+                .groupRoom(groupRoom)
                 .build();
 
         groupRoom.addSchedule(schedule);
