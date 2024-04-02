@@ -1,6 +1,7 @@
 package com.tukorea.planding.schedule.domain;
 
 import com.tukorea.planding.global.audit.BaseEntityTime;
+import com.tukorea.planding.group.domain.GroupRoom;
 import com.tukorea.planding.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,10 @@ public class Schedule extends BaseEntityTime {
     private LocalTime endTime;
 
     private boolean complete;
+
+    @ManyToOne
+    @JoinColumn(name = "group_room_id")
+    private GroupRoom groupRoom;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -1,5 +1,8 @@
 package com.tukorea.planding.schedule.service;
 
+import com.tukorea.planding.group.dao.GroupRoomRepository;
+import com.tukorea.planding.group.service.GroupRoomService;
+import com.tukorea.planding.group.service.GroupScheduleService;
 import com.tukorea.planding.schedule.dao.ScheduleRepository;
 import com.tukorea.planding.schedule.domain.Schedule;
 import com.tukorea.planding.schedule.dto.RequestSchedule;
@@ -36,6 +39,12 @@ class ScheduleServiceTest {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupScheduleService groupScheduleService;
+    @Autowired
+    private GroupRoomRepository groupRoomRepository;
+    @Autowired
+    private GroupRoomService groupRoomService;
 
     @Test
     void createSchedule() {
@@ -163,7 +172,7 @@ class ScheduleServiceTest {
     }
 
     @Test
-    @DisplayName("스케줄 수정시 endTime < startTime")
+    @DisplayName("실패: 스케줄 수정시 endTime < startTime")
     public void updateError() {
         //given
         User user = createUserAndSave(TEST_EMAIL);
@@ -172,8 +181,8 @@ class ScheduleServiceTest {
         LocalTime endTime = LocalTime.of(9, 0);
         Schedule schedule = createAndSaveSchedule(user, TEST_TITLE, TEST_CONTENT, startTime, endTime, TEST_DATE);
 
-        assertEquals(startTime,schedule.getStartTime());
-        assertEquals(endTime,schedule.getEndTime());
+        assertEquals(startTime, schedule.getStartTime());
+        assertEquals(endTime, schedule.getEndTime());
         //when
         String updateTitle = "update_title";
         String updateContent = "update_content";

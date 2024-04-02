@@ -39,3 +39,4 @@ application.yml
 application-oauth.yml
 application-jwt.yml
 application-actuator.yml
+application-test.yml
