@@ -66,6 +66,7 @@ public class User extends BaseEntityTime {
 
     public static UserInfo toUserInfo(User user) {
         return UserInfo.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .profileImage(user.getProfileImage())
                 .role(user.getRole())
