@@ -3,6 +3,7 @@ package com.tukorea.planding.group.service;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import com.tukorea.planding.group.dao.GroupRoomRepository;
+import com.tukorea.planding.group.dao.GroupRoomRepositoryCustomImpl;
 import com.tukorea.planding.group.dao.UserGroupMembershipRepository;
 import com.tukorea.planding.group.domain.GroupRoom;
 import com.tukorea.planding.group.dto.RequestCreateGroupRoom;
@@ -25,6 +26,7 @@ public class GroupRoomService {
     private final UserRepository userRepository;
     private final UserGroupMembershipRepository userGroupMembershipRepository;
     private final GroupRoomRepository groupRoomRepository;
+    private final GroupRoomRepositoryCustomImpl groupRoomRepositoryCustom;
 
     @Transactional
     public ResponseGroupRoom createGroupRoom(UserInfo userInfo, RequestCreateGroupRoom createGroupRoom) {
@@ -73,7 +75,7 @@ public class GroupRoomService {
         User user = userRepository.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        List<GroupRoom> groupRooms = groupRoomRepository.findGroupRoomsByUserId(user.getId());
+        List<GroupRoom> groupRooms = groupRoomRepositoryCustom.findGroupRoomsByUserId(user.getId());
 
         return groupRooms.stream()
                 .map(ResponseGroupRoom::from)

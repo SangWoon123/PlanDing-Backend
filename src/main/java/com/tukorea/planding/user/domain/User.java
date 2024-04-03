@@ -40,7 +40,7 @@ public class User extends BaseEntityTime {
     private String code;
 
     @OneToMany(mappedBy = "user")
-    private List<Schedule> schedules = new ArrayList<>();
+    private final List<Schedule> schedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
