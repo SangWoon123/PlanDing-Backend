@@ -1,6 +1,7 @@
 package com.tukorea.planding.global.jwt.token.service;
 
 
+import com.tukorea.planding.global.jwt.redis.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,18 +26,21 @@ public class TokenService {
     private long refreshExpiration;
     private static final String BEARER = "Bearer ";
     // redis
+    private RedisService redisService;
 
     public TokenService(@Value("${jwt.secret}") String SECRET_KEY,
                         @Value("${jwt.access-expiration}") long accessExpiration,
                         @Value("${jwt.refresh-expiration}") long refreshExpiration,
                         @Value("${jwt.access-header}") String accessHeader,
-                        @Value("${jwt.refresh-header}") String refreshHeader
+                        @Value("${jwt.refresh-header}") String refreshHeader,
+                        RedisService redisService
                         ) {
         this.SECRET_KEY = SECRET_KEY;
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
         this.accessHeader = accessHeader;
         this.refreshHeader = refreshHeader;
+        this.redisService=redisService;
     }
 
     public String generateToken(long expiration, String email) {
@@ -53,6 +59,7 @@ public class TokenService {
 
     public String generateRefreshToken(String email) {
         String refreshToken = generateToken(refreshExpiration, email);
+        redisService.setValue(email,refreshToken,Duration.ofMillis(refreshExpiration));
         return refreshToken;
     }
 

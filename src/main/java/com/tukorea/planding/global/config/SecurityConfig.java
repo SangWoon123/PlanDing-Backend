@@ -1,5 +1,6 @@
 package com.tukorea.planding.global.config;
 
+import com.tukorea.planding.global.UserLogoutHandler;
 import com.tukorea.planding.global.jwt.token.JwtAuthenticationFilter;
 import com.tukorea.planding.global.oauth.handler.Oauth2SuccessHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2Service;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOAuth2Service customOAuth2Service;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
+    private final UserLogoutHandler userLogoutHandler;
     private final String[] PUBLIC_URL = {
             "/swagger-resources/**", "/v3/api-docs/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html",
     };
@@ -40,7 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(PUBLIC_URL).permitAll()
-                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/profile",
+                        .requestMatchers("/","/logout", "/css/**", "/images/**", "/js/**", "/profile",
                                 "/oauth2", "/oauth2/**", "/login", "/login/**", "/api/v1/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((sessionManagement) ->
@@ -49,7 +51,10 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuth2Service))
                         .successHandler(oauth2SuccessHandler))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logOut->logOut.addLogoutHandler(userLogoutHandler)
+                        .logoutUrl("/logout")
+                        .permitAll());
 
         return http.build();
     }

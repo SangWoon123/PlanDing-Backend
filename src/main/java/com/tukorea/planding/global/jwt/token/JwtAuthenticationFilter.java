@@ -1,6 +1,7 @@
 package com.tukorea.planding.global.jwt.token;
 
 
+import com.tukorea.planding.global.jwt.redis.RedisService;
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.TokenService;
 import com.tukorea.planding.user.dao.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -34,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
+    private final RedisService redisService;
 
 
     @Override
