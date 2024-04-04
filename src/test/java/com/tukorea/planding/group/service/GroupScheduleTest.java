@@ -68,7 +68,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -118,7 +118,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // when
@@ -154,7 +154,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // when
@@ -181,7 +181,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -195,7 +195,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title("update")
                 .content("update")
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         //when
@@ -237,7 +237,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -251,7 +251,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title("update")
                 .content("update")
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         //when
@@ -284,7 +284,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -298,7 +298,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title("update")
                 .content("update")
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         //when
@@ -322,7 +322,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -362,7 +362,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성
@@ -393,7 +393,7 @@ public class GroupScheduleTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         // 스케줄 생성

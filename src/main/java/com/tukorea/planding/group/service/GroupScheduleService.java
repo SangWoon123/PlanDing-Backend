@@ -30,7 +30,7 @@ public class GroupScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(requestSchedule.getTitle())
                 .content(requestSchedule.getContent())
-                .scheduleDate(requestSchedule.getDate())
+                .scheduleDate(requestSchedule.getScheduleDate())
                 .startTime(requestSchedule.getStartTime())
                 .endTime(requestSchedule.getEndTime())
                 .isComplete(false)

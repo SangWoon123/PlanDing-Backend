@@ -11,7 +11,7 @@ import java.time.LocalTime;
 public class RequestSchedule {
     private String title;
     private String content;
-    private LocalDate date;
+    private LocalDate scheduleDate;
     private LocalTime startTime;
     private LocalTime endTime;
 }

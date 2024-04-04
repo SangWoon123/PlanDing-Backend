@@ -34,7 +34,7 @@ public class ScheduleService {
                 .user(user)
                 .title(requestSchedule.getTitle())
                 .content(requestSchedule.getContent())
-                .scheduleDate(requestSchedule.getDate())
+                .scheduleDate(requestSchedule.getScheduleDate())
                 .startTime(requestSchedule.getStartTime())
                 .endTime(requestSchedule.getEndTime())
                 .isComplete(false)

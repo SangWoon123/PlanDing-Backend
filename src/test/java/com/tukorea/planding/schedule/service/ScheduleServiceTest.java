@@ -67,7 +67,7 @@ class ScheduleServiceTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         //when
@@ -98,7 +98,7 @@ class ScheduleServiceTest {
                 .endTime(endTime)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .build();
 
         //when

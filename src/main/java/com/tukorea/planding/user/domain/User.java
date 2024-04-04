@@ -87,7 +87,7 @@ public class User extends BaseEntity {
                 .profileImage(user.getProfileImage())
                 .role(user.getRole())
                 .username(user.getUsername())
-                .code(user.getUserCode())
+                .userCode(user.getUserCode())
                 .build();
     }
 }

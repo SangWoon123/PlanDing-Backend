@@ -3,7 +3,7 @@ package com.tukorea.planding.global.jwt.token;
 
 import com.tukorea.planding.global.jwt.redis.RedisService;
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
-import com.tukorea.planding.global.jwt.token.service.JwtService;
+import com.tukorea.planding.global.jwt.token.service.JwtUtil;
 import com.tukorea.planding.user.dao.UserRepository;
 import com.tukorea.planding.user.domain.User;
 import com.tukorea.planding.user.dto.UserInfo;
@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final RedisService redisService;
@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = jwtService.extractAccessToken(request).orElse(null);
-        String refreshToken = jwtService.extractRefreshToken(request).orElse(null);
+        String accessToken = jwtUtil.extractAccessToken(request).orElse(null);
+        String refreshToken = jwtUtil.extractRefreshToken(request).orElse(null);
 
         if (accessToken == null) {
             log.warn("엑세스 코드가 없는 요청");
@@ -62,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             checkAccessToken(accessToken);
         }
 
-        String email = jwtService.getEmailFromJwtToken(accessToken);
+        String email = jwtUtil.getEmailFromJwtToken(accessToken);
         log.info(email);
         saveAuthentication(userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다.")));
@@ -77,7 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void checkAccessToken(String accessToken) {
         log.debug("Access 토큰 확인 및 검증");
-        jwtService.validateToken(accessToken);
+        jwtUtil.validateToken(accessToken);
         log.debug("유효한 토큰입니다.");
     }
 
@@ -85,13 +85,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                                       HttpServletResponse response) {
         log.debug("Refresh 토큰 확인 및 검증");
 
-        jwtService.validateToken(refreshToken);
-        String email = jwtService.getEmailFromJwtToken(refreshToken);
+        jwtUtil.validateToken(refreshToken);
+        String email = jwtUtil.getEmailFromJwtToken(refreshToken);
 
-        String newAccessToken = jwtService.generateAccessToken(email);
-        String newRefreshToken = jwtService.generateRefreshToken(email);
+        String newAccessToken = jwtUtil.generateAccessToken(email);
+        String newRefreshToken = jwtUtil.generateRefreshToken(email);
 
-        jwtService.sendAccessAndRefreshToken(response, newAccessToken, newRefreshToken);
+        jwtUtil.sendAccessAndRefreshToken(response, newAccessToken, newRefreshToken);
         refreshTokenService.updateRefreshToken(email, newRefreshToken);
     }
 
@@ -103,7 +103,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .username(user.getUsername())
                 .profileImage(user.getProfileImage())
                 .role(user.getRole())
-                .code(user.getUserCode())
+                .userCode(user.getUserCode())
                 .build();
         Authentication authentication = getAuthentication(userInfo);
         SecurityContextHolder.getContext().setAuthentication(authentication);

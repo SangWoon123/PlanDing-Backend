@@ -15,7 +15,7 @@ public class ResponseSchedule {
     private Long id;
     private String title;
     private String content;
-    private LocalDate date;
+    private LocalDate scheduleDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private boolean complete;
@@ -25,7 +25,7 @@ public class ResponseSchedule {
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
-                .date(schedule.getScheduleDate())
+                .scheduleDate(schedule.getScheduleDate())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
                 .complete(schedule.isComplete())
