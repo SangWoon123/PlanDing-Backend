@@ -1,7 +1,8 @@
 package com.tukorea.planding.global.oauth.handler;
 
-import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.JwtUtil;
+import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
+import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
 import com.tukorea.planding.user.dao.UserRepository;
 import jakarta.servlet.ServletException;
@@ -21,9 +22,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenHandler jwtTokenHandler;
     private final RefreshTokenService refreshTokenService;
-    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -32,8 +33,8 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 
-        String accessToken = jwtUtil.generateAccessToken(oAuth2User.getEmail());
-        String refreshToken = jwtUtil.generateRefreshToken(oAuth2User.getEmail());
+        String accessToken = jwtTokenHandler.generateAccessToken(oAuth2User.getEmail());
+        String refreshToken = jwtTokenHandler.generateRefreshToken(oAuth2User.getEmail());
 
 
         log.info("token생성 ={}", accessToken);

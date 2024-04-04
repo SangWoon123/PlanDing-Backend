@@ -1,6 +1,6 @@
 package com.tukorea.planding.global.websocket;
 
-import com.tukorea.planding.global.jwt.token.service.JwtUtil;
+import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -19,14 +19,14 @@ import java.util.Objects;
 @Slf4j
 public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenHandler jwtTokenHandler;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.getAccessor(message,StompHeaderAccessor.class);
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String jwt=accessor.getFirstNativeHeader("Authorization");
-            jwtUtil.validateToken(Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7));
+            jwtTokenHandler.validateToken(Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7));
         }
         return message;
     }
