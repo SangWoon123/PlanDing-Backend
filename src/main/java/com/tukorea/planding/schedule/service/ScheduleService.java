@@ -2,7 +2,7 @@ package com.tukorea.planding.schedule.service;
 
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.group.dao.UserGroupMembershipRepository;
+import com.tukorea.planding.group.dao.UserGroupMembershipRepositoryCustomImpl;
 import com.tukorea.planding.schedule.dao.ScheduleRepository;
 import com.tukorea.planding.schedule.domain.Schedule;
 import com.tukorea.planding.schedule.dto.RequestSchedule;
@@ -25,7 +25,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
-    private final UserGroupMembershipRepository userGroupMembershipRepository;
+    private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustomImpl;
 
     public ResponseSchedule createSchedule(UserInfo userInfo, RequestSchedule requestSchedule) {
         User user = validateUserByEmail(userInfo.getEmail());
@@ -87,7 +87,7 @@ public class ScheduleService {
     */
     public List<ResponseSchedule> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
         // 유저가 그룹룸에 접근할 권리가있는지 확인
-        if (!userGroupMembershipRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -101,7 +101,7 @@ public class ScheduleService {
     }
 
     public ResponseSchedule updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
-        if (!userGroupMembershipRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -112,7 +112,7 @@ public class ScheduleService {
     }
 
     public void deleteScheduleByGroupRoom(Long groupRoomId, Long scheduleId, UserInfo userInfo) {
-        if (!userGroupMembershipRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
         scheduleRepository.deleteById(scheduleId);
