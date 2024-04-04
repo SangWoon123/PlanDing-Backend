@@ -1,6 +1,6 @@
 package com.tukorea.planding.user.domain;
 
-import com.tukorea.planding.global.audit.BaseEntityTime;
+import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.oauth.details.Role;
 //import com.tukorea.planding.group.domain.GroupRoom;
 import com.tukorea.planding.group.domain.GroupRoom;
@@ -17,7 +17,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends BaseEntityTime {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

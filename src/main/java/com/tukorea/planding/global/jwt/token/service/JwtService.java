@@ -2,7 +2,7 @@ package com.tukorea.planding.global.jwt.token.service;
 
 
 import com.tukorea.planding.global.jwt.redis.RedisService;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class TokenService {
+public class JwtService {
 
     private final String SECRET_KEY;
     private String accessHeader;
@@ -28,12 +28,12 @@ public class TokenService {
     // redis
     private RedisService redisService;
 
-    public TokenService(@Value("${jwt.secret}") String SECRET_KEY,
-                        @Value("${jwt.access-expiration}") long accessExpiration,
-                        @Value("${jwt.refresh-expiration}") long refreshExpiration,
-                        @Value("${jwt.access-header}") String accessHeader,
-                        @Value("${jwt.refresh-header}") String refreshHeader,
-                        RedisService redisService
+    public JwtService(@Value("${jwt.secret}") String SECRET_KEY,
+                      @Value("${jwt.access-expiration}") long accessExpiration,
+                      @Value("${jwt.refresh-expiration}") long refreshExpiration,
+                      @Value("${jwt.access-header}") String accessHeader,
+                      @Value("${jwt.refresh-header}") String refreshHeader,
+                      RedisService redisService
                         ) {
         this.SECRET_KEY = SECRET_KEY;
         this.accessExpiration = accessExpiration;
@@ -52,7 +52,6 @@ public class TokenService {
                 .compact();
     }
 
-    // JWT 토큰 생성
     public String generateAccessToken(String email) {
         return generateToken(accessExpiration, email);
     }
@@ -63,25 +62,38 @@ public class TokenService {
         return refreshToken;
     }
 
-    // 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String token) {
+    /**
+     * 토큰을 파싱해서 올바른 토큰인지 확인
+     *
+     * @param token 검증할 토큰
+     * @return 유효한 토큰이면 {@code true}
+     */
+    public boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
             return true;
-        }catch (Exception e){
+        }catch (final JwtException | IllegalArgumentException e){
             return false;
         }
     }
 
-    public String resolveSubject(String token) {
-        Claims claim = Jwts.parserBuilder()
+    public String getEmailFromJwtToken(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
-        return claim.getSubject();
+                .getBody()
+                .getSubject();
     }
 
+    /**
+     * 토큰을 헤더 응답에 포함
+     *
+     * @param response 응답 설정
+     * @param accessToken 액세스 토큰
+     * @param refreshToken 리프레스 토큰
+     * @return 유효한 토큰이면 {@code true}
+     */
     public void sendAccessAndRefreshToken(HttpServletResponse response,
                                           String accessToken,
                                           String refreshToken

@@ -1,10 +1,9 @@
 package com.tukorea.planding.global.oauth.handler;
 
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
-import com.tukorea.planding.global.jwt.token.service.TokenService;
+import com.tukorea.planding.global.jwt.token.service.JwtService;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
 import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
+    private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
 
@@ -33,14 +32,14 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 
-        String accessToken = tokenService.generateAccessToken(oAuth2User.getEmail());
-        String refreshToken = tokenService.generateRefreshToken(oAuth2User.getEmail());
+        String accessToken = jwtService.generateAccessToken(oAuth2User.getEmail());
+        String refreshToken = jwtService.generateRefreshToken(oAuth2User.getEmail());
 
 
         log.info("token생성 ={}", accessToken);
         log.info("refresh생성 ={}", refreshToken);
 
-        tokenService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
         refreshTokenService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 

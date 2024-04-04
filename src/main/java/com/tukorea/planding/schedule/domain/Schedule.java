@@ -1,6 +1,6 @@
 package com.tukorea.planding.schedule.domain;
 
-import com.tukorea.planding.global.audit.BaseEntityTime;
+import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.group.domain.GroupRoom;
 import com.tukorea.planding.user.domain.User;
 import jakarta.persistence.*;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Schedule extends BaseEntityTime {
+public class Schedule extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

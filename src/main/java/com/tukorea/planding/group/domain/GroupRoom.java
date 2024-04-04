@@ -1,5 +1,6 @@
 package com.tukorea.planding.group.domain;
 
+import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.schedule.domain.Schedule;
 import com.tukorea.planding.user.domain.User;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class GroupRoom {
+public class GroupRoom extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
