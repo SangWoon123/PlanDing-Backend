@@ -34,10 +34,10 @@ public class ScheduleService {
                 .user(user)
                 .title(requestSchedule.getTitle())
                 .content(requestSchedule.getContent())
-                .date(requestSchedule.getDate())
+                .scheduleDate(requestSchedule.getDate())
                 .startTime(requestSchedule.getStartTime())
                 .endTime(requestSchedule.getEndTime())
-                .complete(false)
+                .isComplete(false)
                 .build();
 
         Schedule save = scheduleRepository.save(newSchedule);
@@ -59,7 +59,7 @@ public class ScheduleService {
     public List<ResponseSchedule> getSchedule(LocalDate date, UserInfo userInfo) {
         User user = validateUserByEmail(userInfo.getEmail());
 
-        List<Schedule> schedules = scheduleRepository.findByDateAndUser(date, user);
+        List<Schedule> schedules = scheduleRepository.findByScheduleDateAndUser(date, user);
 
         List<ResponseSchedule> responseSchedules = schedules.stream()
                 .map(ResponseSchedule::from)

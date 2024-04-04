@@ -25,7 +25,7 @@ public class ResponseSchedule {
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
-                .date(schedule.getDate())
+                .date(schedule.getScheduleDate())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
                 .complete(schedule.isComplete())

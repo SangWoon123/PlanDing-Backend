@@ -103,7 +103,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .username(user.getUsername())
                 .profileImage(user.getProfileImage())
                 .role(user.getRole())
-                .code(user.getCode())
+                .code(user.getUserCode())
                 .build();
         Authentication authentication = getAuthentication(userInfo);
         SecurityContextHolder.getContext().setAuthentication(authentication);

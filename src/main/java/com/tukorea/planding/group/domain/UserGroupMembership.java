@@ -7,9 +7,7 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserGroupMembership {
 
     @Id
@@ -24,4 +22,9 @@ public class UserGroupMembership {
     @JoinColumn(name = "group_room_id")
     private GroupRoom groupRoom;
 
+    @Builder
+    public UserGroupMembership(User user, GroupRoom groupRoom) {
+        this.user = user;
+        this.groupRoom = groupRoom;
+    }
 }

@@ -43,7 +43,7 @@ public class OAuthAttributes {
                 .username(oauth2UserInfo.getNickname())
                 .profileImage(oauth2UserInfo.getProfileImage())
                 .role(Role.USER)
-                .code(User.createCode())
+                .userCode(User.createCode())
                 .build();
     }
 }

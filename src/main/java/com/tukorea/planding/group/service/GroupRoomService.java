@@ -35,7 +35,7 @@ public class GroupRoomService {
 
         GroupRoom newGroupRoom = GroupRoom.builder()
                 .title(createGroupRoom.getTitle())
-                .owner(user.getCode())
+                .owner(user.getUserCode())
                 .build();
 
         newGroupRoom.addUser(user);
@@ -87,13 +87,13 @@ public class GroupRoomService {
             return userRepository.findByEmail(checking.getUserEmail())
                     .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         } else {
-            return userRepository.findByCode(checking.getUserCode())
+            return userRepository.findByUserCode(checking.getUserCode())
                     .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         }
     }
 
     private void validInvitePermission(GroupRoom groupRoom, User invitingUser) {
-        if (!groupRoom.getOwner().equals(invitingUser.getCode())) {
+        if (!groupRoom.getOwner().equals(invitingUser.getUserCode())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
         }
     }

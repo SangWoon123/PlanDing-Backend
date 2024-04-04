@@ -85,7 +85,7 @@ public class GroupScheduleTest {
         Schedule createdSchedule = group.getSchedules().get(0);
         assertEquals(TEST_TITLE, createdSchedule.getTitle());
         assertEquals(TEST_CONTENT, createdSchedule.getContent());
-        assertEquals(TEST_DATE, createdSchedule.getDate());
+        assertEquals(TEST_DATE, createdSchedule.getScheduleDate());
         assertEquals(startTime, createdSchedule.getStartTime());
         assertEquals(endTime, createdSchedule.getEndTime());
     }
@@ -105,7 +105,7 @@ public class GroupScheduleTest {
         RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
-                .userCode(userB.getCode())
+                .userCode(userB.getUserCode())
                 .build();
 
         groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
@@ -224,7 +224,7 @@ public class GroupScheduleTest {
         RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
-                .userCode(userB.getCode())
+                .userCode(userB.getUserCode())
                 .build();
 
         groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
@@ -349,7 +349,7 @@ public class GroupScheduleTest {
         RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
-                .userCode(userB.getCode())
+                .userCode(userB.getUserCode())
                 .build();
 
         groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
@@ -407,7 +407,7 @@ public class GroupScheduleTest {
     private User createUserAndSave(String email, String userCode) {
         User user = User.builder()
                 .email(email)
-                .code(userCode)
+                .userCode(userCode)
                 .build();
         return userRepository.save(user);
     }

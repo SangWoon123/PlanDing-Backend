@@ -125,7 +125,7 @@ class ScheduleServiceTest {
         Schedule schedule = Schedule
                 .builder()
                 .user(user)
-                .date(TEST_DATE)
+                .scheduleDate(TEST_DATE)
                 .title(TEST_TITLE)
                 .content(TEST_CONTENT)
                 .startTime(startTime)
@@ -199,7 +199,7 @@ class ScheduleServiceTest {
     private Schedule createAndSaveSchedule(User user, String title, String content, LocalTime startTime, LocalTime endTime, LocalDate date) {
         Schedule schedule = Schedule.builder()
                 .user(user)
-                .date(date)
+                .scheduleDate(date)
                 .title(title)
                 .content(content)
                 .startTime(startTime)

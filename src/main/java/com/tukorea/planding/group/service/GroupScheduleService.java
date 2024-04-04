@@ -30,10 +30,10 @@ public class GroupScheduleService {
         Schedule schedule = Schedule.builder()
                 .title(requestSchedule.getTitle())
                 .content(requestSchedule.getContent())
-                .date(requestSchedule.getDate())
+                .scheduleDate(requestSchedule.getDate())
                 .startTime(requestSchedule.getStartTime())
                 .endTime(requestSchedule.getEndTime())
-                .complete(false)
+                .isComplete(false)
                 .groupRoom(groupRoom)
                 .build();
 

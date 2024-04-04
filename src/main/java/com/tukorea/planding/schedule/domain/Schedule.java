@@ -12,39 +12,52 @@ import java.util.Optional;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "SCHEDULE")
 public class Schedule extends BaseEntity {
 
     @Id
+    @Column(name = "schedule_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDate date;
+    @Column(name = "schedule_date", nullable = false)
+    private LocalDate scheduleDate;
 
-    @Column(nullable = false)
+    @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
-    @Column(nullable = false)
+    @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
-    private boolean complete;
+    @Column(name = "complete", nullable = false)
+    private boolean isComplete;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_room_id")
     private GroupRoom groupRoom;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public Schedule(String title, String content, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, boolean isComplete, GroupRoom groupRoom, User user) {
+        this.title = title;
+        this.content = content;
+        this.scheduleDate = scheduleDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isComplete = isComplete;
+        this.groupRoom = groupRoom;
+        this.user = user;
+    }
 
     public void update(String title, String content, LocalTime startTime, LocalTime endTime) {
         Optional.ofNullable(title).ifPresent(value -> this.title = value);
@@ -58,11 +71,11 @@ public class Schedule extends BaseEntity {
     }
 
     public void toggleComplete() {
-        if (complete) {
-            this.complete = false;
+        if (isComplete) {
+            this.isComplete = false;
             return;
         }
-        this.complete = true;
+        this.isComplete = true;
     }
 
     public void setUser(User user) {
