@@ -1,6 +1,5 @@
 package com.tukorea.planding.global;
 
-import com.tukorea.planding.global.jwt.redis.RedisService;
 import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,14 +14,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserLogoutHandler implements LogoutHandler {
 
-    private final RedisService redisService;
     private final JwtTokenHandler jwtTokenHandler;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String token = jwtTokenHandler.extractAccessToken(request).get();
         String email= jwtTokenHandler.getEmailFromJwtToken(token);
-        redisService.delete(email);
         log.info("Redis: 로그아웃 완료");
     }
 }

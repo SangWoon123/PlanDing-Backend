@@ -1,8 +1,8 @@
 package com.tukorea.planding.global.oauth.handler;
 
+import com.tukorea.planding.domain.auth.dto.TokenResponse;
+import com.tukorea.planding.domain.auth.service.TokenService;
 import com.tukorea.planding.global.jwt.token.service.JwtUtil;
-import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
-import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +21,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenHandler jwtTokenHandler;
-    private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -32,26 +31,22 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 
-        String accessToken = jwtTokenHandler.generateAccessToken(oAuth2User.getEmail());
-        String refreshToken = jwtTokenHandler.generateRefreshToken(oAuth2User.getEmail());
+        TokenResponse newToken = tokenService.createNewToken(oAuth2User.getEmail());
 
 
-        log.info("token생성 ={}", accessToken);
-        log.info("refresh생성 ={}", refreshToken);
+        log.info("token생성 ={}", newToken.accessToken());
+        log.info("refresh생성 ={}", newToken.refreshToken());
 
-        jwtUtil.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtUtil.sendAccessAndRefreshToken(response, newToken.accessToken(), newToken.refreshToken());
 
-        refreshTokenService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
-
-
-        String url=makeRedirectUrl(accessToken,refreshToken);
-        getRedirectStrategy().sendRedirect(request,response,url);
+        String url = makeRedirectUrl(newToken.accessToken(), newToken.refreshToken());
+        getRedirectStrategy().sendRedirect(request, response, url);
     }
 
-    private String makeRedirectUrl(String accessToken,String refreshToken) {
+    private String makeRedirectUrl(String accessToken, String refreshToken) {
         return UriComponentsBuilder.fromUriString("http://localhost:5173/login")
-                .queryParam("accessToken",accessToken)
-                .queryParam("refreshToken",refreshToken)
+                .queryParam("accessToken", accessToken)
+                .queryParam("refreshToken", refreshToken)
                 .build().toUriString();
     }
 }
