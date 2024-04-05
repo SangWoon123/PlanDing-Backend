@@ -1,7 +1,7 @@
-package com.tukorea.planding.global.config;
+package com.tukorea.planding.global.config.security;
 
 import com.tukorea.planding.global.UserLogoutHandler;
-import com.tukorea.planding.global.jwt.token.JwtAuthenticationFilter;
+import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
 import com.tukorea.planding.global.oauth.handler.Oauth2SuccessHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2Service;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity

@@ -2,8 +2,8 @@ package com.tukorea.planding.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.domain.schedule.controller.ScheduleController;
-import com.tukorea.planding.global.config.SecurityConfig;
-import com.tukorea.planding.global.jwt.token.JwtAuthenticationFilter;
+import com.tukorea.planding.global.config.security.SecurityConfig;
+import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.entity.User;

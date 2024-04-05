@@ -1,6 +1,6 @@
 package com.tukorea.planding.global.websocket;
 
-import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
+import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

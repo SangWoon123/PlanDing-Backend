@@ -2,7 +2,7 @@ package com.tukorea.planding.global.oauth.handler;
 
 import com.tukorea.planding.domain.auth.dto.TokenResponse;
 import com.tukorea.planding.domain.auth.service.TokenService;
-import com.tukorea.planding.global.jwt.token.service.JwtUtil;
+import com.tukorea.planding.global.config.security.jwt.JwtUtil;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

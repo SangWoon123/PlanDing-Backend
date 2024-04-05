@@ -2,12 +2,10 @@ package com.tukorea.planding.domain.auth.service;
 
 import com.tukorea.planding.domain.auth.dto.TokenResponse;
 import com.tukorea.planding.domain.auth.repository.TokenInfoCacheRepository;
-import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
+import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @Slf4j

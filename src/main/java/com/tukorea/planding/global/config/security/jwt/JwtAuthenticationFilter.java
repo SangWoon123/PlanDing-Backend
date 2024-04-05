@@ -1,12 +1,12 @@
-package com.tukorea.planding.global.jwt.token;
+package com.tukorea.planding.global.config.security.jwt;
 
 
 import com.tukorea.planding.domain.auth.dto.TokenResponse;
 import com.tukorea.planding.domain.auth.service.TokenService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.global.jwt.token.service.JwtUtil;
-import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
+import com.tukorea.planding.global.config.security.jwt.JwtUtil;
+import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;

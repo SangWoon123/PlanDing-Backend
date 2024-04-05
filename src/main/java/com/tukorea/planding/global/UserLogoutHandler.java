@@ -1,6 +1,6 @@
 package com.tukorea.planding.global;
 
-import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
+import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

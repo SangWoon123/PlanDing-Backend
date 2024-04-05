@@ -1,4 +1,4 @@
-package com.tukorea.planding.global.jwt.token.service;
+package com.tukorea.planding.global.config.security.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
