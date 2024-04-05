@@ -3,7 +3,7 @@ package com.tukorea.planding.global.error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.global.config.SecurityConfig;
 import com.tukorea.planding.global.jwt.token.JwtAuthenticationFilter;
-import com.tukorea.planding.schedule.controller.ScheduleController;
+import com.tukorea.planding.domain.schedule.controller.ScheduleController;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

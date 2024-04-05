@@ -1,9 +1,9 @@
 package com.tukorea.planding.global.jwt.token.service;
 
-import com.tukorea.planding.global.jwt.token.dao.RefreshToken;
+import com.tukorea.planding.global.jwt.token.entity.RefreshToken;
 import com.tukorea.planding.global.jwt.token.repository.RefreshTokenRepository;
-import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

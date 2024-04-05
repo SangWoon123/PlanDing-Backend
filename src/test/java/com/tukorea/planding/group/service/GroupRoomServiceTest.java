@@ -1,15 +1,16 @@
 package com.tukorea.planding.group.service;
 
-import com.tukorea.planding.group.dao.GroupRoomRepository;
-import com.tukorea.planding.group.domain.GroupRoom;
-import com.tukorea.planding.group.dto.RequestCreateGroupRoom;
-import com.tukorea.planding.group.dto.RequestInviteGroupRoom;
-import com.tukorea.planding.group.dto.ResponseGroupRoom;
-import com.tukorea.planding.schedule.dao.ScheduleRepository;
-import com.tukorea.planding.schedule.service.ScheduleService;
-import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.User;
-import com.tukorea.planding.user.dto.UserInfo;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
+import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
+import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.service.GroupRoomService;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.dto.UserInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

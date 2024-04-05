@@ -1,15 +1,15 @@
 package com.tukorea.planding.schedule.service;
 
-import com.tukorea.planding.group.dao.GroupRoomRepository;
-import com.tukorea.planding.group.service.GroupRoomService;
-import com.tukorea.planding.group.service.GroupScheduleService;
-import com.tukorea.planding.schedule.dao.ScheduleRepository;
-import com.tukorea.planding.schedule.domain.Schedule;
-import com.tukorea.planding.schedule.dto.RequestSchedule;
-import com.tukorea.planding.schedule.dto.ResponseSchedule;
-import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.User;
-import com.tukorea.planding.user.dto.UserInfo;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.service.GroupRoomService;
+import com.tukorea.planding.domain.group.service.GroupScheduleService;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.entity.Schedule;
+import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
+import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.service.ScheduleService;import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.dto.UserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,7 +4,6 @@ import com.tukorea.planding.global.jwt.token.service.JwtUtil;
 import com.tukorea.planding.global.jwt.token.service.RefreshTokenService;
 import com.tukorea.planding.global.jwt.token.service.JwtTokenHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
-import com.tukorea.planding.user.dao.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

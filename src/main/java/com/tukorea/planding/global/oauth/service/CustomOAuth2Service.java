@@ -1,8 +1,8 @@
 package com.tukorea.planding.global.oauth.service;
 
-import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.SocialType;
-import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.entity.SocialType;
+import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

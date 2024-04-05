@@ -1,7 +1,7 @@
 package com.tukorea.planding.global.oauth.details;
 
-import com.tukorea.planding.user.dao.UserRepository;
-import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

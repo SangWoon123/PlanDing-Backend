@@ -4,8 +4,8 @@ import com.tukorea.planding.global.oauth.details.Role;
 import com.tukorea.planding.global.oauth.userInfo.KakaoOAuth2UserInfo;
 
 import com.tukorea.planding.global.oauth.userInfo.OAuth2UserInfo;
-import com.tukorea.planding.user.domain.SocialType;
-import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.domain.user.entity.SocialType;
+import com.tukorea.planding.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 

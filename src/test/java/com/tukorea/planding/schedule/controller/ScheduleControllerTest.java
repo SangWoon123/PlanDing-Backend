@@ -1,12 +1,12 @@
 package com.tukorea.planding.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tukorea.planding.domain.schedule.controller.ScheduleController;
 import com.tukorea.planding.global.config.SecurityConfig;
-import com.tukorea.planding.global.error.GlobalExceptionController;
 import com.tukorea.planding.global.jwt.token.JwtAuthenticationFilter;
-import com.tukorea.planding.schedule.dto.RequestSchedule;
-import com.tukorea.planding.schedule.service.ScheduleService;
-import com.tukorea.planding.user.domain.User;
+import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
+import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.user.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,17 +17,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
