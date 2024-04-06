@@ -6,8 +6,6 @@ import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
-import com.tukorea.planding.domain.schedule.service.ScheduleService;
-import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +39,12 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "개인 스케줄: 하루치 날짜로 가져오기")
-    @GetMapping("/{date}")
-    public CommonResponse<List<ResponseSchedule>> getSchedule(@PathVariable(name = "date") LocalDate date, @AuthenticationPrincipal UserInfo userInfo) {
-        List<ResponseSchedule> responseSchedule = scheduleService.getSchedule(date, userInfo);
+    @Operation(summary = "개인 스케줄: 주간으로 가져오기")
+    @GetMapping("/week/{startDate}/{endDate}")
+    public CommonResponse<List<ResponseSchedule>> getWeekSchedule(@PathVariable(name = "startDate") LocalDate startDate,
+                                                                  @PathVariable(name = "endDate") LocalDate endDate
+            , @AuthenticationPrincipal UserInfo userInfo) {
+        List<ResponseSchedule> responseSchedule = scheduleService.getWeekSchedule(startDate, endDate, userInfo);
         return CommonUtils.success(responseSchedule);
     }
 

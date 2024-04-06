@@ -7,9 +7,11 @@ import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
-import com.tukorea.planding.domain.schedule.service.ScheduleService;import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.global.oauth.details.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ class ScheduleServiceTest {
     private static final String TEST_TITLE = "Test Schedule";
     private static final String TEST_CONTENT = "Test Content";
     private static final LocalDate TEST_DATE = LocalDate.of(2024, 01, 02);
+    private static final LocalDate END_DATE = LocalDate.of(2024, 01, 03);
 
 
     @Autowired
@@ -110,11 +113,14 @@ class ScheduleServiceTest {
     }
 
     @Test
-    @DisplayName("date로 개인 스케줄 가져오기")
-    public void getScheduleTest() {
+    @DisplayName("주간 개인 스케줄 가져오기")
+    public void getWeekSchedule() {
         //given
         UserInfo userInfo = UserInfo.builder()
                 .email("test@")
+                .role(Role.USER)
+                .userCode("#CODE")
+                .username("username")
                 .build();
 
         User user = createUserAndSave(TEST_EMAIL);
@@ -139,7 +145,7 @@ class ScheduleServiceTest {
         scheduleRepository.save(schedule1);
 
         //when
-        List<ResponseSchedule> result = scheduleService.getSchedule(TEST_DATE, userInfo);
+        List<ResponseSchedule> result = scheduleService.getWeekSchedule(TEST_DATE, END_DATE, userInfo);
 
         //then
         assertNotNull(result);
@@ -192,7 +198,11 @@ class ScheduleServiceTest {
     }
 
     private User createUserAndSave(String email) {
-        User user = User.builder().email(email).build();
+        User user = User.builder()
+                .email(email)
+                .role(Role.USER)
+                .userCode("#CODE")
+                .username("username").build();
         return userRepository.save(user);
     }
 

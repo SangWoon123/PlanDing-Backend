@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.schedule.service;
 
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustomImpl;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.repository.UserRepository;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleRepositoryCustomImpl scheduleRepositoryCustom;
     private final UserRepository userRepository;
     private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustomImpl;
 
@@ -56,10 +58,10 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
-    public List<ResponseSchedule> getSchedule(LocalDate date, UserInfo userInfo) {
+    public List<ResponseSchedule> getWeekSchedule(LocalDate startDate, LocalDate endDate, UserInfo userInfo) {
         User user = validateUserByEmail(userInfo.getEmail());
 
-        List<Schedule> schedules = scheduleRepository.findByScheduleDateAndUser(date, user);
+        List<Schedule> schedules = scheduleRepositoryCustom.findWeeklyScheduleByUser(startDate, endDate, user);
 
         List<ResponseSchedule> responseSchedules = schedules.stream()
                 .map(ResponseSchedule::from)
