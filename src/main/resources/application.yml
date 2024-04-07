@@ -1,0 +1,14 @@
+jpa:
+  show-sql: true
+  database-platform: org.hibernate.dialect.MySQL8Dialect
+  properties:
+    hibernate:
+      format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: info
+
+spring:
+  profiles:
+    active: dev
