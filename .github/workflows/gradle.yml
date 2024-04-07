@@ -43,15 +43,12 @@ jobs:
           mkdir resources
           cd ./resources
           touch ./application.yml
-          touch ./application-oauth.yml
-          touch ./application-jwt.yml
-          echo "$APPLICATION_OAUTH" > ./application-oauth.yml
-          echo "$APPLICATION_JWT" > ./application-jwt.yml
+          touch ./application-dev.yml
           echo "$APPLICATION" > ./application.yml
+          echo "$APPLICATION_DEV" > ./application-dev.yml
       env:
-        APPLICATION_OAUTH: ${{ secrets.APPLICATION_OAUTH }}
-        APPLICATION_JWT: ${{ secrets.APPLICATION_JWT }}
         APPLICATION: ${{ secrets.APPLICATION }}
+        APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
       shell: bash
 
     - name: Gradle 권한 부여
