@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.schedule.service;
 
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustomImpl;
+import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -119,6 +120,27 @@ public class ScheduleService {
         }
         scheduleRepository.deleteById(scheduleId);
     }
+
+    public ResponseSchedule updateScheduleStatus(Long scheduleId, ScheduleStatus status) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        switch (status) {
+            case POSSIBLE:
+                schedule.markAsPossible();
+                break;
+            case IMPOSSIBLE:
+                schedule.markAsImpossible();
+                break;
+            case UNDECIDED:
+                schedule.markAsUndecided();
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid status");
+        }
+        return ResponseSchedule.from(schedule);
+    }
+
 
     private User validateUserByEmail(String email) {
         return userRepository.findByEmail(email)

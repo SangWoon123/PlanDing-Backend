@@ -2,6 +2,8 @@ package com.tukorea.planding.domain.schedule.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
+import com.tukorea.planding.domain.schedule.entity.Schedule;
+import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
@@ -48,10 +50,17 @@ public class ScheduleController {
         return CommonUtils.success(responseSchedule);
     }
 
-    @Operation(summary = "게인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정 (* 수정필요)")
+    @Operation(summary = "개인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정 (* 수정필요)")
     @PatchMapping("/{schedule_id}")
     public CommonResponse<ResponseSchedule> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody RequestSchedule requestSchedule, @AuthenticationPrincipal UserInfo userInfo) {
         ResponseSchedule responseSchedule = scheduleService.updateSchedule(id, requestSchedule, userInfo);
+        return CommonUtils.success(responseSchedule);
+    }
+
+    @Operation(summary = "개인 스케줄: 스케줄 상태 변환")
+    @PatchMapping("/{schedule_id}/status")
+    public CommonResponse<ResponseSchedule> updateScheduleStatus(@PathVariable(name = "schedule_id") Long id, @RequestBody ScheduleStatus scheduleStatus) {
+        ResponseSchedule responseSchedule = scheduleService.updateScheduleStatus(id, scheduleStatus);
         return CommonUtils.success(responseSchedule);
     }
 
