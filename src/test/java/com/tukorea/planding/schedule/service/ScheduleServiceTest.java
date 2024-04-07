@@ -3,6 +3,7 @@ package com.tukorea.planding.schedule.service;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.group.service.GroupScheduleService;
+import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
@@ -11,6 +12,8 @@ import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
 import com.tukorea.planding.global.oauth.details.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,12 +45,6 @@ class ScheduleServiceTest {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private GroupScheduleService groupScheduleService;
-    @Autowired
-    private GroupRoomRepository groupRoomRepository;
-    @Autowired
-    private GroupRoomService groupRoomService;
 
     @Test
     void createSchedule() {
@@ -195,6 +192,25 @@ class ScheduleServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> schedule.update(updateTitle, updateContent, LocalTime.of(10, 0), LocalTime.of(9, 10)));
+    }
+
+    @Test
+    @DisplayName("성공: 스케줄 상태변화")
+    public void statusTest() {
+        //given
+        User user = createUserAndSave(TEST_EMAIL);
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+        Schedule schedule = createAndSaveSchedule(user, TEST_TITLE, TEST_CONTENT, startTime, endTime, TEST_DATE);
+
+        ScheduleStatus status = ScheduleStatus.POSSIBLE;
+        scheduleService.updateScheduleStatus(schedule.getId(), status);
+
+        Schedule result = scheduleRepository.findById(schedule.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        assertEquals(ScheduleStatus.POSSIBLE, result.getStatus());
     }
 
     private User createUserAndSave(String email) {
