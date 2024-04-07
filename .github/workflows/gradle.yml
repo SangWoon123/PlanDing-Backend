@@ -40,7 +40,7 @@ jobs:
     - name: Make application.yml
       run: |
           cd ./src/main
-          mkdir resources
+          ls
           cd ./resources
           touch ./application.yml
           touch ./application-dev.yml
