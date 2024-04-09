@@ -49,7 +49,7 @@ class GroupRoomServiceTest {
         userRepository.save(user);
 
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(userInfo, RequestCreateGroupRoom.builder()
-                .title("first_group")
+                .name("first_group")
                 .build());
 
         Optional<GroupRoom> getgroup = groupRoomRepository.findById(groupRoom.getId());

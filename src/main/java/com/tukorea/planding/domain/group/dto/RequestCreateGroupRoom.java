@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RequestCreateGroupRoom {
-    private String title;
+    private String name;
 }

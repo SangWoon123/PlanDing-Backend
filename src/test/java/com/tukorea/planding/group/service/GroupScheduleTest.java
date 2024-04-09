@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +62,7 @@ public class GroupScheduleTest {
         User user = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         LocalTime startTime = LocalTime.of(7, 0);
@@ -104,7 +103,7 @@ public class GroupScheduleTest {
         User userA = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
@@ -149,7 +148,7 @@ public class GroupScheduleTest {
         User userA = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userC = createUserAndSave("testC", "codeC");
@@ -179,7 +178,7 @@ public class GroupScheduleTest {
         User user = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         LocalTime startTime = LocalTime.of(7, 0);
@@ -226,7 +225,7 @@ public class GroupScheduleTest {
         User userA = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
@@ -282,7 +281,7 @@ public class GroupScheduleTest {
         User user = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userC = createUserAndSave("testC", "codeC");
@@ -323,7 +322,7 @@ public class GroupScheduleTest {
         User user = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         LocalTime startTime = LocalTime.of(7, 0);
@@ -354,7 +353,7 @@ public class GroupScheduleTest {
         User userA = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
@@ -394,7 +393,7 @@ public class GroupScheduleTest {
         User user = createUserAndSave(TEST_EMAIL, "code");
         ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
                 .builder()
-                .title("group_name")
+                .name("group_name")
                 .build());
 
         User userC = createUserAndSave("testC", "codeC");

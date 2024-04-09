@@ -27,7 +27,7 @@ public class GroupRoomService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         GroupRoom newGroupRoom = GroupRoom.builder()
-                .title(createGroupRoom.getTitle())
+                .name(createGroupRoom.getName())
                 .owner(user.getUserCode())
                 .build();
 

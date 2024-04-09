@@ -18,8 +18,8 @@ public class GroupRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "owner", nullable = false)
     private String owner; // 그룹룸의 소유자
@@ -34,8 +34,8 @@ public class GroupRoom extends BaseEntity {
     private final List<Schedule> schedules = new ArrayList<>();
 
     @Builder
-    public GroupRoom(String title, String owner, String groupCode) {
-        this.title = title;
+    public GroupRoom(String name, String owner, String groupCode) {
+        this.name = name;
         this.owner = owner;
         this.groupCode = groupCode;
     }

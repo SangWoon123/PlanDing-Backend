@@ -18,6 +18,6 @@ public class ResponseGroupRoom {
     }
 
     public static ResponseGroupRoom from(GroupRoom groupRoom) {
-        return new ResponseGroupRoom(groupRoom.getId(), groupRoom.getTitle(), groupRoom.getGroupCode(), groupRoom.getOwner());
+        return new ResponseGroupRoom(groupRoom.getId(), groupRoom.getName(), groupRoom.getGroupCode(), groupRoom.getOwner());
     }
 }
