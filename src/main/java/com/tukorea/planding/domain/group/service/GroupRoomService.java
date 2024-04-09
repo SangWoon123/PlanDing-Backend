@@ -1,6 +1,13 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustomImpl;import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepository;import com.tukorea.planding.domain.user.entity.User;import com.tukorea.planding.domain.user.dto.UserInfo;import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
+import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
+import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustomImpl;
+import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepository;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
@@ -42,8 +49,6 @@ public class GroupRoomService {
 
     @Transactional
     public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestInviteGroupRoom invitedUserInfo) {
-        RequestInviteGroupRoom checking = RequestInviteGroupRoom.checking(invitedUserInfo);
-
         // 초대하는 유저가 존재하는지 체크하는 로직
         User invitingUser = userRepository.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -54,7 +59,8 @@ public class GroupRoomService {
         // 초대하는 유저가 방장인지 체크하는 로직
         validInvitePermission(groupRoom, invitingUser);
 
-        User invitedUser = findUserByRequest(checking);
+        User invitedUser = userRepository.findByUserCode(invitedUserInfo.getUserCode())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         groupRoom.addUser(invitedUser);
 
         // 중간테이블에 유저, 그룹 정보 저장
@@ -73,16 +79,6 @@ public class GroupRoomService {
         return groupRooms.stream()
                 .map(ResponseGroupRoom::from)
                 .collect(Collectors.toList());
-    }
-
-    private User findUserByRequest(RequestInviteGroupRoom checking) {
-        if (checking.getUserCode() == null) {
-            return userRepository.findByEmail(checking.getUserEmail())
-                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        } else {
-            return userRepository.findByUserCode(checking.getUserCode())
-                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        }
     }
 
     private void validInvitePermission(GroupRoom groupRoom, User invitingUser) {

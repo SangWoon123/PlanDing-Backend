@@ -11,6 +11,7 @@ import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.global.oauth.details.Role;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,10 +65,14 @@ class GroupRoomServiceTest {
     public void inviteGroup() {
         User userA = User.builder()
                 .userCode("#abcd")
+                .email("test")
+                .role(Role.USER)
                 .build();
         userRepository.save(userA);
 
         User userB = User.builder()
+                .email("test2")
+                .role(Role.USER)
                 .userCode("#1234")
                 .build();
         userRepository.save(userB);
@@ -95,12 +100,14 @@ class GroupRoomServiceTest {
         User userA = User.builder()
                 .email("userA")
                 .userCode("#abcd")
+                .role(Role.USER)
                 .build();
         userRepository.save(userA);
 
         User userB = User.builder()
                 .email("userB")
                 .userCode("#1234")
+                .role(Role.USER)
                 .build();
         userRepository.save(userB);
 
