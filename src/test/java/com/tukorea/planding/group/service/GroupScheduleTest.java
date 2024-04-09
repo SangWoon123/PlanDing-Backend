@@ -1,24 +1,28 @@
 package com.tukorea.planding.group.service;
 
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
+import com.tukorea.planding.domain.group.dto.RequestGroupSchedule;
 import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
 import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.group.service.GroupScheduleService;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.entity.Schedule;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
-import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
+import com.tukorea.planding.global.oauth.details.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +69,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -115,7 +120,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -151,7 +157,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -163,7 +170,7 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //then
-        assertThrows(AccessDeniedException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
     }
 
     @Test
@@ -178,7 +185,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -234,7 +242,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -281,7 +290,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -304,7 +314,7 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        assertThrows(AccessDeniedException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
     }
 
     @Test
@@ -319,7 +329,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -333,7 +344,7 @@ public class GroupScheduleTest {
         scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(user));
 
 
-        assertThrows(IllegalArgumentException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId())));
+        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
     }
 
     @Test
@@ -359,7 +370,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -373,7 +385,7 @@ public class GroupScheduleTest {
         //when
         scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userB));
         //then
-        assertThrows(IllegalArgumentException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId())));
+        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
     }
 
     @Test
@@ -390,7 +402,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+                .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -402,7 +415,7 @@ public class GroupScheduleTest {
         ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //when
-        assertThrows(AccessDeniedException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userC)));
     }
 
 
@@ -410,6 +423,7 @@ public class GroupScheduleTest {
         User user = User.builder()
                 .email(email)
                 .userCode(userCode)
+                .role(Role.USER)
                 .build();
         return userRepository.save(user);
     }

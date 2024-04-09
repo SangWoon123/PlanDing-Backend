@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,44 +74,53 @@ public class ScheduleService {
     }
 
     public ResponseSchedule updateSchedule(Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
+        // [1] 유저 확인
         User user = validateUserByEmail(userInfo.getEmail());
+
+        // [2] 스케줄 확인
         Schedule schedule = findScheduleById(scheduleId);
 
+        // [3] 유저가 스케줄 업데이트할 수 있는 권한인지 체크
         if (!schedule.getUser().getId().equals(user.getId())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
         }
 
-        schedule.update(schedule.getTitle(), schedule.getContent(), schedule.getStartTime(), schedule.getEndTime());
+        // [4] 스케줄 업데이트
+        schedule.update(requestSchedule.getTitle(), requestSchedule.getContent(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
 
         return ResponseSchedule.from(schedule);
     }
 
     /*
     그룹룸 스케줄관련 코드
+
     */
     public List<ResponseSchedule> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
-        // 유저가 그룹룸에 접근할 권리가있는지 확인
+        // [1] 유저가 그룹룸에 접근할 권리가있는지 확인
         if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
-        // 그룹룸 ID를 기반으로 스케줄을 조회
+        // [2] 그룹룸 ID를 기반으로 스케줄을 조회
         List<Schedule> schedules = scheduleRepository.findByGroupRoomId(groupRoomId);
 
-        // 조회된 스케줄 리스트를 ResponseSchedule DTO로 변환
+        // [3] dto 반환
         return schedules.stream()
                 .map(ResponseSchedule::from)
                 .collect(Collectors.toList());
     }
 
     public ResponseSchedule updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
+        // [1] 그룹룸에 수정하려는 유저가 존재하는지 확인
         if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
+        // [2] 스케줄을 업데이트
         Schedule schedule = findScheduleById(scheduleId);
         schedule.update(requestSchedule.getTitle(), requestSchedule.getContent(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
 
+        // [3] dto 반환
         return ResponseSchedule.from(schedule);
     }
 
@@ -141,6 +151,15 @@ public class ScheduleService {
         return ResponseSchedule.from(schedule);
     }
 
+    /*
+    공통 로직
+     */
+    public List<ResponseSchedule> findOverlapSchedule(Long userId, RequestSchedule requestSchedule) {
+        List<Schedule> overlapSchedules = scheduleRepositoryCustom.findOverlapSchedules(userId, requestSchedule.getScheduleDate(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
+        return overlapSchedules.stream()
+                .map(ResponseSchedule::from)
+                .collect(Collectors.toList());
+    }
 
     private User validateUserByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -151,5 +170,4 @@ public class ScheduleService {
         return scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
     }
-
 }

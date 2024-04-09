@@ -27,6 +27,13 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+    @Operation(summary = "공통: 스케쥴 생성을 할 때 내가 포함된 모든 그룹, 개인 시간때에 스케쥴을 확인")
+    @PostMapping("/overlap")
+    public CommonResponse<List<ResponseSchedule>> findOverlapSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestSchedule requestSchedule) {
+        List<ResponseSchedule> responseSchedules = scheduleService.findOverlapSchedule(userInfo.getId(), requestSchedule);
+        return CommonUtils.success(responseSchedules);
+    }
+
     @Operation(summary = "개인 스케줄: 생성")
     @PostMapping()
     public CommonResponse<ResponseSchedule> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody RequestSchedule requestSchedule) {
@@ -50,7 +57,8 @@ public class ScheduleController {
         return CommonUtils.success(responseSchedule);
     }
 
-    @Operation(summary = "개인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정 (* 수정필요)")
+    //TODO 아직 요구사항 미정
+    @Operation(summary = "개인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정")
     @PatchMapping("/{schedule_id}")
     public CommonResponse<ResponseSchedule> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody RequestSchedule requestSchedule, @AuthenticationPrincipal UserInfo userInfo) {
         ResponseSchedule responseSchedule = scheduleService.updateSchedule(id, requestSchedule, userInfo);
