@@ -8,6 +8,7 @@ import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
@@ -22,10 +23,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -45,6 +48,8 @@ class ScheduleServiceTest {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ScheduleRepositoryCustomImpl scheduleRepositoryCustom;
 
     @Test
     void createSchedule() {
@@ -211,6 +216,30 @@ class ScheduleServiceTest {
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
 
         assertEquals(ScheduleStatus.POSSIBLE, result.getStatus());
+    }
+
+    @Test
+    @DisplayName("성공: 스케줄을 생성할때 겹치는 스케줄 가져오기")
+    public void overlapSchedule(){
+        User user=createUserAndSave("email");
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+        createAndSaveSchedule(user, TEST_TITLE, TEST_CONTENT, startTime, endTime, TEST_DATE);
+
+        LocalTime startTime2 = LocalTime.of(9, 0);
+        LocalTime endTime2 = LocalTime.of(11, 0);
+        createAndSaveSchedule(user, TEST_TITLE, TEST_CONTENT, startTime2, endTime2, TEST_DATE);
+
+        LocalTime startTime3 = LocalTime.of(9, 0);
+        LocalTime endTime3 = LocalTime.of(9, 30);
+        createAndSaveSchedule(user, TEST_TITLE, TEST_CONTENT, startTime3, endTime3, TEST_DATE);
+
+        List<Schedule> result = scheduleRepositoryCustom.findOverlapSchedules(user.getId(), TEST_DATE, LocalTime.of(8, 0), LocalTime.of(10, 0));
+        assertThat(result).isNotEmpty();
+        assertEquals(3,result.size());
+
+
     }
 
     private User createUserAndSave(String email) {

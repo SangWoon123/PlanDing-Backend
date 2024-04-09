@@ -1,14 +1,12 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.entity.GroupRoom;import com.tukorea.planding.domain.group.repository.GroupRoomRepository;import com.tukorea.planding.domain.schedule.entity.Schedule;import com.tukorea.planding.domain.user.repository.UserRepository;import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.domain.group.dto.RequestGroupSchedule;
+import com.tukorea.planding.domain.group.entity.GroupRoom;import com.tukorea.planding.domain.group.repository.GroupRoomRepository;import com.tukorea.planding.domain.schedule.entity.Schedule;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
 import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
-import com.tukorea.planding.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,10 @@ public class GroupScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseSchedule createGroupSchedule(String groupCode, RequestSchedule requestSchedule) {
+    public ResponseSchedule createGroupSchedule(String groupCode, RequestGroupSchedule requestSchedule) {
+
+        User user = userRepository.findById(requestSchedule.getUserId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(groupCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
@@ -36,6 +37,8 @@ public class GroupScheduleService {
                 .isComplete(false)
                 .groupRoom(groupRoom)
                 .build();
+
+        schedule.addUser(user);
 
         groupRoom.addSchedule(schedule);
         // 그룹 스케줄을 데이터베이스에 저장

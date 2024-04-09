@@ -82,7 +82,7 @@ public class Schedule extends BaseEntity {
         this.isComplete = true;
     }
 
-    public void setUser(User user) {
+    public void addUser(User user) {
         this.user = user;
         user.getSchedules().add(this);
     }
