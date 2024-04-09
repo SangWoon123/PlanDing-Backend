@@ -49,6 +49,18 @@ public class ScheduleService {
         return ResponseSchedule.from(save);
     }
 
+    public ResponseSchedule getSchedule(Long scheduleId, UserInfo userInfo) {
+        User user = validateUserByEmail(userInfo.getEmail());
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        if (!schedule.getUser().getId().equals(user.getId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
+        }
+
+        return ResponseSchedule.from(schedule);
+    }
+
     public void deleteSchedule(UserInfo userInfo, Long scheduleId) {
         Schedule schedule = findScheduleById(scheduleId);
         User user = schedule.getUser();

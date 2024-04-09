@@ -48,6 +48,13 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "개인 스케줄: id 값으로 가져오기")
+    @GetMapping("/{schedule_id}")
+    public CommonResponse<ResponseSchedule> getScheduleById(@PathVariable(name = "schedule_id") Long id, @AuthenticationPrincipal UserInfo userInfo) {
+        ResponseSchedule responseSchedule = scheduleService.getSchedule(id, userInfo);
+        return CommonUtils.success(responseSchedule);
+    }
+
     @Operation(summary = "개인 스케줄: 주간으로 가져오기")
     @GetMapping("/week/{startDate}/{endDate}")
     public CommonResponse<List<ResponseSchedule>> getWeekSchedule(@PathVariable(name = "startDate") LocalDate startDate,
