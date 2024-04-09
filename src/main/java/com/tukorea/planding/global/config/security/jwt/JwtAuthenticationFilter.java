@@ -1,21 +1,21 @@
 package com.tukorea.planding.global.config.security.jwt;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.domain.auth.dto.TokenResponse;
 import com.tukorea.planding.domain.auth.service.TokenService;
+import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.global.config.security.jwt.JwtUtil;
-import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
-import com.tukorea.planding.domain.user.repository.UserRepository;
-import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.dto.UserInfo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +25,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -90,8 +92,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .orElse(null);
 
         if (accessToken == null) {
-            log.warn("Access 토큰이 없습니다.");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access token is missing or invalid");
+            handleMissingToken(request, response);
             return;
         }
 
@@ -146,6 +147,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/v3/api-docs/swagger-config", "/v3/api-docs",
         };
         String path = request.getRequestURI();
+        log.info(path);
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
+    }
+
+    private void handleMissingToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.error("Access 토큰이 없습니다.");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+
+        final Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+        body.put("error", "Unauthorized");
+        body.put("message", "헤더에 액세스토큰이 존재하지 않습니다.");
+        body.put("path", request.getServletPath());
+
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), body);
     }
 }
