@@ -29,7 +29,8 @@ public class JwtTokenHandler {
      * 토큰 생성 메서드
      *
      * @param expiration 만료시간 (액세스 or 리프레시)
-     * @param email      사용자 이메일정보
+     * @param userId     사용자 유저PK
+     * @param userCode   사용자 유저코드
      * @return 토큰
      */
     public String generateToken(long expiration, final Long userId, final String userCode) {
@@ -57,27 +58,14 @@ public class JwtTokenHandler {
      */
     public boolean validateToken(final String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(jwtProperties.getSECRET()).build().parseClaimsJws(token).getBody();
+            extractAllClaims(token);
             return true;
         } catch (final JwtException | IllegalArgumentException e) {
+            log.error(e.getMessage());
             return false;
         }
     }
 
-    /**
-     * 토큰으로부터 파싱해서 유저 이메일 정보 획득
-     *
-     * @param token 검증할 토큰
-     * @return 유효한 토큰이면 이메일 반환 {@code String}
-     */
-//    public String getEmailFromJwtToken(final String token) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey(jwtProperties.getSECRET())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody()
-//                .getSubject();
-//    }
     private Map<String, Object> createClaims(final Long userId, final String userCode) { // payload
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userId);
