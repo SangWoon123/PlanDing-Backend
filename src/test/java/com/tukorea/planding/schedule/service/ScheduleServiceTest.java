@@ -56,10 +56,14 @@ class ScheduleServiceTest {
         //given
         UserInfo userInfo = UserInfo.builder()
                 .email("test@")
+                .userCode("#test")
+                .role(Role.USER)
                 .build();
 
         User user = User.builder()
                 .email("test@")
+                .userCode("#test")
+                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
@@ -91,6 +95,8 @@ class ScheduleServiceTest {
         //given
         UserInfo userInfo = UserInfo.builder()
                 .email(TEST_EMAIL)
+                .userCode("#CODE")
+                .role(Role.USER)
                 .build();
 
         createUserAndSave(TEST_EMAIL);

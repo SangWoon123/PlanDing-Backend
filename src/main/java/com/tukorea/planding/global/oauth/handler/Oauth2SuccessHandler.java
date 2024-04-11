@@ -30,8 +30,7 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-
-        TokenResponse newToken = tokenService.createNewToken(oAuth2User.getEmail());
+        TokenResponse newToken = tokenService.createNewToken(oAuth2User.getUserId(), oAuth2User.getUserCode());
 
 
         log.info("token생성 ={}", newToken.accessToken());

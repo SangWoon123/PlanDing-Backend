@@ -1,6 +1,9 @@
 package com.tukorea.planding.global.config.security.jwt;
 
 
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 @Component
@@ -26,21 +32,21 @@ public class JwtTokenHandler {
      * @param email      사용자 이메일정보
      * @return 토큰
      */
-    public String generateToken(long expiration, String email) {
+    public String generateToken(long expiration, final Long userId, final String userCode) {
         return Jwts.builder()
-                .setSubject(email)
+                .setClaims(createClaims(userId, userCode))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSECRET()) // HS512과 비교했을때 본 서비스는 암호화 난이도를 낮게 설정
                 .compact();
     }
 
-    public String generateAccessToken(final String email) {
-        return generateToken(jwtProperties.getAccessExpiration(), email);
+    public String generateAccessToken(final Long userId, final String userCode) {
+        return generateToken(jwtProperties.getAccessExpiration(), userId, userCode);
     }
 
-    public String generateRefreshToken(final String email) {
-        return generateToken(jwtProperties.getRefreshExpiration(), email);
+    public String generateRefreshToken(final Long userId, final String userCode) {
+        return generateToken(jwtProperties.getRefreshExpiration(), userId, userCode);
     }
 
     /**
@@ -64,13 +70,37 @@ public class JwtTokenHandler {
      * @param token 검증할 토큰
      * @return 유효한 토큰이면 이메일 반환 {@code String}
      */
-    public String getEmailFromJwtToken(final String token) {
-        return Jwts.parserBuilder()
+//    public String getEmailFromJwtToken(final String token) {
+//        return Jwts.parserBuilder()
+//                .setSigningKey(jwtProperties.getSECRET())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .getSubject();
+//    }
+    private Map<String, Object> createClaims(final Long userId, final String userCode) { // payload
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userId);
+        claims.put("code", userCode);
+        return claims;
+    }
+
+    public String extractSubject(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
                 .setSigningKey(jwtProperties.getSECRET())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 
     public Optional<String> extractRefreshToken(HttpServletRequest request) {

@@ -16,13 +16,13 @@ public class TokenInfoCacheRepository {
     /**
      * 캐시에 토큰 저장
      *
-     * @param key   캐시에 저장할 키, refresh-token String
-     * @param email 저장할 사용자 정보(이메일)
+     * @param key      캐시에 저장할 키, refresh-token String
+     * @param userCode 저장할 사용자 정보(유저코드)
      */
-    public void save(final String key, final String email) {
+    public void save(final String key, final String userCode) {
         redisTemplate.opsForValue().set(
                 key,
-                email,
+                userCode,
                 MAXIMUM_REFRESH_TOKEN_EXPIRES_IN_DAY,
                 TimeUnit.DAYS
         );

@@ -11,6 +11,7 @@ import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -98,9 +96,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = jwtTokenHandler.getEmailFromJwtToken(accessToken);
+        String userCode = jwtTokenHandler.extractClaim(accessToken, claims -> claims.get("code", String.class));
 
-        saveAuthentication(userRepository.findByEmail(email)
+
+        saveAuthentication(userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE)));
 
         filterChain.doFilter(request, response);

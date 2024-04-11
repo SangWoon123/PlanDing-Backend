@@ -19,7 +19,7 @@ public class UserLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String token = jwtTokenHandler.extractAccessToken(request).get();
-        String email= jwtTokenHandler.getEmailFromJwtToken(token);
+        String email= jwtTokenHandler.extractSubject(token);
         log.info("Redis: 로그아웃 완료");
     }
 }
