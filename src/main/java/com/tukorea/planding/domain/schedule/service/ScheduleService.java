@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +31,7 @@ public class ScheduleService {
     private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustomImpl;
 
     public ResponseSchedule createSchedule(UserInfo userInfo, RequestSchedule requestSchedule) {
-        User user = validateUserByEmail(userInfo.getEmail());
+        User user = validateUserByUserCode(userInfo.getUserCode());
 
         Schedule newSchedule = Schedule.builder()
                 .user(user)
@@ -50,7 +49,7 @@ public class ScheduleService {
     }
 
     public ResponseSchedule getSchedule(Long scheduleId, UserInfo userInfo) {
-        User user = validateUserByEmail(userInfo.getEmail());
+        User user = validateUserByUserCode(userInfo.getUserCode());
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
 
@@ -65,7 +64,7 @@ public class ScheduleService {
         Schedule schedule = findScheduleById(scheduleId);
         User user = schedule.getUser();
 
-        if (!user.getEmail().equals(userInfo.getEmail())) {
+        if (!user.getUserCode().equals(userInfo.getUserCode())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
         }
 
@@ -73,7 +72,7 @@ public class ScheduleService {
     }
 
     public List<ResponseSchedule> getWeekSchedule(LocalDate startDate, LocalDate endDate, UserInfo userInfo) {
-        User user = validateUserByEmail(userInfo.getEmail());
+        User user = validateUserByUserCode(userInfo.getUserCode());
 
         List<Schedule> schedules = scheduleRepositoryCustom.findWeeklyScheduleByUser(startDate, endDate, user);
 
@@ -87,7 +86,7 @@ public class ScheduleService {
 
     public ResponseSchedule updateSchedule(Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
         // [1] 유저 확인
-        User user = validateUserByEmail(userInfo.getEmail());
+        User user = validateUserByUserCode(userInfo.getUserCode());
 
         // [2] 스케줄 확인
         Schedule schedule = findScheduleById(scheduleId);
@@ -173,8 +172,8 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
-    private User validateUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+    private User validateUserByUserCode(String userCode) {
+        return userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 

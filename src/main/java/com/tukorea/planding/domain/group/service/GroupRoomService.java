@@ -3,15 +3,15 @@ package com.tukorea.planding.domain.group.service;
 import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
 import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
 import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustomImpl;
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepository;
-import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class GroupRoomService {
 
     @Transactional
     public ResponseGroupRoom createGroupRoom(UserInfo userInfo, RequestCreateGroupRoom createGroupRoom) {
-        User user = userRepository.findByEmail(userInfo.getEmail())
+        User user = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         GroupRoom newGroupRoom = GroupRoom.builder()
@@ -50,7 +50,7 @@ public class GroupRoomService {
     @Transactional
     public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestInviteGroupRoom invitedUserInfo) {
         // 초대하는 유저가 존재하는지 체크하는 로직
-        User invitingUser = userRepository.findByEmail(userInfo.getEmail())
+        User invitingUser = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(invitedUserInfo.getInviteGroupCode())
@@ -71,7 +71,7 @@ public class GroupRoomService {
 
     // 유저가 속한 그룹룸 가져오기
     public List<ResponseGroupRoom> getAllGroupRoomByUser(UserInfo userInfo) {
-        User user = userRepository.findByEmail(userInfo.getEmail())
+        User user = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         List<GroupRoom> groupRooms = groupRoomRepositoryCustom.findGroupRoomsByUserId(user.getId());
