@@ -21,9 +21,16 @@ public class UserGroupMembership {
     @JoinColumn(name = "group_room_id")
     private GroupRoom groupRoom;
 
+    @Setter
+    @Column(name = "is_connected")
+    private boolean isConnected;
+
     @Builder
-    public UserGroupMembership(User user, GroupRoom groupRoom) {
+    public UserGroupMembership(User user, GroupRoom groupRoom, boolean isConnected) {
         this.user = user;
         this.groupRoom = groupRoom;
+        this.isConnected = isConnected;
     }
+
+
 }
