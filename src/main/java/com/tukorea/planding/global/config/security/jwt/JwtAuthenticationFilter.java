@@ -51,13 +51,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        if (request.getRequestURI().startsWith("/api/v1/ws")) {
-            log.info("웹소켓 인증이 필요하지 않는 API");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String refreshToken = jwtTokenHandler.extractRefreshToken(request)
                 .filter(jwtTokenHandler::validateToken)
                 .orElse(null);
@@ -153,16 +146,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String[] excludePath = {
-                "/oauth2/**", "/login", "/login/**", "/swagger-ui/**",
-                "/v3/api-docs/**", "/swagger-ui/index.html",
-                "/swagger-ui/swagger-ui-standalone-preset.js", "/swagger-ui/swagger-initializer.js",
-                "/swagger-ui/swagger-ui-bundle.js", "/swagger-ui/swagger-ui.css",
-                "/swagger-ui/index.css", "/swagger-ui/favicon-32x32.png",
-                "/swagger-ui/favicon-16x16.png",
-                "/api-docs/json/swagger-config", "/api-docs/json",
-                "/v3/api-docs/swagger-config", "/v3/api-docs",
+                "/api/v1/ws", "/api/v1/test", "/login", "/swagger-ui/", "/v3/api-docs",
+                "/api-docs/json/", "/swagger-ui/index.html"
         };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
