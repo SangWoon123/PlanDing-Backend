@@ -1,13 +1,10 @@
 package com.tukorea.planding.schedule.service;
 
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.service.GroupRoomService;
-import com.tukorea.planding.domain.group.service.GroupScheduleService;
 import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
-import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.repository.UserRepository;
@@ -23,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +67,7 @@ class ScheduleServiceTest {
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(10, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -80,7 +76,7 @@ class ScheduleServiceTest {
                 .build();
 
         //when
-        ResponseSchedule schedule = scheduleService.createSchedule(userInfo, requestSchedule);
+        ScheduleResponse schedule = scheduleService.createSchedule(userInfo, scheduleRequest);
 
         //then
         assertNotNull(schedule);
@@ -104,7 +100,7 @@ class ScheduleServiceTest {
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(10, 0);
 
-        RequestSchedule requestSchedule = RequestSchedule.builder()
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .title(TEST_TITLE)
@@ -113,7 +109,7 @@ class ScheduleServiceTest {
                 .build();
 
         //when
-        ResponseSchedule schedule = scheduleService.createSchedule(userInfo, requestSchedule);
+        ScheduleResponse schedule = scheduleService.createSchedule(userInfo, scheduleRequest);
         scheduleService.deleteSchedule(userInfo, schedule.getId());
 
         //then
@@ -153,7 +149,7 @@ class ScheduleServiceTest {
         scheduleRepository.save(schedule1);
 
         //when
-        List<ResponseSchedule> result = scheduleService.getWeekSchedule(TEST_DATE, END_DATE, userInfo);
+        List<ScheduleResponse> result = scheduleService.getWeekSchedule(TEST_DATE, END_DATE, userInfo);
 
         //then
         assertNotNull(result);

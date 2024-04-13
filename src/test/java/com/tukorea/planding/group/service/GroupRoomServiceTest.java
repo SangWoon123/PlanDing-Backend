@@ -2,9 +2,9 @@ package com.tukorea.planding.group.service;
 
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
-import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
-import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
@@ -49,7 +49,7 @@ class GroupRoomServiceTest {
 
         userRepository.save(user);
 
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(userInfo, RequestCreateGroupRoom.builder()
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(userInfo, GroupCreateRequest.builder()
                 .name("first_group")
                 .build());
 
@@ -118,14 +118,14 @@ class GroupRoomServiceTest {
         GroupRoom save = groupRoomRepository.save(groupRoom);
 
 
-        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
                 .inviteGroupCode(save.getGroupCode())
                 .userCode(userB.getUserCode())
                 .build();
 
         // 유저 B 그룹방에 초대
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
 
         // 그룹방에 유저 B가 초대되었는지 확인
         GroupRoom savedGroupRoom = groupRoomRepository.findById(groupRoom.getId()).orElse(null);
@@ -161,7 +161,7 @@ class GroupRoomServiceTest {
         GroupRoom save = groupRoomRepository.save(groupRoom);
 
 
-        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
                 .inviteGroupCode(save.getGroupCode())
                 .userCode(userB.getUserCode())
@@ -169,7 +169,7 @@ class GroupRoomServiceTest {
 
         // 그룹방에 유저 B가 초대되었는지 확인
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        groupRoomService.inviteGroupRoom(User.toUserInfo(userC), requestInviteGroupRoom),
+                        groupRoomService.inviteGroupRoom(User.toUserInfo(userC), groupInviteRequest),
                 "User does not have permission to invite this groupRoom");
     }
 }

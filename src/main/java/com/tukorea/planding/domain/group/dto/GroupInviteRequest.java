@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RequestInviteGroupRoom {
+public class GroupInviteRequest {
     private String userCode;
     private String inviteGroupCode;
 }

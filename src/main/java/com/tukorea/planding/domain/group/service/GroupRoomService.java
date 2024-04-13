@@ -1,8 +1,8 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
-import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
-import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustomImpl;
@@ -29,12 +29,12 @@ public class GroupRoomService {
     private final GroupRoomRepositoryCustomImpl groupRoomRepositoryCustom;
 
     @Transactional
-    public ResponseGroupRoom createGroupRoom(UserInfo userInfo, RequestCreateGroupRoom createGroupRoom) {
+    public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {
         User user = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         GroupRoom newGroupRoom = GroupRoom.builder()
-                .name(createGroupRoom.getName())
+                .name(createGroupRoom.name())
                 .owner(user.getUserCode())
                 .build();
 
@@ -44,11 +44,11 @@ public class GroupRoomService {
         // 중간테이블에 유저, 그룹 정보 저장
         userGroupMembershipRepository.saveAll(newGroupRoom.getGroupMemberships());
 
-        return ResponseGroupRoom.from(savedGroupRoom);
+        return GroupResponse.from(savedGroupRoom);
     }
 
     @Transactional
-    public ResponseGroupRoom inviteGroupRoom(UserInfo userInfo, RequestInviteGroupRoom invitedUserInfo) {
+    public GroupResponse inviteGroupRoom(UserInfo userInfo, GroupInviteRequest invitedUserInfo) {
         // 초대하는 유저가 존재하는지 체크하는 로직
         User invitingUser = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -66,18 +66,18 @@ public class GroupRoomService {
         // 중간테이블에 유저, 그룹 정보 저장
         userGroupMembershipRepository.saveAll(groupRoom.getGroupMemberships());
 
-        return ResponseGroupRoom.from(groupRoom);
+        return GroupResponse.from(groupRoom);
     }
 
     // 유저가 속한 그룹룸 가져오기
-    public List<ResponseGroupRoom> getAllGroupRoomByUser(UserInfo userInfo) {
+    public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
         User user = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         List<GroupRoom> groupRooms = groupRoomRepositoryCustom.findGroupRoomsByUserId(user.getId());
 
         return groupRooms.stream()
-                .map(ResponseGroupRoom::from)
+                .map(GroupResponse::from)
                 .collect(Collectors.toList());
     }
 

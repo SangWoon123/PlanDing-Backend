@@ -1,15 +1,15 @@
 package com.tukorea.planding.group.service;
 
-import com.tukorea.planding.domain.group.dto.RequestCreateGroupRoom;
-import com.tukorea.planding.domain.group.dto.RequestGroupSchedule;
-import com.tukorea.planding.domain.group.dto.RequestInviteGroupRoom;
-import com.tukorea.planding.domain.group.dto.ResponseGroupRoom;
+import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.GroupScheduleRequest;
+import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.group.service.GroupScheduleService;
-import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
-import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
@@ -60,7 +60,7 @@ public class GroupScheduleTest {
     @DisplayName("성공: 유저 A가 작성한 스케줄 조회")
     public void createGroupScheduleTest() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -68,7 +68,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -101,25 +101,25 @@ public class GroupScheduleTest {
     public void createGroupScheduleTest2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
 
-        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -132,7 +132,7 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //then
-        List<ResponseSchedule> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userB));
+        List<ScheduleResponse> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userB));
 
         assertNotNull(result);
         assertEquals(result.get(0).getTitle(), requestSchedule.getTitle());
@@ -146,7 +146,7 @@ public class GroupScheduleTest {
     public void createGroupScheduleFailTest() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -156,7 +156,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -176,7 +176,7 @@ public class GroupScheduleTest {
     @DisplayName("성공: 유저 A가 작성한 스케줄 수정")
     public void update1() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -184,7 +184,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -194,12 +194,12 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
 
-        RequestSchedule updateSchedule = RequestSchedule.builder()
+        ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .title("update")
@@ -223,25 +223,25 @@ public class GroupScheduleTest {
     public void update2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
 
-        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -251,12 +251,12 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
 
-        RequestSchedule updateSchedule = RequestSchedule.builder()
+        ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .title("update")
@@ -279,7 +279,7 @@ public class GroupScheduleTest {
     @DisplayName("실패: 외부 유저C가 수정")
     public void update3() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -289,7 +289,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -299,12 +299,12 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
 
-        RequestSchedule updateSchedule = RequestSchedule.builder()
+        ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
                 .endTime(endTime)
                 .title("update")
@@ -320,7 +320,7 @@ public class GroupScheduleTest {
     @DisplayName("성공: 유저 A가 작성한 스케줄 삭제")
     public void delete1() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -328,7 +328,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -338,7 +338,7 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(user));
 
@@ -351,25 +351,25 @@ public class GroupScheduleTest {
     public void delete2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
 
         User userB = createUserAndSave("testB", "codeB");
 
-        RequestInviteGroupRoom requestInviteGroupRoom = RequestInviteGroupRoom
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
                 .inviteGroupCode(groupRoom.getCode())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), requestInviteGroupRoom);
+        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(userA.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -379,7 +379,7 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //when
         scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userB));
@@ -391,7 +391,7 @@ public class GroupScheduleTest {
     @DisplayName("실패: 외부 유저 C가 수정")
     public void delete3() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        ResponseGroupRoom groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), RequestCreateGroupRoom
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -401,7 +401,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        RequestGroupSchedule requestSchedule = RequestGroupSchedule.builder()
+        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
                 .userId(user.getId())
                 .startTime(startTime)
                 .endTime(endTime)
@@ -411,7 +411,7 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ResponseSchedule groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
 
         //when
         assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userC)));
