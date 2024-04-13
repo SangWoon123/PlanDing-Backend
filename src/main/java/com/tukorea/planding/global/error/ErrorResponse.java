@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ErrorResponse {
 
     private String message;
-    private int errorCode;
+    private String errorCode;
     private List<FieldError> errors;
     private HttpStatus status;
 
