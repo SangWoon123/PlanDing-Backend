@@ -10,8 +10,8 @@ import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.dto.RequestSchedule;
-import com.tukorea.planding.domain.schedule.dto.ResponseSchedule;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,25 +30,25 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustomImpl;
 
-    public ResponseSchedule createSchedule(UserInfo userInfo, RequestSchedule requestSchedule) {
+    public ScheduleResponse createSchedule(UserInfo userInfo, ScheduleRequest scheduleRequest) {
         User user = validateUserByUserCode(userInfo.getUserCode());
 
         Schedule newSchedule = Schedule.builder()
                 .user(user)
-                .title(requestSchedule.getTitle())
-                .content(requestSchedule.getContent())
-                .scheduleDate(requestSchedule.getScheduleDate())
-                .startTime(requestSchedule.getStartTime())
-                .endTime(requestSchedule.getEndTime())
+                .title(scheduleRequest.title())
+                .content(scheduleRequest.content())
+                .scheduleDate(scheduleRequest.scheduleDate())
+                .startTime(scheduleRequest.startTime())
+                .endTime(scheduleRequest.endTime())
                 .isComplete(false)
                 .build();
 
         Schedule save = scheduleRepository.save(newSchedule);
 
-        return ResponseSchedule.from(save);
+        return ScheduleResponse.from(save);
     }
 
-    public ResponseSchedule getSchedule(Long scheduleId, UserInfo userInfo) {
+    public ScheduleResponse getSchedule(Long scheduleId, UserInfo userInfo) {
         User user = validateUserByUserCode(userInfo.getUserCode());
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
@@ -57,7 +57,7 @@ public class ScheduleService {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
         }
 
-        return ResponseSchedule.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
     public void deleteSchedule(UserInfo userInfo, Long scheduleId) {
@@ -71,20 +71,20 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
-    public List<ResponseSchedule> getWeekSchedule(LocalDate startDate, LocalDate endDate, UserInfo userInfo) {
+    public List<ScheduleResponse> getWeekSchedule(LocalDate startDate, LocalDate endDate, UserInfo userInfo) {
         User user = validateUserByUserCode(userInfo.getUserCode());
 
         List<Schedule> schedules = scheduleRepositoryCustom.findWeeklyScheduleByUser(startDate, endDate, user);
 
-        List<ResponseSchedule> responseSchedules = schedules.stream()
-                .map(ResponseSchedule::from)
-                .sorted(ResponseSchedule.getComparatorByStartTime())
+        List<ScheduleResponse> scheduleResponses = schedules.stream()
+                .map(ScheduleResponse::from)
+                .sorted(ScheduleResponse.getComparatorByStartTime())
                 .collect(Collectors.toList());
 
-        return responseSchedules;
+        return scheduleResponses;
     }
 
-    public ResponseSchedule updateSchedule(Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
+    public ScheduleResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
         // [1] 유저 확인
         User user = validateUserByUserCode(userInfo.getUserCode());
 
@@ -97,16 +97,16 @@ public class ScheduleService {
         }
 
         // [4] 스케줄 업데이트
-        schedule.update(requestSchedule.getTitle(), requestSchedule.getContent(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
+        schedule.update(scheduleRequest.title(), scheduleRequest.content(), scheduleRequest.startTime(), scheduleRequest.endTime());
 
-        return ResponseSchedule.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
     /*
     그룹룸 스케줄관련 코드
 
     */
-    public List<ResponseSchedule> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
+    public List<ScheduleResponse> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
         // [1] 유저가 그룹룸에 접근할 권리가있는지 확인
         if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
@@ -117,11 +117,11 @@ public class ScheduleService {
 
         // [3] dto 반환
         return schedules.stream()
-                .map(ResponseSchedule::from)
+                .map(ScheduleResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public ResponseSchedule updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, RequestSchedule requestSchedule, UserInfo userInfo) {
+    public ScheduleResponse updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
         // [1] 그룹룸에 수정하려는 유저가 존재하는지 확인
         if (!userGroupMembershipRepositoryCustomImpl.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
@@ -129,10 +129,10 @@ public class ScheduleService {
 
         // [2] 스케줄을 업데이트
         Schedule schedule = findScheduleById(scheduleId);
-        schedule.update(requestSchedule.getTitle(), requestSchedule.getContent(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
+        schedule.update(scheduleRequest.title(), scheduleRequest.content(), scheduleRequest.startTime(), scheduleRequest.endTime());
 
         // [3] dto 반환
-        return ResponseSchedule.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
     public void deleteScheduleByGroupRoom(Long groupRoomId, Long scheduleId, UserInfo userInfo) {
@@ -142,7 +142,7 @@ public class ScheduleService {
         scheduleRepository.deleteById(scheduleId);
     }
 
-    public ResponseSchedule updateScheduleStatus(Long scheduleId, ScheduleStatus status) {
+    public ScheduleResponse updateScheduleStatus(Long scheduleId, ScheduleStatus status) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
 
@@ -159,16 +159,16 @@ public class ScheduleService {
             default:
                 throw new IllegalArgumentException("Invalid status");
         }
-        return ResponseSchedule.from(schedule);
+        return ScheduleResponse.from(schedule);
     }
 
     /*
     공통 로직
      */
-    public List<ResponseSchedule> findOverlapSchedule(Long userId, RequestSchedule requestSchedule) {
-        List<Schedule> overlapSchedules = scheduleRepositoryCustom.findOverlapSchedules(userId, requestSchedule.getScheduleDate(), requestSchedule.getStartTime(), requestSchedule.getEndTime());
+    public List<ScheduleResponse> findOverlapSchedule(Long userId, ScheduleRequest scheduleRequest) {
+        List<Schedule> overlapSchedules = scheduleRepositoryCustom.findOverlapSchedules(userId, scheduleRequest.scheduleDate(), scheduleRequest.startTime(), scheduleRequest.endTime());
         return overlapSchedules.stream()
-                .map(ResponseSchedule::from)
+                .map(ScheduleResponse::from)
                 .collect(Collectors.toList());
     }
 
