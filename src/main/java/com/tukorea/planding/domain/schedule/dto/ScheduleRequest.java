@@ -1,13 +1,12 @@
 package com.tukorea.planding.domain.schedule.dto;
 
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Builder
-public record RequestSchedule(
+public record ScheduleRequest(
         String title,
         String content,
         LocalDate scheduleDate,

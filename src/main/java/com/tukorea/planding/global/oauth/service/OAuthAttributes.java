@@ -24,8 +24,7 @@ public class OAuthAttributes {
 
     public static OAuthAttributes of(SocialType socialType,
                                      String userNameAttributeName, Map<String, Object> attributes) {
-
-        return ofKakao(userNameAttributeName,attributes);
+        return ofKakao(userNameAttributeName, attributes);
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {

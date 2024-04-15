@@ -80,10 +80,10 @@ class ScheduleServiceTest {
 
         //then
         assertNotNull(schedule);
-        assertEquals(TEST_TITLE, schedule.getTitle());
-        assertEquals(TEST_CONTENT, schedule.getContent());
-        assertEquals(startTime, schedule.getStartTime());
-        assertEquals(endTime, schedule.getEndTime());
+        assertEquals(TEST_TITLE, schedule.title());
+        assertEquals(TEST_CONTENT, schedule.content());
+        assertEquals(startTime, schedule.startTime());
+        assertEquals(endTime, schedule.endTime());
     }
 
     @Test
@@ -110,10 +110,10 @@ class ScheduleServiceTest {
 
         //when
         ScheduleResponse schedule = scheduleService.createSchedule(userInfo, scheduleRequest);
-        scheduleService.deleteSchedule(userInfo, schedule.getId());
+        scheduleService.deleteSchedule(userInfo, schedule.id());
 
         //then
-        assertEquals(Optional.empty(), scheduleRepository.findById(schedule.getId()));
+        assertEquals(Optional.empty(), scheduleRepository.findById(schedule.id()));
     }
 
     @Test
@@ -154,8 +154,8 @@ class ScheduleServiceTest {
         //then
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(result.get(0).getStartTime(), schedule1.getStartTime());
-        assertEquals(result.get(1).getStartTime(), schedule.getStartTime());
+        assertEquals(result.get(0).startTime(), schedule1.getStartTime());
+        assertEquals(result.get(1).startTime(), schedule.getStartTime());
     }
 
     @Test

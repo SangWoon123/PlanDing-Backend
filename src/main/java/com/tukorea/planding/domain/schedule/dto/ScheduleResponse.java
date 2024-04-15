@@ -1,7 +1,6 @@
 package com.tukorea.planding.domain.schedule.dto;
 
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.entity.Schedule;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,20 +8,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 
-@Getter
 @Builder
-public class ResponseSchedule {
+public record ScheduleResponse(
+        Long id,
+        String title,
+        String content,
+        LocalDate scheduleDate,
+        LocalTime startTime,
+        LocalTime endTime,
+        boolean complete
+) {
 
-    private Long id;
-    private String title;
-    private String content;
-    private LocalDate scheduleDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private boolean complete;
-
-    public static ResponseSchedule from(Schedule schedule) {
-        return ResponseSchedule.builder()
+    public static ScheduleResponse from(Schedule schedule) {
+        return ScheduleResponse.builder()
                 .id(schedule.getId())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
@@ -33,7 +31,7 @@ public class ResponseSchedule {
                 .build();
     }
 
-    public static Comparator<ResponseSchedule> getComparatorByStartTime() {
-        return Comparator.comparing(schedule -> schedule.getStartTime());
+    public static Comparator<ScheduleResponse> getComparatorByStartTime() {
+        return Comparator.comparing(schedule -> schedule.startTime());
     }
 }

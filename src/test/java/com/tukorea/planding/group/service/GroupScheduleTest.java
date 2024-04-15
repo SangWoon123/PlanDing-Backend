@@ -78,11 +78,11 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
 
         // 생성된 스케줄 검증
-        GroupRoom group = groupRoomRepository.findByGroupCode(groupRoom.getCode())
+        GroupRoom group = groupRoomRepository.findByGroupCode(groupRoom.code())
                 .orElseThrow(() -> new AssertionError("Group room not found"));
         assertNotNull(group);
 
@@ -110,7 +110,7 @@ public class GroupScheduleTest {
 
         GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.getCode())
+                .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
@@ -129,16 +129,16 @@ public class GroupScheduleTest {
                 .build();
 
         // when
-        groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //then
-        List<ScheduleResponse> result = scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userB));
+        List<ScheduleResponse> result = scheduleService.getSchedulesByGroupRoom(groupRoom.id(), User.toUserInfo(userB));
 
         assertNotNull(result);
-        assertEquals(result.get(0).getTitle(), requestSchedule.getTitle());
-        assertEquals(result.get(0).getContent(), requestSchedule.getContent());
-        assertEquals(result.get(0).getStartTime(), requestSchedule.getStartTime());
-        assertEquals(result.get(0).getEndTime(), requestSchedule.getEndTime());
+        assertEquals(result.get(0).title(), requestSchedule.title());
+        assertEquals(result.get(0).complete(), requestSchedule.content());
+        assertEquals(result.get(0).startTime(), requestSchedule.startTime());
+        assertEquals(result.get(0).endTime(), requestSchedule.endTime());
     }
 
     @Test
@@ -166,10 +166,10 @@ public class GroupScheduleTest {
                 .build();
 
         // when
-        groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //then
-        assertThrows(BusinessException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.getId(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.id(), User.toUserInfo(userC)));
     }
 
     @Test
@@ -194,10 +194,10 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
-        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+        Schedule schedule = scheduleRepository.findById(groupSchedule.id())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.id()));
 
         ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
@@ -208,11 +208,11 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(user));
+        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(user));
 
         //then
-        Schedule result = scheduleRepository.findById(groupSchedule.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+        Schedule result = scheduleRepository.findById(groupSchedule.id())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.id()));
 
         assertEquals(result.getTitle(), "update");
         assertEquals(result.getContent(), "update");
@@ -232,7 +232,7 @@ public class GroupScheduleTest {
 
         GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.getCode())
+                .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
@@ -251,10 +251,10 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
-        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+        Schedule schedule = scheduleRepository.findById(groupSchedule.id())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.id()));
 
         ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
@@ -265,11 +265,11 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userB));
+        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(userB));
 
         //then
-        Schedule result = scheduleRepository.findById(groupSchedule.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+        Schedule result = scheduleRepository.findById(groupSchedule.id())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.id()));
 
         assertEquals(result.getTitle(), "update");
         assertEquals(result.getContent(), "update");
@@ -299,10 +299,10 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
-        Schedule schedule = scheduleRepository.findById(groupSchedule.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.getId()));
+        Schedule schedule = scheduleRepository.findById(groupSchedule.id())
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + groupSchedule.id()));
 
         ScheduleRequest updateSchedule = ScheduleRequest.builder()
                 .startTime(startTime)
@@ -313,7 +313,7 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        assertThrows(BusinessException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.getId(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
     }
 
     @Test
@@ -338,12 +338,12 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
-        scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(user));
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(user));
 
 
-        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
+        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.id()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
     }
 
     @Test
@@ -360,7 +360,7 @@ public class GroupScheduleTest {
 
         GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.getCode())
+                .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
@@ -379,12 +379,12 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //when
-        scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userB));
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(userB));
         //then
-        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.getId()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
+        assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.id()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
     }
 
     @Test
@@ -411,10 +411,10 @@ public class GroupScheduleTest {
                 .build();
 
         // 스케줄 생성
-        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.getCode(), requestSchedule);
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //when
-        assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.getId(), groupSchedule.getId(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(userC)));
     }
 
 
