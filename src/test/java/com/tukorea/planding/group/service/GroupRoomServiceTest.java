@@ -8,6 +8,7 @@ import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -45,7 +46,7 @@ class GroupRoomServiceTest {
                 .userCode("#abcd")
                 .build();
 
-        UserInfo userInfo = User.toUserInfo(user);
+        UserInfo userInfo = UserMapper.toUserInfo(user);
 
         userRepository.save(user);
 
@@ -53,11 +54,11 @@ class GroupRoomServiceTest {
                 .name("first_group")
                 .build());
 
-        Optional<GroupRoom> getgroup = groupRoomRepository.findById(groupRoom.getId());
+        Optional<GroupRoom> getgroup = groupRoomRepository.findById(groupRoom.id());
 
         Assertions.assertNotNull(getgroup);
-        Assertions.assertEquals(groupRoom.getCode(), getgroup.get().getGroupCode());
-        Assertions.assertEquals(groupRoom.getOwnerCode(), getgroup.get().getOwner());
+        Assertions.assertEquals(groupRoom.code(), getgroup.get().getGroupCode());
+        Assertions.assertEquals(groupRoom.ownerCode(), getgroup.get().getOwner());
     }
 
     @Test
@@ -125,7 +126,7 @@ class GroupRoomServiceTest {
                 .build();
 
         // 유저 B 그룹방에 초대
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         // 그룹방에 유저 B가 초대되었는지 확인
         GroupRoom savedGroupRoom = groupRoomRepository.findById(groupRoom.getId()).orElse(null);
@@ -169,7 +170,7 @@ class GroupRoomServiceTest {
 
         // 그룹방에 유저 B가 초대되었는지 확인
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        groupRoomService.inviteGroupRoom(User.toUserInfo(userC), groupInviteRequest),
+                        groupRoomService.handleInvitation(UserMapper.toUserInfo(userC), groupInviteRequest),
                 "User does not have permission to invite this groupRoom");
     }
 }

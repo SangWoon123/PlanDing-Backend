@@ -11,7 +11,7 @@ public enum ErrorCode {
     /**
      * User Error
      */
-    USER_NOT_FOUND("USER-001", "유저가 존재하지 않습니다.",HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND("USER-001", "유저가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
     /**
      * Schedule Error
@@ -25,7 +25,8 @@ public enum ErrorCode {
     ACCESS_DENIED("GROUP-001", "본 사용자는 이 그룹에 접근할 권한이 없습니다.", HttpStatus.FORBIDDEN),
     USER_NOT_INVITABLE("GROUP-002", "초대할 유저를 찾지 못하였습니다.", HttpStatus.NOT_FOUND),
     GROUP_ROOM_NOT_FOUND("GROUP-003", "그룹룸이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    UNAUTHORIZED_GROUP_ROOM_INVITATION("GROUP-004", "그룹룸에 초대할 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
+    UNAUTHORIZED_GROUP_ROOM_INVITATION("GROUP-004", "그룹룸에 초대할 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
+    USER_ALREADY_INVITED("GROUP-005", "이미 그룹룸에 초대되었습니다.", HttpStatus.UNAUTHORIZED);
 
 
     private final String errorCode;

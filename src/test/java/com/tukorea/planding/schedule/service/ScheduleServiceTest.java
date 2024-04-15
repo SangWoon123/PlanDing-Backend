@@ -7,6 +7,7 @@ import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -163,7 +164,7 @@ class ScheduleServiceTest {
     public void updateSchedule() {
         //given
         User user = createUserAndSave(TEST_EMAIL);
-        UserInfo userInfo = User.toUserInfo(user);
+        UserInfo userInfo = UserMapper.toUserInfo(user);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);

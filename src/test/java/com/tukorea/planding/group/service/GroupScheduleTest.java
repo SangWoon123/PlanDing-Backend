@@ -14,6 +14,7 @@ import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
@@ -60,7 +61,7 @@ public class GroupScheduleTest {
     @DisplayName("성공: 유저 A가 작성한 스케줄 조회")
     public void createGroupScheduleTest() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -101,7 +102,7 @@ public class GroupScheduleTest {
     public void createGroupScheduleTest2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -114,7 +115,7 @@ public class GroupScheduleTest {
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
@@ -132,7 +133,7 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //then
-        List<ScheduleResponse> result = scheduleService.getSchedulesByGroupRoom(groupRoom.id(), User.toUserInfo(userB));
+        List<ScheduleResponse> result = scheduleService.getSchedulesByGroupRoom(groupRoom.id(), UserMapper.toUserInfo(userB));
 
         assertNotNull(result);
         assertEquals(result.get(0).title(), requestSchedule.title());
@@ -146,7 +147,7 @@ public class GroupScheduleTest {
     public void createGroupScheduleFailTest() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -169,14 +170,14 @@ public class GroupScheduleTest {
         groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //then
-        assertThrows(BusinessException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.id(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.getSchedulesByGroupRoom(groupRoom.id(), UserMapper.toUserInfo(userC)));
     }
 
     @Test
     @DisplayName("성공: 유저 A가 작성한 스케줄 수정")
     public void update1() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -208,7 +209,7 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(user));
+        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, UserMapper.toUserInfo(user));
 
         //then
         Schedule result = scheduleRepository.findById(groupSchedule.id())
@@ -223,7 +224,7 @@ public class GroupScheduleTest {
     public void update2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -236,7 +237,7 @@ public class GroupScheduleTest {
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
@@ -265,7 +266,7 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(userB));
+        scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, UserMapper.toUserInfo(userB));
 
         //then
         Schedule result = scheduleRepository.findById(groupSchedule.id())
@@ -279,7 +280,7 @@ public class GroupScheduleTest {
     @DisplayName("실패: 외부 유저C가 수정")
     public void update3() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -313,14 +314,14 @@ public class GroupScheduleTest {
                 .build();
 
         //when
-        assertThrows(BusinessException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.updateScheduleByGroupRoom(groupRoom.id(), schedule.getId(), updateSchedule, UserMapper.toUserInfo(userC)));
     }
 
     @Test
     @DisplayName("성공: 유저 A가 작성한 스케줄 삭제")
     public void delete1() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -340,7 +341,7 @@ public class GroupScheduleTest {
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
-        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(user));
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), UserMapper.toUserInfo(user));
 
 
         assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.id()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
@@ -351,7 +352,7 @@ public class GroupScheduleTest {
     public void delete2() {
         //given
         User userA = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(userA), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(userA), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -364,7 +365,7 @@ public class GroupScheduleTest {
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.inviteGroupRoom(User.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
@@ -382,7 +383,7 @@ public class GroupScheduleTest {
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //when
-        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(userB));
+        scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), UserMapper.toUserInfo(userB));
         //then
         assertThrows(BusinessException.class, () -> scheduleRepository.findById(groupSchedule.id()).orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND)));
     }
@@ -391,7 +392,7 @@ public class GroupScheduleTest {
     @DisplayName("실패: 외부 유저 C가 수정")
     public void delete3() {
         User user = createUserAndSave(TEST_EMAIL, "code");
-        GroupResponse groupRoom = groupRoomService.createGroupRoom(User.toUserInfo(user), GroupCreateRequest
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(user), GroupCreateRequest
                 .builder()
                 .name("group_name")
                 .build());
@@ -414,7 +415,7 @@ public class GroupScheduleTest {
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
 
         //when
-        assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), User.toUserInfo(userC)));
+        assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), UserMapper.toUserInfo(userC)));
     }
 
 

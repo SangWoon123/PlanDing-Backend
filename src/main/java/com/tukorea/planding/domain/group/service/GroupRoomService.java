@@ -48,7 +48,7 @@ public class GroupRoomService {
     }
 
     @Transactional
-    public GroupResponse inviteGroupRoom(UserInfo userInfo, GroupInviteRequest invitedUserInfo) {
+    public GroupResponse handleInvitation(UserInfo userInfo, GroupInviteRequest invitedUserInfo) {
         // 초대하는 유저가 존재하는지 체크하는 로직
         User invitingUser = userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -61,7 +61,15 @@ public class GroupRoomService {
 
         User invitedUser = userRepository.findByUserCode(invitedUserInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        // 초대한 유저가 이미 그룹에 속해 있는지 확인
+        if (groupRoom.getGroupMemberships().contains(invitedUser)) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
+        }
+
         groupRoom.addUser(invitedUser);
+
+
 
         // 중간테이블에 유저, 그룹 정보 저장
         userGroupMembershipRepository.saveAll(groupRoom.getGroupMemberships());

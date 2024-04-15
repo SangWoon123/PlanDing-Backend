@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.group.entity;
 
-import com.tukorea.planding.domain.user.entity.User;import com.tukorea.planding.global.audit.BaseEntity;
+import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.*;

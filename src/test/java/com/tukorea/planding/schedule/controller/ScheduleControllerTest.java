@@ -2,6 +2,7 @@ package com.tukorea.planding.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.domain.schedule.controller.ScheduleController;
+import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.global.config.security.SecurityConfig;
 import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
 import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
@@ -57,7 +58,7 @@ class ScheduleControllerTest {
                 .title("test")
                 .build();
 
-        given(scheduleService.createSchedule(User.toUserInfo(user),schedule)).willThrow(UsernameNotFoundException.class);
+        given(scheduleService.createSchedule(UserMapper.toUserInfo(user),schedule)).willThrow(UsernameNotFoundException.class);
 
 
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/schedule")

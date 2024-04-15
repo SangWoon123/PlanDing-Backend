@@ -32,7 +32,7 @@ public class GroupRoomController {
     @Operation(summary = "다른유저 그룹으로 초대")
     @PostMapping("/invite")
     public CommonResponse<GroupResponse> inviteGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupInviteRequest invitedUser) {
-        GroupResponse groupResponse = groupRoomService.inviteGroupRoom(userInfo, invitedUser);
+        GroupResponse groupResponse = groupRoomService.handleInvitation(userInfo, invitedUser);
         return CommonUtils.success(groupResponse);
     }
 
