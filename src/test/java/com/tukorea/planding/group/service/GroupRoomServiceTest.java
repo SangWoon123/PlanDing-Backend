@@ -3,7 +3,7 @@ package com.tukorea.planding.group.service;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
@@ -119,14 +119,14 @@ class GroupRoomServiceTest {
         GroupRoom save = groupRoomRepository.save(groupRoom);
 
 
-        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+        InvitationRequest invitationRequest = InvitationRequest
                 .builder()
                 .inviteGroupCode(save.getGroupCode())
                 .userCode(userB.getUserCode())
                 .build();
 
         // 유저 B 그룹방에 초대
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
 
         // 그룹방에 유저 B가 초대되었는지 확인
         GroupRoom savedGroupRoom = groupRoomRepository.findById(groupRoom.getId()).orElse(null);
@@ -162,7 +162,7 @@ class GroupRoomServiceTest {
         GroupRoom save = groupRoomRepository.save(groupRoom);
 
 
-        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+        InvitationRequest invitationRequest = InvitationRequest
                 .builder()
                 .inviteGroupCode(save.getGroupCode())
                 .userCode(userB.getUserCode())
@@ -170,7 +170,7 @@ class GroupRoomServiceTest {
 
         // 그룹방에 유저 B가 초대되었는지 확인
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                        groupRoomService.handleInvitation(UserMapper.toUserInfo(userC), groupInviteRequest),
+                        groupRoomService.handleInvitation(UserMapper.toUserInfo(userC), invitationRequest),
                 "User does not have permission to invite this groupRoom");
     }
 }

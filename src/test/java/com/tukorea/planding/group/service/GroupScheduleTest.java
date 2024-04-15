@@ -2,7 +2,7 @@ package com.tukorea.planding.group.service;
 
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.GroupScheduleRequest;
-import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
@@ -109,13 +109,13 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+        InvitationRequest invitationRequest = InvitationRequest
                 .builder()
                 .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
@@ -231,13 +231,13 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+        InvitationRequest invitationRequest = InvitationRequest
                 .builder()
                 .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
@@ -359,13 +359,13 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+        InvitationRequest invitationRequest = InvitationRequest
                 .builder()
                 .inviteGroupCode(groupRoom.code())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), groupInviteRequest);
+        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);

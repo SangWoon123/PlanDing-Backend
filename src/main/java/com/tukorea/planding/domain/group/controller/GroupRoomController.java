@@ -3,7 +3,7 @@ package com.tukorea.planding.domain.group.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -26,13 +26,6 @@ public class GroupRoomController {
     @PostMapping()
     public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupCreateRequest createGroupRoom) {
         GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom);
-        return CommonUtils.success(groupResponse);
-    }
-
-    @Operation(summary = "다른유저 그룹으로 초대")
-    @PostMapping("/invite")
-    public CommonResponse<GroupResponse> inviteGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupInviteRequest invitedUser) {
-        GroupResponse groupResponse = groupRoomService.handleInvitation(userInfo, invitedUser);
         return CommonUtils.success(groupResponse);
     }
 

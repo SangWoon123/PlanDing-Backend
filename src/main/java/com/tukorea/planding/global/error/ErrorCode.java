@@ -26,7 +26,13 @@ public enum ErrorCode {
     USER_NOT_INVITABLE("GROUP-002", "초대할 유저를 찾지 못하였습니다.", HttpStatus.NOT_FOUND),
     GROUP_ROOM_NOT_FOUND("GROUP-003", "그룹룸이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_GROUP_ROOM_INVITATION("GROUP-004", "그룹룸에 초대할 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
-    USER_ALREADY_INVITED("GROUP-005", "이미 그룹룸에 초대되었습니다.", HttpStatus.UNAUTHORIZED);
+    USER_ALREADY_INVITED("GROUP-005", "이미 그룹룸에 초대되었습니다.", HttpStatus.UNAUTHORIZED),
+
+    /**
+     * Invite Error
+     */
+    INVITATION_ALREADY_SENT("INVITATION-001", "이미 초대한 사용자입니다.", HttpStatus.CONFLICT),
+    CANNOT_INVITE_YOURSELF("INVITATION-002", "자기 자신은 초대를 할 수 없습니다.", HttpStatus.CONFLICT);
 
 
     private final String errorCode;
