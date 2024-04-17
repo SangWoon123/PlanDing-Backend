@@ -76,10 +76,10 @@ public class Invitation {
 
     public static InvitationResponse toInviteResponse(Invitation invitation) {
         return InvitationResponse.builder()
-                .inviteUser(invitation.getInvitingUser().getUserCode())
+                .invitingUser(invitation.getInvitingUser().getUserCode())
                 .groupName(invitation.getGroupRoom().getName())
                 .inviteCode(invitation.getInviteCode())
-                .status(invitation.getInviteStatus())
+                .inviteStatus(invitation.getInviteStatus())
                 .build();
     }
 }
