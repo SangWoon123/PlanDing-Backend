@@ -3,11 +3,10 @@ package com.tukorea.planding.domain.invitation.entity;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.invitation.dto.InvitationResponse;
 import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -56,6 +55,21 @@ public class Invitation {
         this.expiredAt = expiredAt;
     }
 
+    public void accept() {
+        if (this.inviteStatus != InviteStatus.PENDING) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
+        }
+        this.inviteStatus = InviteStatus.ACCEPTED;
+
+    }
+
+    public void decline() {
+        if (this.inviteStatus != InviteStatus.PENDING) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
+        }
+        this.inviteStatus = InviteStatus.DECLINED;
+    }
+
     private String generateInviteCode() {
         return "INV-" + LocalDateTime.now().toString();
     }
@@ -63,9 +77,9 @@ public class Invitation {
     public static InvitationResponse toInviteResponse(Invitation invitation) {
         return InvitationResponse.builder()
                 .inviteUser(invitation.getInvitingUser().getUserCode())
-                .invitedUser(invitation.getInvitedUser().getUserCode())
                 .groupName(invitation.getGroupRoom().getName())
                 .inviteCode(invitation.getInviteCode())
+                .status(invitation.getInviteStatus())
                 .build();
     }
 }

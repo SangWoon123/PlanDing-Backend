@@ -10,10 +10,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Invitation", description = "그룹 초대관련")
 @RestController
@@ -29,4 +28,21 @@ public class InvitationController {
         InvitationResponse invitationResponse = invitationService.inviteGroupRoom(userInfo, invitedUser);
         return CommonUtils.success(invitationResponse);
     }
+
+    //TODO 쿼리스트링Url 변경 고민 ex) api/v1/invitation/accept?{code}
+    @Operation(summary = "초대 승낙")
+    @GetMapping("/{code}/accept")
+    public CommonResponse<InvitationResponse> acceptInvitation(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "code") String code) {
+        InvitationResponse invitationResponse = invitationService.acceptInvitation(userInfo, code);
+        return CommonUtils.success(invitationResponse);
+    }
+
+    @Operation(summary = "초대 받은 목록")
+    @GetMapping()
+    public CommonResponse<List<InvitationResponse>> getInvitations(@AuthenticationPrincipal UserInfo userInfo) {
+        List<InvitationResponse> invitationResponses = invitationService.getInvitations(userInfo);
+        return CommonUtils.success(invitationResponses);
+    }
+
+
 }
