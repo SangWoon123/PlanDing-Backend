@@ -1,5 +1,7 @@
 package com.tukorea.planding.domain.user.entity;
 
+import com.tukorea.planding.domain.notify.entity.Notification;
+import com.tukorea.planding.domain.user.dto.AndroidLoginResponse;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.oauth.details.Role;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
@@ -54,6 +56,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Notification> notificationList = new ArrayList<>();
+
     @Builder
     public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode) {
         this.email = email;
@@ -80,14 +85,4 @@ public class User extends BaseEntity {
         return "#" + c.substring(0, 4);
     }
 
-    public static UserInfo toUserInfo(User user) {
-        return UserInfo.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .profileImage(user.getProfileImage())
-                .role(user.getRole())
-                .username(user.getUsername())
-                .userCode(user.getUserCode())
-                .build();
-    }
 }
