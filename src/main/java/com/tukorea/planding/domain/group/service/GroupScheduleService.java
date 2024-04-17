@@ -4,7 +4,7 @@ import com.tukorea.planding.domain.group.dto.GroupScheduleRequest;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustomImpl;
-import com.tukorea.planding.domain.notify.dto.RequestNotification;
+import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
@@ -69,7 +69,7 @@ public class GroupScheduleService {
 
         // [6] 그룹 구성원들에게 스케줄 생성 알림 전송
         for (User member : notificationUser) {
-            RequestNotification request = RequestNotification.builder()
+            NotificationScheduleRequest request = NotificationScheduleRequest.builder()
                     .receiverCode(member.getUserCode())
                     .createdAt(LocalDateTime.now())
                     .message(save.getTitle())
