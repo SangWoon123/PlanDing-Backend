@@ -37,7 +37,7 @@ public class InvitationController {
         return CommonUtils.success(invitationResponse);
     }
 
-    @Operation(summary = "초대 받은 목록")
+    @Operation(summary = "초대를 받은 목록",description = "아직 초대의 상태를 바꾸지 않은 경우만")
     @GetMapping()
     public CommonResponse<List<InvitationResponse>> getInvitations(@AuthenticationPrincipal UserInfo userInfo) {
         List<InvitationResponse> invitationResponses = invitationService.getInvitations(userInfo);

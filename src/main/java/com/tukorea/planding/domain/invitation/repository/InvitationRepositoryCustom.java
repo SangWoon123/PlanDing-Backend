@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.invitation.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.invitation.entity.Invitation;
+import com.tukorea.planding.domain.invitation.entity.InviteStatus;
 import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,9 +16,10 @@ import static com.tukorea.planding.domain.invitation.entity.QInvitation.invitati
 public class InvitationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public List<Invitation> findByUser(User user) {
+    public List<Invitation> findPendingInvitationsForUser(User user) {
         return queryFactory.selectFrom(invitation)
-                .where(invitation.invitedUser.userCode.eq(user.getUserCode()))
+                .where(invitation.invitedUser.userCode.eq(user.getUserCode())
+                        .and(invitation.inviteStatus.eq(InviteStatus.PENDING)))
                 .fetch();
     }
 }

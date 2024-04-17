@@ -57,4 +57,12 @@ public class GroupRoomService {
                 .map(GroupResponse::from)
                 .collect(Collectors.toList());
     }
+
+    /*
+    DB 접근 메서드
+     */
+    public GroupRoom getGroupByCode(String groupCode) {
+        return groupRoomRepository.findByGroupCode(groupCode)
+                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
+    }
 }
