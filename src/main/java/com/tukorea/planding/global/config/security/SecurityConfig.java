@@ -26,22 +26,21 @@ public class SecurityConfig {
     private final CustomOAuth2Service customOAuth2Service;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
     private final UserLogoutHandler userLogoutHandler;
-    private final String[] PUBLIC_URL = {
+    private final String[] SWAGGER = {
             "/swagger-resources/**", "/v3/api-docs/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html",
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors-> cors.configurationSource(configurationSource())) // cors 활성화
+                .cors(cors -> cors.configurationSource(configurationSource())) // cors 활성화
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                        .requestMatchers(PUBLIC_URL).permitAll()
-                        .requestMatchers("/","/logout", "/css/**", "/images/**", "/js/**", "/profile",
-                                "/oauth2", "/oauth2/**", "/login", "/login/**", "/api/v1/**").permitAll()
+                        .requestMatchers(SWAGGER).permitAll()
+                        .requestMatchers("/login", "/api/v1/**", "/api/v1/ws", "/logout").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -50,7 +49,7 @@ public class SecurityConfig {
                                 .userService(customOAuth2Service))
                         .successHandler(oauth2SuccessHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logOut->logOut.addLogoutHandler(userLogoutHandler)
+                .logout(logOut -> logOut.addLogoutHandler(userLogoutHandler)
                         .logoutUrl("/logout")
                         .permitAll());
 
