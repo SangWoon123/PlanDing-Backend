@@ -35,9 +35,10 @@ public class Notification {
     private LocalDateTime readAt;
 
     @Builder
-    public Notification(User user, String message, String url, NotificationType notificationType, LocalDateTime createdAt, LocalDateTime readAt) {
+    public Notification(User user, String message, String groupName, String url, NotificationType notificationType, LocalDateTime createdAt, LocalDateTime readAt) {
         this.user = user;
         this.message = message;
+        this.groupName = groupName;
         this.url = url;
         this.notificationType = notificationType;
         this.createdAt = createdAt;

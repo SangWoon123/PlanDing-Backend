@@ -78,6 +78,7 @@ public class NotificationService {
                 .createdAt(LocalDateTime.now())
                 .notificationType(notificationScheduleRequest.getType())
                 .url(notificationScheduleRequest.getUrl())
+                .groupName(notificationScheduleRequest.getGroupName())
                 .readAt(null)
                 .build();
     }
