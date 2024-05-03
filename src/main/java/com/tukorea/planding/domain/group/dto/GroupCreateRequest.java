@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record GroupCreateRequest(
-        String name
+        String name,
+        String description
 ) {
-
 }

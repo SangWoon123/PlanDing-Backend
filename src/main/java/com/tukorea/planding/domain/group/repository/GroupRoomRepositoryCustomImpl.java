@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.tukorea.planding.domain.group.entity.QGroupRoom.groupRoom;
 
@@ -22,5 +23,13 @@ public class GroupRoomRepositoryCustomImpl implements GroupRoomRepositoryCustom{
                 .innerJoin(groupRoom.groupMemberships)
                 .on(groupRoom.groupMemberships.any().user.id.eq(userId))
                 .fetch();
+    }
+
+    @Override
+    public GroupRoom findByGroupCode(String groupCode) {
+        return queryFactory.select(groupRoom)
+                .from(groupRoom)
+                .where(groupRoom.groupCode.eq(groupCode))
+                .fetchOne();
     }
 }

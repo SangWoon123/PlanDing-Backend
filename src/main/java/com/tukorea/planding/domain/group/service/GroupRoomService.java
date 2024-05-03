@@ -2,13 +2,11 @@ package com.tukorea.planding.domain.group.service;
 
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
+import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustomImpl;
-import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepository;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.service.UserQueryService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,47 +20,52 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GroupRoomService {
 
-    private final UserRepository userRepository;
-    private final UserGroupMembershipRepository userGroupMembershipRepository;
-    private final GroupRoomRepository groupRoomRepository;
-    private final GroupRoomRepositoryCustomImpl groupRoomRepositoryCustom;
+    private final UserQueryService userQueryService;
+    private final UserGroupMemberShipService userGroupMemberShipService;
+    private final GroupQueryService groupQueryService;
 
     @Transactional
     public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {
-        User user = userRepository.findByUserCode(userInfo.getUserCode())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = userQueryService.getUserByUserCode(userInfo);
 
-        GroupRoom newGroupRoom = GroupRoom.builder()
-                .name(createGroupRoom.name())
-                .owner(user.getUserCode())
-                .build();
-
-        newGroupRoom.addUser(user);
-        GroupRoom savedGroupRoom = groupRoomRepository.save(newGroupRoom);
+        GroupRoom newGroupRoom = GroupRoom.createGroupRoom(createGroupRoom, user);
+        GroupRoom savedGroupRoom = groupQueryService.createGroup(newGroupRoom);
 
         // 중간테이블에 유저, 그룹 정보 저장
-        userGroupMembershipRepository.saveAll(newGroupRoom.getGroupMemberships());
+        userGroupMemberShipService.saveAll(savedGroupRoom);
 
-        return GroupResponse.from(savedGroupRoom);
+        return toGroupResponse(newGroupRoom);
+    }
+
+    @Transactional
+    public GroupResponse updateGroupNameOrDescription(UserInfo userInfo, GroupUpdateRequest groupUpdateRequest) {
+        User user = userQueryService.getUserByUserCode(userInfo);
+
+        GroupRoom groupRoom = groupQueryService.getGroupByCode(groupUpdateRequest.groupCode());
+
+        // TODO 그룹의 팀원도 변경가능하도록
+        if (!groupRoom.getOwner().equals(user.getUserCode())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+        }
+
+        groupRoom.updateNameOrDes(groupUpdateRequest.name(), groupUpdateRequest.description());
+
+        return toGroupResponse(groupRoom);
     }
 
     // 유저가 속한 그룹룸 가져오기
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
-        User user = userRepository.findByUserCode(userInfo.getUserCode())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = userQueryService.getUserByUserCode(userInfo);
 
-        List<GroupRoom> groupRooms = groupRoomRepositoryCustom.findGroupRoomsByUserId(user.getId());
+        List<GroupRoom> groupRooms = groupQueryService.findGroupsByUser(user);
 
         return groupRooms.stream()
-                .map(GroupResponse::from)
+                .map(this::toGroupResponse)
                 .collect(Collectors.toList());
     }
 
-    /*
-    DB 접근 메서드
-     */
-    public GroupRoom getGroupByCode(String groupCode) {
-        return groupRoomRepository.findByGroupCode(groupCode)
-                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
+    private GroupResponse toGroupResponse(GroupRoom groupRoom) {
+        return GroupResponse.from(groupRoom);
     }
+
 }

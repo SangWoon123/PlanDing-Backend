@@ -1,5 +1,6 @@
 package com.tukorea.planding.domain.group.entity;
 
+import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
@@ -22,6 +23,9 @@ public class GroupRoom extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "owner", nullable = false)
     private String owner; // 그룹룸의 소유자
 
@@ -35,8 +39,9 @@ public class GroupRoom extends BaseEntity {
     private final List<Schedule> schedules = new ArrayList<>();
 
     @Builder
-    public GroupRoom(String name, String owner, String groupCode) {
+    public GroupRoom(String name, String description, String owner, String groupCode) {
         this.name = name;
+        this.description = description;
         this.owner = owner;
         this.groupCode = groupCode;
     }
@@ -44,6 +49,16 @@ public class GroupRoom extends BaseEntity {
     @PrePersist
     public void generateRoomCode() {
         this.groupCode = "G" + UUID.randomUUID().toString();
+    }
+
+    public static GroupRoom createGroupRoom(GroupCreateRequest groupCreateRequest, User owner) {
+        GroupRoom groupRoom = GroupRoom.builder()
+                .name(groupCreateRequest.name())
+                .description(groupCreateRequest.description())
+                .owner(owner.getUserCode())
+                .build();
+        groupRoom.addUser(owner);
+        return groupRoom;
     }
 
     // 연관 관계 편의 메서드
@@ -59,6 +74,15 @@ public class GroupRoom extends BaseEntity {
     // 스케줄을 그룹룸에 추가하는 메서드
     public void addSchedule(Schedule schedule) {
         this.schedules.add(schedule);
+    }
+
+    public void updateNameOrDes(String name, String description) {
+        if (name != null && !name.equals(this.name)) {
+            this.name = name;
+        }
+        if (description != null && !description.equals(this.description)) {
+            this.description = description;
+        }
     }
 
 

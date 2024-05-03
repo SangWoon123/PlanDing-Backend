@@ -3,6 +3,7 @@ package com.tukorea.planding.domain.group.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
 import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
@@ -27,6 +28,13 @@ public class GroupRoomController {
     public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupCreateRequest createGroupRoom) {
         GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom);
         return CommonUtils.success(groupResponse);
+    }
+
+    @Operation(summary = "그룹 이름,설명 변경")
+    @PatchMapping()
+    public CommonResponse<GroupResponse> updateGroupNameOrDescription(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupUpdateRequest groupUpdateRequest) {
+        GroupResponse groupResponses = groupRoomService.updateGroupNameOrDescription(userInfo, groupUpdateRequest);
+        return CommonUtils.success(groupResponses);
     }
 
     @Operation(summary = "유저가 속한 그룹 가져오기")
