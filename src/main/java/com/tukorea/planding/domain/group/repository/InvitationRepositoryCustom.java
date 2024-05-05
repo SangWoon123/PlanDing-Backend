@@ -1,15 +1,16 @@
-package com.tukorea.planding.domain.invitation.repository;
+package com.tukorea.planding.domain.group.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tukorea.planding.domain.invitation.entity.Invitation;
-import com.tukorea.planding.domain.invitation.entity.InviteStatus;
+import com.tukorea.planding.domain.group.entity.Invitation;
+import com.tukorea.planding.domain.group.entity.InviteStatus;
 import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.tukorea.planding.domain.invitation.entity.QInvitation.invitation;
+import static com.tukorea.planding.domain.group.entity.QInvitation.invitation;
+
 
 @Repository
 @RequiredArgsConstructor

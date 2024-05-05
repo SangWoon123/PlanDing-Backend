@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.invitation.entity;
+package com.tukorea.planding.domain.group.entity;
 
 public enum InviteStatus {
     PENDING, // 대기 중

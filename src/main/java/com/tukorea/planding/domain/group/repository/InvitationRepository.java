@@ -1,11 +1,10 @@
-package com.tukorea.planding.domain.invitation.repository;
+package com.tukorea.planding.domain.group.repository;
 
-import com.tukorea.planding.domain.invitation.entity.Invitation;
-import com.tukorea.planding.domain.invitation.entity.InviteStatus;
+import com.tukorea.planding.domain.group.entity.Invitation;
+import com.tukorea.planding.domain.group.entity.InviteStatus;
 import com.tukorea.planding.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {

@@ -4,7 +4,6 @@ import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
-import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.user.dto.UserInfo;

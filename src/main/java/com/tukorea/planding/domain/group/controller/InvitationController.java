@@ -1,10 +1,10 @@
-package com.tukorea.planding.domain.invitation.controller;
+package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
-import com.tukorea.planding.domain.invitation.dto.InvitationResponse;
-import com.tukorea.planding.domain.invitation.service.InvitationService;
+import com.tukorea.planding.domain.group.dto.InvitationRequest;
+import com.tukorea.planding.domain.group.dto.InvitationResponse;
+import com.tukorea.planding.domain.group.service.InvitationService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +37,7 @@ public class InvitationController {
         return CommonUtils.success(invitationResponse);
     }
 
-    @Operation(summary = "초대를 받은 목록",description = "아직 초대의 상태를 바꾸지 않은 경우만")
+    @Operation(summary = "초대를 받은 목록", description = "아직 초대의 상태를 바꾸지 않은 경우만")
     @GetMapping()
     public CommonResponse<List<InvitationResponse>> getInvitations(@AuthenticationPrincipal UserInfo userInfo) {
         List<InvitationResponse> invitationResponses = invitationService.getInvitations(userInfo);

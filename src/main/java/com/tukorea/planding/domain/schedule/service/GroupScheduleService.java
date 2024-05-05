@@ -1,15 +1,15 @@
-package com.tukorea.planding.domain.group.service;
+package com.tukorea.planding.domain.schedule.service;
 
-import com.tukorea.planding.domain.group.dto.GroupScheduleRequest;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustomImpl;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.domain.user.service.UserQueryService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
@@ -29,16 +29,15 @@ public class GroupScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final GroupRoomRepository groupRoomRepository;
-    private final UserRepository userRepository;
+    private final UserQueryService userQueryService;
     private final NotificationService notificationService;
     private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustom;
 
     @Transactional
-    public ScheduleResponse createGroupSchedule(String groupCode, GroupScheduleRequest requestSchedule) {
+    public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
 
         // [1] 작성한 유저
-        User user = userRepository.findById(requestSchedule.userId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = userQueryService.getByUserInfo(requestSchedule.userCode());
 
         // [2] 그룹방
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(groupCode)
@@ -82,4 +81,5 @@ public class GroupScheduleService {
 
         return ScheduleResponse.from(save);
     }
+
 }
