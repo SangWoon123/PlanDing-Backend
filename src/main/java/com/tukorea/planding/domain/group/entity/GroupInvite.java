@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.group.entity;
 
-import com.tukorea.planding.domain.group.dto.InvitationResponse;
+import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Invitation {
+public class GroupInvite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "invitation_id")
+    @Column(name = "group_invite_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,8 +31,8 @@ public class Invitation {
     @JoinColumn(name = "inviting_user_id")
     private User invitingUser;
 
-    @Column(name = "invite_code", unique = true)
-    private String inviteCode;
+    @Column(name = "group_invite_code", unique = true)
+    private String groupInviteCode;
 
     @Enumerated(EnumType.STRING)
     private InviteStatus inviteStatus;
@@ -44,11 +44,11 @@ public class Invitation {
     private LocalDateTime expiredAt;
 
     @Builder
-    public Invitation(GroupRoom groupRoom, User invitedUser, User invitingUser, InviteStatus inviteStatus, LocalDateTime createdAt, LocalDateTime expiredAt) {
+    public GroupInvite(GroupRoom groupRoom, User invitedUser, User invitingUser, InviteStatus inviteStatus, LocalDateTime createdAt, LocalDateTime expiredAt) {
         this.groupRoom = groupRoom;
         this.invitedUser = invitedUser;
         this.invitingUser = invitingUser;
-        this.inviteCode = generateInviteCode();
+        this.groupInviteCode = generateInviteCode();
         this.inviteStatus = inviteStatus;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
@@ -73,12 +73,12 @@ public class Invitation {
         return "INV-" + LocalDateTime.now().toString();
     }
 
-    public static InvitationResponse toInviteResponse(Invitation invitation) {
-        return InvitationResponse.builder()
-                .invitingUser(invitation.getInvitingUser().getUserCode())
-                .groupName(invitation.getGroupRoom().getName())
-                .inviteCode(invitation.getInviteCode())
-                .inviteStatus(invitation.getInviteStatus())
+    public static GroupInviteResponse toInviteResponse(GroupInvite groupInvite) {
+        return GroupInviteResponse.builder()
+                .invitingUser(groupInvite.getInvitingUser().getUserCode())
+                .groupName(groupInvite.getGroupRoom().getName())
+                .inviteCode(groupInvite.getGroupInviteCode())
+                .inviteStatus(groupInvite.getInviteStatus())
                 .build();
     }
 }

@@ -1,12 +1,12 @@
 package com.tukorea.planding.domain.group.service;
 
+import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepository;
-import com.tukorea.planding.domain.group.dto.InvitationRequest;
-import com.tukorea.planding.domain.group.dto.InvitationResponse;
-import com.tukorea.planding.domain.group.entity.Invitation;
+import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
-import com.tukorea.planding.domain.group.repository.InvitationRepository;
+import com.tukorea.planding.domain.group.repository.GroupInviteRepository;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class InvitationService {
+public class GroupInviteService {
 
     private final UserQueryService userQueryService;
-    private final InvitationRepository invitationRepository;
+    private final GroupInviteRepository groupInviteRepository;
     private final GroupQueryService groupQueryService;
-    private final InvitationQueryService invitationQueryService;
+    private final GroupInviteQueryService groupInviteQueryService;
 
 
     private final NotificationService notificationService;
@@ -41,7 +41,7 @@ public class InvitationService {
 
 
     @Transactional
-    public InvitationResponse inviteGroupRoom(UserInfo userInfo, InvitationRequest invitedUserInfo) {
+    public GroupInviteResponse inviteGroupRoom(UserInfo userInfo, GroupInviteRequest invitedUserInfo) {
 
         // 초대하는 유저가 존재하는지 체크하는 로직
         User invitingUser = userQueryService.getByUserInfo(userInfo.getUserCode());
@@ -60,35 +60,35 @@ public class InvitationService {
         User invitedUser = userQueryService.getByUserInfo(invitedUserInfo.userCode());
         checkUserAlreadyOrInvited(groupRoom, invitedUser);
 
-        Invitation invite = createAndSaveInvitation(groupRoom, invitingUser, invitedUser);
+        GroupInvite invite = createAndSaveInvitation(groupRoom, invitingUser, invitedUser);
 
         sendGroupInviteNotification(invitedUser, groupRoom);
 
-        return Invitation.toInviteResponse(invite);
+        return GroupInvite.toInviteResponse(invite);
     }
 
-    public List<InvitationResponse> getInvitations(UserInfo userInfo) {
+    public List<GroupInviteResponse> getInvitations(UserInfo userInfo) {
         User user = userQueryService.getByUserInfo(userInfo.getUserCode());
 
-        List<Invitation> invitations = invitationQueryService.getPendingInvitationForUser(user);
+        List<GroupInvite> groupInvites = groupInviteQueryService.getPendingInvitationForUser(user);
 
-        return invitations.stream()
-                .map(Invitation::toInviteResponse)
+        return groupInvites.stream()
+                .map(GroupInvite::toInviteResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public InvitationResponse acceptInvitation(UserInfo userInfo, String code) {
+    public GroupInviteResponse acceptInvitation(UserInfo userInfo, String code) {
         User user = userQueryService.getByUserInfo(userInfo.getUserCode());
 
-        Invitation invitation = invitationQueryService.getInvitationByInviteCode(code);
-        invitation.accept();
+        GroupInvite groupInvite = groupInviteQueryService.getInvitationByInviteCode(code);
+        groupInvite.accept();
 
-        invitation.getGroupRoom().addUser(user);
+        groupInvite.getGroupRoom().addUser(user);
 
-        userGroupMembershipRepository.saveAll(invitation.getGroupRoom().getGroupMemberships());
+        userGroupMembershipRepository.saveAll(groupInvite.getGroupRoom().getGroupMemberships());
 
-        return Invitation.toInviteResponse(invitation);
+        return GroupInvite.toInviteResponse(groupInvite);
     }
 
     private void sendGroupInviteNotification(User invitedUser, GroupRoom groupRoom) {
@@ -103,8 +103,8 @@ public class InvitationService {
         notificationService.send(request);
     }
 
-    private Invitation createAndSaveInvitation(GroupRoom groupRoom, User invitingUser, User invitedUser) {
-        Invitation invite = Invitation.builder()
+    private GroupInvite createAndSaveInvitation(GroupRoom groupRoom, User invitingUser, User invitedUser) {
+        GroupInvite invite = GroupInvite.builder()
                 .groupRoom(groupRoom)
                 .invitingUser(invitingUser)
                 .invitedUser(invitedUser)
@@ -112,7 +112,7 @@ public class InvitationService {
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusDays(1))
                 .build();
-        return invitationRepository.save(invite);
+        return groupInviteRepository.save(invite);
     }
 
     private void validInvitePermission(GroupRoom groupRoom, User invitingUser) {
@@ -127,7 +127,7 @@ public class InvitationService {
             throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
         }
         // 이미 보낸 초대인지 확인
-        if (invitationRepository.existsByGroupRoomIdAndInvitedUserAndInviteStatus(groupRoom.getId(), invitedUser, InviteStatus.PENDING)) {
+        if (groupInviteRepository.existsByGroupRoomIdAndInvitedUserAndInviteStatus(groupRoom.getId(), invitedUser, InviteStatus.PENDING)) {
             throw new BusinessException(ErrorCode.INVITATION_ALREADY_SENT);
         }
     }
