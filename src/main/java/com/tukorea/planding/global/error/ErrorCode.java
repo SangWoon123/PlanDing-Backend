@@ -33,7 +33,12 @@ public enum ErrorCode {
      */
     INVITATION_ALREADY_SENT("INVITATION-001", "이미 초대한 사용자입니다.", HttpStatus.CONFLICT),
     CANNOT_INVITE_YOURSELF("INVITATION-002", "자기 자신은 초대를 할 수 없습니다.", HttpStatus.CONFLICT),
-    NOTEXIST_INVITE("INVITATION-004", "초대받은 적이 없습니다.", HttpStatus.NOT_FOUND);
+    NOTEXIST_INVITE("INVITATION-004", "초대받은 적이 없습니다.", HttpStatus.NOT_FOUND),
+
+    /**
+     * Group-Schedule-ATTENDANCE Error
+     */
+    INVALID_ATTENDANCE_STATUS("ATTENDANCE-001", "올바르지 않은 상태값입니다.", HttpStatus.NOT_FOUND);
 
 
     private final String errorCode;

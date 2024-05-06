@@ -47,7 +47,7 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "개인 스케줄: id 값으로 가져오기")
+    @Operation(summary = "개인 스케줄: 조회")
     @GetMapping("/{schedule_id}")
     public CommonResponse<ScheduleResponse> getScheduleById(@PathVariable(name = "schedule_id") Long id, @AuthenticationPrincipal UserInfo userInfo) {
         ScheduleResponse scheduleResponse = scheduleService.getSchedule(id, userInfo);
@@ -71,13 +71,6 @@ public class ScheduleController {
         return CommonUtils.success(scheduleResponse);
     }
 
-    @Operation(summary = "개인 스케줄: 스케줄 상태 변환")
-    @PatchMapping("/{schedule_id}/status")
-    public CommonResponse<ScheduleResponse> updateScheduleStatus(@PathVariable(name = "schedule_id") Long id, @RequestBody ScheduleStatus scheduleStatus) {
-        ScheduleResponse scheduleResponse = scheduleService.updateScheduleStatus(id, scheduleStatus);
-        return CommonUtils.success(scheduleResponse);
-    }
-
     /*
        그룹룸 스케줄관련 코드
     */
@@ -85,6 +78,13 @@ public class ScheduleController {
     @GetMapping("/groupRoom/{groupRoomId}")
     public CommonResponse<List<ScheduleResponse>> getSchedulesByGroupRoom(@PathVariable Long groupRoomId, @AuthenticationPrincipal UserInfo userInfo) {
         List<ScheduleResponse> scheduleResponses = scheduleService.getSchedulesByGroupRoom(groupRoomId, userInfo);
+        return CommonUtils.success(scheduleResponses);
+    }
+
+    @Operation(summary = "그룹 스케줄: 조회")
+    @GetMapping("/groupRoom/{groupRoomId}/{scheduleId}")
+    public CommonResponse<ScheduleResponse> getGroupSchedule(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @AuthenticationPrincipal UserInfo userInfo) {
+        ScheduleResponse scheduleResponses = scheduleService.getGroupSchedule(groupRoomId, scheduleId, userInfo);
         return CommonUtils.success(scheduleResponses);
     }
 

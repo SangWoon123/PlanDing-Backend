@@ -13,7 +13,16 @@ import org.springframework.stereotype.Service;
 public class UserQueryService {
     private final UserRepository userRepository;
 
-    public User getUserByUserCode(UserInfo userInfo){
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    public User getByUserInfo(String userCode) {
+        return userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public User getUserByUserCode(UserInfo userInfo) {
         return userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }

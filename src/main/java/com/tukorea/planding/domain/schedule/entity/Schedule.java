@@ -39,10 +39,6 @@ public class Schedule extends BaseEntity {
     @Column(name = "complete", nullable = false)
     private boolean isComplete;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private ScheduleStatus status = ScheduleStatus.UNDECIDED;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_room_id")
     private GroupRoom groupRoom;
@@ -85,21 +81,6 @@ public class Schedule extends BaseEntity {
     public void addUser(User user) {
         this.user = user;
         user.getSchedules().add(this);
-    }
-
-    /*
-    스케줄 상태변환 메서드
-     */
-    public void markAsPossible() {
-        this.status = ScheduleStatus.POSSIBLE;
-    }
-
-    public void markAsImpossible() {
-        this.status = ScheduleStatus.IMPOSSIBLE;
-    }
-
-    public void markAsUndecided() {
-        this.status = ScheduleStatus.UNDECIDED;
     }
 
 }

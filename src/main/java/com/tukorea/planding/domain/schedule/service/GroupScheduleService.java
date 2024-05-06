@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.schedule.service;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustom;
 import com.tukorea.planding.domain.group.repository.UserGroupMembershipRepositoryCustomImpl;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
@@ -31,7 +32,7 @@ public class GroupScheduleService {
     private final GroupRoomRepository groupRoomRepository;
     private final UserQueryService userQueryService;
     private final NotificationService notificationService;
-    private final UserGroupMembershipRepositoryCustomImpl userGroupMembershipRepositoryCustom;
+    private final UserGroupMembershipRepositoryCustom userGroupMembershipRepositoryCustom;
 
     @Transactional
     public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
