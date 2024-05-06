@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.group.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,12 @@ public class GroupFavoriteRepositoryCustomImpl implements GroupFavoriteRepositor
                 .where(groupFavorite.user.userCode.eq(userCode))
                 .fetchFirst();
         return fetchOne != null;
+    }
+
+    @Override
+    public GroupFavorite findByUserAndGroupRoom(User user, GroupRoom groupRoom) {
+        return jpaQueryFactory.selectFrom(groupFavorite)
+                .where(groupFavorite.user.eq(user).and(groupFavorite.groupRoom.eq(groupRoom)))
+                .fetchOne();
     }
 }

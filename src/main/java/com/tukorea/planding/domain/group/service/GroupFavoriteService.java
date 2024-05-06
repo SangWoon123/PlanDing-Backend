@@ -12,8 +12,10 @@ import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class GroupFavoriteService {
 
@@ -35,5 +37,16 @@ public class GroupFavoriteService {
         GroupFavorite save = groupFavoriteRepository.save(groupFavorite);
 
         return GroupFavoriteResponse.from(save);
+    }
+
+    public void deleteFavorite(UserInfo userInfo, String groupCode) {
+        User user = userQueryService.getByUserInfo(userInfo.getUserCode());
+        GroupRoom groupRoom = groupQueryService.getGroupByCode(groupCode);
+
+        GroupFavorite groupFavorite = groupFavoriteRepositoryCustom.findByUserAndGroupRoom(user, groupRoom);
+        if (groupFavorite == null) {
+            throw new BusinessException(ErrorCode.FAVORITE_ALREADY_DELETE);
+        }
+        groupFavoriteRepository.delete(groupFavorite);
     }
 }

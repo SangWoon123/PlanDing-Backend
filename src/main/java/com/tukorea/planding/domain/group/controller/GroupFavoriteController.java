@@ -7,10 +7,7 @@ import com.tukorea.planding.domain.group.service.GroupFavoriteService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +17,15 @@ public class GroupFavoriteController {
     private final GroupFavoriteService groupFavoriteService;
 
     @GetMapping("/{groupCode}")
-    public CommonResponse<?> addFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
+    public CommonResponse<GroupFavoriteResponse> addFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
         GroupFavoriteResponse response = groupFavoriteService.addFavorite(userInfo, groupCode);
         return CommonUtils.success(response);
+    }
+
+    @DeleteMapping("/{groupCode}")
+    public CommonResponse<?> deleteFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
+        groupFavoriteService.deleteFavorite(userInfo, groupCode);
+        return CommonUtils.success("즐겨찾기 해제 완료.");
     }
 
 }
