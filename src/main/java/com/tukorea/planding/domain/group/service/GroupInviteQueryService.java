@@ -20,7 +20,7 @@ public class GroupInviteQueryService {
     private final GroupInviteRepositoryCustom groupInviteRepositoryCustom;
 
     public GroupInvite getInvitationByInviteCode(String inviteCode) {
-        return groupInviteRepository.findByInviteCode(inviteCode)
+        return groupInviteRepository.findByGroupInviteCode(inviteCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOTEXIST_INVITE));
     }
 

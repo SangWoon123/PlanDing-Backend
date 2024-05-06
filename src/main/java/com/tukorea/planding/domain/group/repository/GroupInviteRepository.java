@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface GroupInviteRepository extends JpaRepository<GroupInvite, Long> {
     boolean existsByGroupRoomIdAndInvitedUserAndInviteStatus(Long groupId, User user, InviteStatus inviteStatus);
 
-    Optional<GroupInvite> findByInviteCode(String code);
+    Optional<GroupInvite> findByGroupInviteCode(String code);
 }
