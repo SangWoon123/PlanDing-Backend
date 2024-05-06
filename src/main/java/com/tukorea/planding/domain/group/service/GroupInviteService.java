@@ -3,7 +3,6 @@ package com.tukorea.planding.domain.group.service;
 import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.group.repository.UserGroupRepository;
 import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
 import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
@@ -85,7 +84,7 @@ public class GroupInviteService {
         GroupInvite groupInvite = groupInviteQueryService.getInvitationByInviteCode(code);
         groupInvite.accept();
 
-        final UserGroup userGroup = UserGroup.createGroupOwner(user, groupInvite.getGroupRoom());
+        final UserGroup userGroup = UserGroup.createUserGroup(user, groupInvite.getGroupRoom());
         userGroupService.save(userGroup);
 
         return GroupInvite.toInviteResponse(groupInvite);

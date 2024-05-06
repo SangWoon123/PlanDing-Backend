@@ -32,7 +32,7 @@ public class GroupRoomService {
         GroupRoom newGroupRoom = GroupRoom.createGroupRoom(createGroupRoom, user);
         GroupRoom savedGroupRoom = groupQueryService.createGroup(newGroupRoom);
 
-        final UserGroup userGroup = UserGroup.createGroupOwner(user, savedGroupRoom);
+        final UserGroup userGroup = UserGroup.createUserGroup(user, savedGroupRoom);
 
         // 중간테이블에 유저, 그룹 정보 저장
         userGroupService.save(userGroup);

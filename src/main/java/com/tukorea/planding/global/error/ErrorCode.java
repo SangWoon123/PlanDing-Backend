@@ -27,6 +27,7 @@ public enum ErrorCode {
     GROUP_ROOM_NOT_FOUND("GROUP-003", "그룹룸이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_GROUP_ROOM_INVITATION("GROUP-004", "그룹룸에 초대할 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     USER_ALREADY_INVITED("GROUP-005", "이미 그룹룸에 초대되었습니다.", HttpStatus.UNAUTHORIZED),
+    FAVORITE_ALREADY_ADD("GROUP-006", "이미 즐겨찾기에 등록하였습니다..", HttpStatus.UNAUTHORIZED),
 
     /**
      * Invite Error
@@ -44,4 +45,4 @@ public enum ErrorCode {
     private final String errorCode;
     private final String message;
     private final HttpStatus status;
-}
+    }
