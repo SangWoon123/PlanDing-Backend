@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.tukorea.planding.domain.group.entity.QInvitation.invitation;
+import static com.tukorea.planding.domain.group.entity.QGroupInvite.groupInvite;
 
 
 @Repository
@@ -18,17 +18,17 @@ public class GroupInviteRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public List<GroupInvite> findPendingInvitationsForUser(User user) {
-        return queryFactory.selectFrom(invitation)
-                .where(invitation.invitedUser.userCode.eq(user.getUserCode())
-                        .and(invitation.inviteStatus.eq(InviteStatus.PENDING)))
+        return queryFactory.selectFrom(groupInvite)
+                .where(groupInvite.invitedUser.userCode.eq(user.getUserCode())
+                        .and(groupInvite.inviteStatus.eq(InviteStatus.PENDING)))
                 .fetch();
     }
 
     public Long countByInvitedUserCodeAndStatus(String userCode, InviteStatus inviteStatus) {
-        return queryFactory.select(invitation.count())
-                .from(invitation)
-                .where(invitation.invitedUser.userCode.eq(userCode).and(
-                        invitation.inviteStatus.eq(inviteStatus)
+        return queryFactory.select(groupInvite.count())
+                .from(groupInvite)
+                .where(groupInvite.invitedUser.userCode.eq(userCode).and(
+                        groupInvite.inviteStatus.eq(inviteStatus)
                 ))
                 .fetchOne();
     }

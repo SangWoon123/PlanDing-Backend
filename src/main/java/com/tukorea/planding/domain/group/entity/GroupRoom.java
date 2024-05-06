@@ -12,7 +12,6 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "GROUP_ROOM")
 public class GroupRoom extends BaseEntity {
 
     @Id
@@ -33,10 +32,13 @@ public class GroupRoom extends BaseEntity {
     private String groupCode; // 그룹방 고유 식별값
 
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
+    private final Set<UserGroup> groupMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Schedule> schedules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<GroupFavorite> groupFavorites = new ArrayList<>();
 
     @Builder
     public GroupRoom(String name, String description, String owner, String groupCode) {
@@ -52,23 +54,11 @@ public class GroupRoom extends BaseEntity {
     }
 
     public static GroupRoom createGroupRoom(GroupCreateRequest groupCreateRequest, User owner) {
-        GroupRoom groupRoom = GroupRoom.builder()
+        return GroupRoom.builder()
                 .name(groupCreateRequest.name())
                 .description(groupCreateRequest.description())
                 .owner(owner.getUserCode())
                 .build();
-        groupRoom.addUser(owner);
-        return groupRoom;
-    }
-
-    // 연관 관계 편의 메서드
-    public void addUser(User user) {
-        UserGroupMembership membership = UserGroupMembership.builder()
-                .user(user)
-                .groupRoom(this)
-                .build();
-        this.groupMemberships.add(membership);
-        user.getGroupMemberships().add(membership);
     }
 
     // 스케줄을 그룹룸에 추가하는 메서드

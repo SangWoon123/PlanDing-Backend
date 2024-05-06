@@ -1,13 +1,12 @@
 package com.tukorea.planding.domain.user.entity;
 
+import com.tukorea.planding.domain.group.entity.GroupFavorite;
+import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.notify.entity.Notification;
-import com.tukorea.planding.domain.user.dto.AndroidLoginResponse;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.oauth.details.Role;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.entity.UserGroupMembership;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.user.dto.UserInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,7 +18,6 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "USER")
 public class User extends BaseEntity {
 
     @Id
@@ -54,10 +52,13 @@ public class User extends BaseEntity {
     private final List<Schedule> schedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<UserGroupMembership> groupMemberships = new HashSet<>();
+    private final Set<UserGroup> groupMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notificationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<GroupFavorite> groupFavorites = new ArrayList<>();
 
     @Builder
     public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode) {
@@ -68,16 +69,6 @@ public class User extends BaseEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.userCode = userCode;
-    }
-
-    // 연관 관계 편의 메서드
-    public void joinGroupRoom(GroupRoom groupRoom) {
-        UserGroupMembership membership = UserGroupMembership.builder()
-                .user(this)
-                .groupRoom(groupRoom)
-                .build();
-        this.groupMemberships.add(membership);
-        groupRoom.getGroupMemberships().add(membership);
     }
 
     public static String createCode() {

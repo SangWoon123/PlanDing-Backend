@@ -1,6 +1,6 @@
 package com.tukorea.planding.global.websocket;
 
-import com.tukorea.planding.domain.group.service.UserGroupMemberShipService;
+import com.tukorea.planding.domain.group.service.UserGroupService;
 import com.tukorea.planding.global.config.security.jwt.JwtTokenHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.broker.SimpleBrokerMessageHandler;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -22,7 +21,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
     private final JwtTokenHandler jwtTokenHandler;
     private final WebSocketRegistry webSocketRegistry;
-    private final UserGroupMemberShipService userGroupMemberShipService;
+    private final UserGroupService userGroupService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -58,7 +57,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                 webSocketRegistry.register(sessionId, new UserInfoSession(userCode, groupCode));
 
                 // 유저 그룹 접속 업데이트
-                userGroupMemberShipService.updateConnectionStatus(userCode, groupCode, true);
+                userGroupService.updateConnectionStatus(userCode, groupCode, true);
             }
         } else {
             log.error("JWT token not found or invalid format");
@@ -70,7 +69,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         UserInfoSession userInfo = webSocketRegistry.getRegister(sessionId);
 
         if (userInfo != null) {
-            userGroupMemberShipService.updateConnectionStatus(userInfo.userCode(), userInfo.groupCode(), false);
+            userGroupService.updateConnectionStatus(userInfo.userCode(), userInfo.groupCode(), false);
         }
 
         webSocketRegistry.unregister(sessionId);

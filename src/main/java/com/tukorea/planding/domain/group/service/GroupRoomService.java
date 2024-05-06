@@ -4,6 +4,7 @@ import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.GroupResponse;
 import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class GroupRoomService {
 
     private final UserQueryService userQueryService;
-    private final UserGroupMemberShipService userGroupMemberShipService;
+    private final UserGroupService userGroupService;
     private final GroupQueryService groupQueryService;
 
     @Transactional
@@ -31,8 +32,10 @@ public class GroupRoomService {
         GroupRoom newGroupRoom = GroupRoom.createGroupRoom(createGroupRoom, user);
         GroupRoom savedGroupRoom = groupQueryService.createGroup(newGroupRoom);
 
+        final UserGroup userGroup = UserGroup.createGroupOwner(user, savedGroupRoom);
+
         // 중간테이블에 유저, 그룹 정보 저장
-        userGroupMemberShipService.saveAll(savedGroupRoom);
+        userGroupService.save(userGroup);
 
         return toGroupResponse(newGroupRoom);
     }
