@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.service;
+package com.tukorea.planding.domain.group.service.query;
 
 import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
