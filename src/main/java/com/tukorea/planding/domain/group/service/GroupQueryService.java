@@ -25,13 +25,17 @@ public class GroupQueryService {
         return groupRoomRepository.save(groupRoom);
     }
 
-    public List<GroupRoom> findGroupsByUser(User user){
-        return groupRoomRepositoryCustom.findGroupRoomsByUserId(user.getId());
+    public List<GroupRoom> findGroupsByUserId(Long userId) {
+        return groupRoomRepositoryCustom.findGroupRoomsByUserId(userId);
     }
 
-    public GroupRoom getGroupByCode(String groupCode) {
-        return groupRoomRepository.findByGroupCode(groupCode)
+    public GroupRoom getGroupById(Long groupId) {
+        return groupRoomRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
+    }
+
+    public List<User> getGroupUsers(Long groupId) {
+        return groupRoomRepositoryCustom.getGroupUsers(groupId);
     }
 
 }

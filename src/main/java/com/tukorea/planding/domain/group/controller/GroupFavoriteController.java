@@ -2,7 +2,7 @@ package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.group.dto.GroupFavoriteResponse;
+import com.tukorea.planding.domain.group.dto.response.GroupFavoriteResponse;
 import com.tukorea.planding.domain.group.service.GroupFavoriteService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +16,15 @@ public class GroupFavoriteController {
 
     private final GroupFavoriteService groupFavoriteService;
 
-    @GetMapping("/{groupCode}")
-    public CommonResponse<GroupFavoriteResponse> addFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
-        GroupFavoriteResponse response = groupFavoriteService.addFavorite(userInfo, groupCode);
+    @GetMapping("/{groupId}")
+    public CommonResponse<GroupFavoriteResponse> addFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
+        GroupFavoriteResponse response = groupFavoriteService.addFavorite(userInfo, groupId);
         return CommonUtils.success(response);
     }
 
-    @DeleteMapping("/{groupCode}")
-    public CommonResponse<?> deleteFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
-        groupFavoriteService.deleteFavorite(userInfo, groupCode);
+    @DeleteMapping("/{groupId}")
+    public CommonResponse<?> deleteFavorite(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
+        groupFavoriteService.deleteFavorite(userInfo, groupId);
         return CommonUtils.success("즐겨찾기 해제 완료.");
     }
 

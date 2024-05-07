@@ -1,11 +1,14 @@
 package com.tukorea.planding.domain.group.repository;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.user.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface GroupRoomRepositoryCustom {
     List<GroupRoom> findGroupRoomsByUserId(Long userId);
-    GroupRoom findByGroupCode(String groupCode);
+
+    GroupRoom findByGroupId(Long groupId);
+
+    List<User> getGroupUsers(Long groupId);
 }

@@ -100,6 +100,5 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponse> deleteScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @AuthenticationPrincipal UserInfo userInfo) {
         scheduleService.deleteScheduleByGroupRoom(groupRoomId, scheduleId, userInfo);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 }

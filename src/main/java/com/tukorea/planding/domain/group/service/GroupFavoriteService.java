@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.GroupFavoriteResponse;
+import com.tukorea.planding.domain.group.dto.response.GroupFavoriteResponse;
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupFavoriteRepository;
@@ -24,9 +24,9 @@ public class GroupFavoriteService {
     private final UserQueryService userQueryService;
     private final GroupQueryService groupQueryService;
 
-    public GroupFavoriteResponse addFavorite(UserInfo userInfo, String groupCode) {
+    public GroupFavoriteResponse addFavorite(UserInfo userInfo, Long groupId) {
         User user = userQueryService.getByUserInfo(userInfo.getUserCode());
-        GroupRoom groupRoom = groupQueryService.getGroupByCode(groupCode);
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
 
         boolean exists = groupFavoriteRepositoryCustom.existsByUserAndGroupRoom(user.getUserCode());
         if (exists) {
@@ -39,9 +39,9 @@ public class GroupFavoriteService {
         return GroupFavoriteResponse.from(save);
     }
 
-    public void deleteFavorite(UserInfo userInfo, String groupCode) {
+    public void deleteFavorite(UserInfo userInfo, Long groupId) {
         User user = userQueryService.getByUserInfo(userInfo.getUserCode());
-        GroupRoom groupRoom = groupQueryService.getGroupByCode(groupCode);
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
 
         GroupFavorite groupFavorite = groupFavoriteRepositoryCustom.findByUserAndGroupRoom(user, groupRoom);
         if (groupFavorite == null) {

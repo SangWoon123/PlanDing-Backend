@@ -5,7 +5,6 @@ import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.notify.entity.Notification;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.oauth.details.Role;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -52,7 +51,7 @@ public class User extends BaseEntity {
     private final List<Schedule> schedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<UserGroup> groupMemberships = new HashSet<>();
+    private final Set<UserGroup> userGroup = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Notification> notificationList = new ArrayList<>();

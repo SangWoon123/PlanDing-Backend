@@ -1,10 +1,12 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.GroupResponse;
-import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
+import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupResponse;
+import com.tukorea.planding.domain.group.dto.request.GroupUpdateRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupUserResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
+import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
@@ -24,6 +26,7 @@ public class GroupRoomService {
     private final UserQueryService userQueryService;
     private final UserGroupService userGroupService;
     private final GroupQueryService groupQueryService;
+    private final GroupRoomRepository groupRoomRepository;
 
     @Transactional
     public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {
@@ -44,7 +47,7 @@ public class GroupRoomService {
     public GroupResponse updateGroupNameOrDescription(UserInfo userInfo, GroupUpdateRequest groupUpdateRequest) {
         User user = userQueryService.getUserByUserCode(userInfo);
 
-        GroupRoom groupRoom = groupQueryService.getGroupByCode(groupUpdateRequest.groupCode());
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupUpdateRequest.groupId());
 
         // TODO 그룹의 팀원도 변경가능하도록
         if (!groupRoom.getOwner().equals(user.getUserCode())) {
@@ -60,10 +63,18 @@ public class GroupRoomService {
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
         User user = userQueryService.getUserByUserCode(userInfo);
 
-        List<GroupRoom> groupRooms = groupQueryService.findGroupsByUser(user);
+        List<GroupRoom> groupRooms = groupQueryService.findGroupsByUserId(user.getId());
 
         return groupRooms.stream()
                 .map(this::toGroupResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<GroupUserResponse> getGroupUsers(Long groupId) {
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
+        List<User> users = groupQueryService.getGroupUsers(groupRoom.getId());
+        return users.stream()
+                .map(GroupUserResponse::toGroupUserResponse)
                 .collect(Collectors.toList());
     }
 

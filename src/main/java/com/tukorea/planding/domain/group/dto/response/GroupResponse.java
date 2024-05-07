@@ -1,8 +1,7 @@
-package com.tukorea.planding.domain.group.dto;
+package com.tukorea.planding.domain.group.dto.response;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record GroupResponse(

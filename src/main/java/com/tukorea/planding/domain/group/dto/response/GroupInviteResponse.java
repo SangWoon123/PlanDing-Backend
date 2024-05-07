@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.dto;
+package com.tukorea.planding.domain.group.dto.response;
 
 import com.tukorea.planding.domain.group.entity.InviteStatus;
 import lombok.Builder;

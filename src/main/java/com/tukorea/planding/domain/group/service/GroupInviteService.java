@@ -3,8 +3,8 @@ package com.tukorea.planding.domain.group.service;
 import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
-import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
+import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteResponse;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
 import com.tukorea.planding.domain.group.repository.GroupInviteRepository;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
@@ -51,7 +51,7 @@ public class GroupInviteService {
             throw new BusinessException(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
 
-        GroupRoom groupRoom = groupQueryService.getGroupByCode(invitedUserInfo.inviteGroupCode());
+        GroupRoom groupRoom = groupQueryService.getGroupById(invitedUserInfo.groupId());
         log.info("[그룹 초대] {} : {}", groupRoom.getName(), invitingUser.getUsername());
 
         // 초대하는 유저가 방장인지 체크하는 로직
@@ -122,7 +122,7 @@ public class GroupInviteService {
 
     private void checkUserAlreadyOrInvited(GroupRoom groupRoom, User invitedUser) {
         // 초대한 유저가 이미 그룹에 속해 있는지 확인
-        if (groupRoom.getGroupMemberships().contains(invitedUser)) {
+        if (groupRoom.getUserGroups().contains(invitedUser)) {
             throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
         }
         // 이미 보낸 초대인지 확인

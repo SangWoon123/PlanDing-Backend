@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.group.entity;
 
-import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
@@ -32,7 +32,7 @@ public class GroupRoom extends BaseEntity {
     private String groupCode; // 그룹방 고유 식별값
 
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<UserGroup> groupMemberships = new HashSet<>();
+    private final Set<UserGroup> userGroups = new HashSet<>();
 
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Schedule> schedules = new ArrayList<>();

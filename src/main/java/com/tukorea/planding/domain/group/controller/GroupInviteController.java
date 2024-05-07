@@ -2,8 +2,8 @@ package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.group.dto.GroupInviteRequest;
-import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
+import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteResponse;
 import com.tukorea.planding.domain.group.service.GroupInviteService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;

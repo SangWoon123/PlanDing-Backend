@@ -28,7 +28,7 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
     @Override
     public List<User> findUserByIsConnectionFalse(Long groupRoomId) {
         return queryFactory.selectFrom(user)
-                .join(user.groupMemberships, userGroup)
+                .join(user.userGroup, userGroup)
                 .where(userGroup.groupRoom.id.eq(groupRoomId)
                         .and(userGroup.isConnected.eq(false)))
                 .fetch();

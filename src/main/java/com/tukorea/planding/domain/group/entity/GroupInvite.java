@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.group.entity;
 
-import com.tukorea.planding.domain.group.dto.GroupInviteResponse;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteResponse;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
