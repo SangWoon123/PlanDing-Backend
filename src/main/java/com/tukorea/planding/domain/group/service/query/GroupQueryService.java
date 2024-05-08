@@ -34,6 +34,10 @@ public class GroupQueryService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
     }
 
+    public void delete(GroupRoom groupRoom) {
+        groupRoomRepository.delete(groupRoom);
+    }
+
     public List<User> getGroupUsers(Long groupId) {
         return groupRoomRepositoryCustom.getGroupUsers(groupId);
     }

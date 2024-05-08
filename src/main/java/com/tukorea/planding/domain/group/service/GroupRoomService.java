@@ -1,18 +1,20 @@
 package com.tukorea.planding.domain.group.service;
 
 import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.response.GroupResponse;
 import com.tukorea.planding.domain.group.dto.request.GroupUpdateRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupResponse;
 import com.tukorea.planding.domain.group.dto.response.GroupUserResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.service.query.GroupQueryService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GroupRoomService {
 
@@ -59,6 +62,17 @@ public class GroupRoomService {
         return toGroupResponse(groupRoom);
     }
 
+    public void deleteGroup(UserInfo userInfo, Long groupId) {
+        User user = userQueryService.getByUserInfo(userInfo.getUserCode());
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
+
+        if (!groupRoom.getOwner().equals(user.getUserCode())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+        }
+
+        groupQueryService.delete(groupRoom);
+    }
+
     // 유저가 속한 그룹룸 가져오기
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
         User user = userQueryService.getUserByUserCode(userInfo);
@@ -81,5 +95,4 @@ public class GroupRoomService {
     private GroupResponse toGroupResponse(GroupRoom groupRoom) {
         return GroupResponse.from(groupRoom);
     }
-
 }

@@ -2,9 +2,10 @@ package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.GroupUpdateRequest;
-import com.tukorea.planding.domain.group.dto.GroupResponse;
+import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.request.GroupUpdateRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupResponse;
+import com.tukorea.planding.domain.group.dto.response.GroupUserResponse;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,23 +21,38 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/group")
 public class GroupRoomController {
+
     private final GroupRoomService groupRoomService;
 
-    @Operation(summary = "스케줄 그룹 생성")
+    @Operation(summary = "그룹에 속한 유저 조회")
+    @GetMapping("/{groupId}")
+    public CommonResponse<?> getUserByGroup(@PathVariable Long groupId) {
+        List<GroupUserResponse> responses = groupRoomService.getGroupUsers(groupId);
+        return CommonUtils.success(responses);
+    }
+
+    @Operation(summary = "그룹 생성")
     @PostMapping()
     public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupCreateRequest createGroupRoom) {
         GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom);
         return CommonUtils.success(groupResponse);
     }
 
-    @Operation(summary = "그룹 이름,설명 변경")
+    @Operation(summary = "그룹 정보 수정")
     @PatchMapping()
     public CommonResponse<GroupResponse> updateGroupNameOrDescription(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupUpdateRequest groupUpdateRequest) {
         GroupResponse groupResponses = groupRoomService.updateGroupNameOrDescription(userInfo, groupUpdateRequest);
         return CommonUtils.success(groupResponses);
     }
 
-    @Operation(summary = "유저가 속한 그룹 가져오기")
+    @Operation(summary = "그룹 삭제")
+    @DeleteMapping("/{groupId}")
+    public CommonResponse<?> deleteGroup(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
+        groupRoomService.deleteGroup(userInfo, groupId);
+        return CommonUtils.success("그룹삭제 완료.");
+    }
+
+    @Operation(summary = "내 그룹 가져오기")
     @GetMapping("/myGroup")
     public CommonResponse<List<GroupResponse>> getAllGroupRoomByUser(@AuthenticationPrincipal UserInfo userInfo) {
         List<GroupResponse> groupResponses = groupRoomService.getAllGroupRoomByUser(userInfo);
