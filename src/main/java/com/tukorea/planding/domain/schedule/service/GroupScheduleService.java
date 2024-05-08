@@ -37,7 +37,7 @@ public class GroupScheduleService {
     public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
 
         // [1] 작성한 유저
-        User user = userQueryService.getByUserInfo(requestSchedule.userCode());
+        User user = userQueryService.getUserByUserCode(requestSchedule.userCode());
 
         // [2] 그룹방
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(groupCode)

@@ -33,7 +33,7 @@ public class GroupRoomService {
 
     @Transactional
     public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {
-        User user = userQueryService.getUserByUserCode(userInfo);
+        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
         GroupRoom newGroupRoom = GroupRoom.createGroupRoom(createGroupRoom, user);
         GroupRoom savedGroupRoom = groupQueryService.createGroup(newGroupRoom);
@@ -48,7 +48,7 @@ public class GroupRoomService {
 
     @Transactional
     public GroupResponse updateGroupNameOrDescription(UserInfo userInfo, GroupUpdateRequest groupUpdateRequest) {
-        User user = userQueryService.getUserByUserCode(userInfo);
+        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
         GroupRoom groupRoom = groupQueryService.getGroupById(groupUpdateRequest.groupId());
 
@@ -63,7 +63,7 @@ public class GroupRoomService {
     }
 
     public void deleteGroup(UserInfo userInfo, Long groupId) {
-        User user = userQueryService.getByUserInfo(userInfo.getUserCode());
+        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
         GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
 
         if (!groupRoom.getOwner().equals(user.getUserCode())) {
@@ -75,7 +75,7 @@ public class GroupRoomService {
 
     // 유저가 속한 그룹룸 가져오기
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
-        User user = userQueryService.getUserByUserCode(userInfo);
+        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
         List<GroupRoom> groupRooms = groupQueryService.findGroupsByUserId(user.getId());
 

@@ -24,8 +24,8 @@ public class GroupInviteQueryService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOTEXIST_INVITE));
     }
 
-    public List<GroupInvite> getPendingInvitationForUser(User user) {
-        return groupInviteRepositoryCustom.findPendingInvitationsForUser(user);
+    public List<GroupInvite> getPendingInvitationForUser(Long userId) {
+        return groupInviteRepositoryCustom.findPendingInvitationsForUser(userId);
     }
 
     public Long countInvitation(String userCode, InviteStatus inviteStatus) {

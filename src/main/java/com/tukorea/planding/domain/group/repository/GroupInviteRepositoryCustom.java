@@ -17,9 +17,9 @@ import static com.tukorea.planding.domain.group.entity.QGroupInvite.groupInvite;
 public class GroupInviteRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public List<GroupInvite> findPendingInvitationsForUser(User user) {
+    public List<GroupInvite> findPendingInvitationsForUser(Long userId) {
         return queryFactory.selectFrom(groupInvite)
-                .where(groupInvite.invitedUser.userCode.eq(user.getUserCode())
+                .where(groupInvite.invitedUser.id.eq(userId)
                         .and(groupInvite.inviteStatus.eq(InviteStatus.PENDING)))
                 .fetch();
     }

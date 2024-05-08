@@ -37,6 +37,10 @@ public class ScheduleQueryService {
         return scheduleRepository.findByGroupRoomId(groupRoomId);
     }
 
+    public List<Schedule> showTodaySchedule(Long userId) {
+        return scheduleRepositoryCustom.showTodaySchedule(userId);
+    }
+
     public Schedule save(Schedule schedule) {
         return scheduleRepository.save(schedule);
     }

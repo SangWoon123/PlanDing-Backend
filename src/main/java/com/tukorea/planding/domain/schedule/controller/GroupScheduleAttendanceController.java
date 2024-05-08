@@ -20,7 +20,7 @@ public class GroupScheduleAttendanceController {
 
     @GetMapping()
     public ResponseEntity<?> participationGroupSchedule(@AuthenticationPrincipal UserInfo userInfo, GroupScheduleAttendanceRequest status) {
-        groupScheduleAttendanceService.participationGroupSchedule(userInfo.getUserCode(), status);
+        groupScheduleAttendanceService.participationGroupSchedule(userInfo, status);
         return new ResponseEntity<>("스케줄 참여여부 변경 완료되었습니다.", HttpStatus.OK);
     }
 }
