@@ -6,9 +6,14 @@ import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserQueryService {
     private final UserRepository userRepository;
@@ -17,13 +22,8 @@ public class UserQueryService {
         return userRepository.save(user);
     }
 
-    public User getByUserInfo(String userCode) {
+    public User getUserByUserCode(String userCode) {
         return userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    public User getUserByUserCode(UserInfo userInfo) {
-        return userRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 }
