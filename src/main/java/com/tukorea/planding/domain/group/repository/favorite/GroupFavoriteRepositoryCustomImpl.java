@@ -1,11 +1,11 @@
-package com.tukorea.planding.domain.group.repository;
+package com.tukorea.planding.domain.group.repository.favorite;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static com.tukorea.planding.domain.group.entity.QGroupFavorite.groupFavorite;
 
@@ -14,6 +14,11 @@ import static com.tukorea.planding.domain.group.entity.QGroupFavorite.groupFavor
 public class GroupFavoriteRepositoryCustomImpl implements GroupFavoriteRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<GroupFavorite> findByUserFavorite(Long userId) {
+        return null;
+    }
 
     @Override
     public Long countMyFavoriteGroup(String userCode) {
@@ -34,9 +39,11 @@ public class GroupFavoriteRepositoryCustomImpl implements GroupFavoriteRepositor
     }
 
     @Override
-    public GroupFavorite findByUserAndGroupRoom(User user, GroupRoom groupRoom) {
+    public GroupFavorite findByUserIdAndGroupId(Long userId, Long groupId) {
         return jpaQueryFactory.selectFrom(groupFavorite)
-                .where(groupFavorite.user.eq(user).and(groupFavorite.groupRoom.eq(groupRoom)))
+                .where(groupFavorite.user.id.eq(userId).and(groupFavorite.groupRoom.id.eq(groupId)))
                 .fetchOne();
     }
+
+
 }

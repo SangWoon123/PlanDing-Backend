@@ -1,8 +1,8 @@
 package com.tukorea.planding.domain.schedule.group.service;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.repository.UserGroupRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
+import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepositoryCustom;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;

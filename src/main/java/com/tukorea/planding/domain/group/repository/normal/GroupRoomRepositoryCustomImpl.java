@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.repository;
+package com.tukorea.planding.domain.group.repository.normal;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.tukorea.planding.domain.group.entity.QGroupRoom.groupRoom;
 import static com.tukorea.planding.domain.group.entity.QUserGroup.userGroup;
@@ -24,8 +23,8 @@ public class GroupRoomRepositoryCustomImpl implements GroupRoomRepositoryCustom 
     public List<GroupRoom> findGroupRoomsByUserId(Long userId) {
         return queryFactory.select(groupRoom)
                 .from(groupRoom)
-                .innerJoin(groupRoom.userGroups)
-                .on(groupRoom.userGroups.any().user.id.eq(userId))
+                .join(groupRoom.userGroups, userGroup).fetchJoin()
+                .where(groupRoom.userGroups.any().user.id.eq(userId))
                 .fetch();
     }
 
@@ -39,8 +38,8 @@ public class GroupRoomRepositoryCustomImpl implements GroupRoomRepositoryCustom 
 
     @Override
     public List<User> getGroupUsers(Long groupId) {
-        return queryFactory.select(user)
-                .from(userGroup)
+        return queryFactory.selectFrom(user)
+                .join(user.userGroup, userGroup)
                 .where(userGroup.groupRoom.id.eq(groupId))
                 .fetch();
     }

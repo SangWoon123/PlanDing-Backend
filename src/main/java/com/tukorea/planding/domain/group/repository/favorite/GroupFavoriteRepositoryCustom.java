@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.repository;
+package com.tukorea.planding.domain.group.repository.favorite;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 

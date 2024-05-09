@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.repository;
+package com.tukorea.planding.domain.group.repository.usergroup;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.group.entity.UserGroup;

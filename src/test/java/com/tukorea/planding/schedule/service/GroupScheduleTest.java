@@ -4,7 +4,7 @@ import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
 import com.tukorea.planding.domain.group.dto.response.GroupResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.schedule.entity.GroupScheduleAttendance;
 import com.tukorea.planding.domain.schedule.group.service.GroupScheduleService;

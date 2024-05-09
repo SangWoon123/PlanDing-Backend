@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.schedule.common.service;
 
-import com.tukorea.planding.domain.group.repository.UserGroupRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepositoryCustom;
 import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;

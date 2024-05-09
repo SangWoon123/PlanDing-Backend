@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.group.repository;
+package com.tukorea.planding.domain.group.repository.usergroup;
 
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.user.entity.User;
