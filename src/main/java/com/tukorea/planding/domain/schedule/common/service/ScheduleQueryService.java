@@ -1,10 +1,10 @@
-package com.tukorea.planding.domain.schedule.service;
+package com.tukorea.planding.domain.schedule.common.service;
 
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustom;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustom;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;

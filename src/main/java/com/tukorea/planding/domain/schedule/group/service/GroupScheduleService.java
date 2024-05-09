@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.service;
+package com.tukorea.planding.domain.schedule.group.service;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
@@ -6,14 +6,14 @@ import com.tukorea.planding.domain.group.repository.UserGroupRepositoryCustom;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

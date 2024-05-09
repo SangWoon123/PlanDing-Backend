@@ -1,7 +1,7 @@
-package com.tukorea.planding.domain.schedule.controller;
+package com.tukorea.planding.domain.schedule.attedance.controller;
 
-import com.tukorea.planding.domain.schedule.dto.GroupScheduleAttendanceRequest;
-import com.tukorea.planding.domain.schedule.service.GroupScheduleAttendanceService;
+import com.tukorea.planding.domain.schedule.attedance.dto.GroupScheduleAttendanceRequest;
+import com.tukorea.planding.domain.schedule.attedance.service.GroupScheduleAttendanceService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

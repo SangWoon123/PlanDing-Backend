@@ -1,12 +1,11 @@
-package com.tukorea.planding.domain.schedule.controller;
+package com.tukorea.planding.domain.schedule.common.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
-import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.schedule.common.service.ScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

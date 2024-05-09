@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.dto;
+package com.tukorea.planding.domain.schedule.common.dto;
 
 import lombok.Builder;
 

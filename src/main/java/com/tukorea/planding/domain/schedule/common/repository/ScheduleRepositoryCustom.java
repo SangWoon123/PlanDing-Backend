@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.repository;
+package com.tukorea.planding.domain.schedule.common.repository;
 
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.user.entity.User;
@@ -35,4 +35,6 @@ public interface ScheduleRepositoryCustom {
      * @return 중복되는 Schedule
      */
     List<Schedule> findOverlapSchedules(Long userId, LocalDate date, LocalTime startDate, LocalTime endDate);
+
+    List<Schedule> showTodaySchedule(Long userId);
 }

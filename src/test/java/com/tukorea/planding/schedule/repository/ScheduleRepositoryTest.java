@@ -2,9 +2,9 @@ package com.tukorea.planding.schedule.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustom;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustom;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.oauth.details.Role;

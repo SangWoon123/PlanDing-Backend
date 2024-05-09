@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.repository;
+package com.tukorea.planding.domain.schedule.common.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
@@ -35,6 +35,17 @@ public class ScheduleRepositoryCustomImpl implements ScheduleRepositoryCustom {
                                 .and(schedule.endTime.after(startTime)))
                         .or(schedule.startTime.between(startTime, endTime))
                         .or(schedule.endTime.between(startTime, endTime)))
+                .fetch();
+    }
+
+    @Override
+    public List<Schedule> showTodaySchedule(Long userId) {
+        LocalDate today = LocalDate.now();
+
+        return queryFactory
+                .selectFrom(schedule)
+                .where(schedule.user.id.eq(userId)
+                        .and(schedule.scheduleDate.eq(today)))
                 .fetch();
     }
 }

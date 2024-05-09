@@ -1,18 +1,23 @@
-package com.tukorea.planding.group.service;
+package com.tukorea.planding.schedule.service;
 
-import com.tukorea.planding.domain.group.dto.GroupCreateRequest;
-import com.tukorea.planding.domain.group.dto.GroupScheduleRequest;
-import com.tukorea.planding.domain.invitation.dto.InvitationRequest;
-import com.tukorea.planding.domain.group.dto.GroupResponse;
+import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
+import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupRoomService;
-import com.tukorea.planding.domain.group.service.GroupScheduleService;
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.entity.GroupScheduleAttendance;
+import com.tukorea.planding.domain.schedule.group.service.GroupScheduleService;
+import com.tukorea.planding.domain.group.service.GroupInviteService;
+import com.tukorea.planding.domain.schedule.attedance.repository.GroupScheduleAttendanceRepository;
+import com.tukorea.planding.domain.schedule.attedance.service.GroupScheduleAttendanceService;
+import com.tukorea.planding.domain.schedule.attedance.dto.GroupScheduleAttendanceRequest;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.common.service.ScheduleService;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.domain.user.repository.UserRepository;
@@ -30,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -55,6 +61,12 @@ public class GroupScheduleTest {
     private GroupRoomRepository groupRoomRepository;
     @Autowired
     private GroupRoomService groupRoomService;
+    @Autowired
+    private GroupInviteService groupInviteService;
+    @Autowired
+    private GroupScheduleAttendanceService participationService;
+    @Autowired
+    private GroupScheduleAttendanceRepository groupScheduleAttendanceRepository;
 
 
     @Test
@@ -69,14 +81,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(user.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(user.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
 
         // 스케줄 생성
         groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -109,25 +114,19 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        InvitationRequest invitationRequest = InvitationRequest
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.code())
+                .groupId(groupRoom.id())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
+        groupInviteService.inviteGroupRoom(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(userA.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(userA.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // when
         groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -157,14 +156,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(userA.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(userA.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // when
         groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -185,14 +178,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(user.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(user.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -231,25 +218,19 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        InvitationRequest invitationRequest = InvitationRequest
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.code())
+                .groupId(groupRoom.id())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
+        groupInviteService.inviteGroupRoom(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(userA.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(userA.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -290,14 +271,7 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(user.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(user.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -329,14 +303,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(user.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(user.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -359,25 +327,19 @@ public class GroupScheduleTest {
 
         User userB = createUserAndSave("testB", "codeB");
 
-        InvitationRequest invitationRequest = InvitationRequest
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
                 .builder()
-                .inviteGroupCode(groupRoom.code())
+                .groupId(groupRoom.id())
                 .userCode(userB.getUserCode())
                 .build();
 
-        groupRoomService.handleInvitation(UserMapper.toUserInfo(userA), invitationRequest);
+        groupInviteService.inviteGroupRoom(UserMapper.toUserInfo(userA), groupInviteRequest);
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(userA.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(userA.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -402,14 +364,8 @@ public class GroupScheduleTest {
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
 
-        GroupScheduleRequest requestSchedule = GroupScheduleRequest.builder()
-                .userId(user.getId())
-                .startTime(startTime)
-                .endTime(endTime)
-                .title(TEST_TITLE)
-                .content(TEST_CONTENT)
-                .scheduleDate(TEST_DATE)
-                .build();
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(user.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
 
         // 스케줄 생성
         ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
@@ -418,6 +374,56 @@ public class GroupScheduleTest {
         assertThrows(BusinessException.class, () -> scheduleService.deleteScheduleByGroupRoom(groupRoom.id(), groupSchedule.id(), UserMapper.toUserInfo(userC)));
     }
 
+    @Test
+    @DisplayName("성공: 스케줄 참여여부 ")
+    public void acceptSchedule() {
+        // 유저 생성
+        User userA = createUserAndSave(TEST_EMAIL, "code");
+        GroupResponse groupRoom = groupRoomService.createGroupRoom(UserMapper.toUserInfo(userA), GroupCreateRequest
+                .builder()
+                .name("group_name")
+                .build());
+
+        User userB = createUserAndSave("testB", "codeB");
+
+        GroupInviteRequest groupInviteRequest = GroupInviteRequest
+                .builder()
+                .groupId(groupRoom.id())
+                .userCode(userB.getUserCode())
+                .build();
+
+        groupInviteService.inviteGroupRoom(UserMapper.toUserInfo(userA), groupInviteRequest);
+
+        LocalTime startTime = LocalTime.of(7, 0);
+        LocalTime endTime = LocalTime.of(9, 0);
+
+        ScheduleRequest requestSchedule = createGroupScheduleRequest(userA.getUserCode(), startTime, endTime, TEST_TITLE, TEST_CONTENT, TEST_DATE);
+
+        // 스케줄 생성
+        ScheduleResponse groupSchedule = groupScheduleService.createGroupSchedule(groupRoom.code(), requestSchedule);
+
+        GroupScheduleAttendanceRequest groupScheduleAttendanceRequest = GroupScheduleAttendanceRequest.builder()
+                .scheduleId(groupSchedule.id())
+                .status(ScheduleStatus.UNDECIDED)
+                .build();
+        //스케줄 참여여부 설정
+        participationService.participationGroupSchedule(UserMapper.toUserInfo(userB), groupScheduleAttendanceRequest);
+
+        GroupScheduleAttendance participation = groupScheduleAttendanceRepository.findByUserIdAndScheduleId(userB.getId(), groupSchedule.id()).orElse(null);
+        assertNotNull(participation);
+        assertEquals(ScheduleStatus.UNDECIDED, participation.getStatus());
+    }
+
+    private ScheduleRequest createGroupScheduleRequest(String userCode, LocalTime startTime, LocalTime endTime, String title, String content, LocalDate scheduleDate) {
+        return ScheduleRequest.builder()
+                .userCode(userCode)
+                .startTime(startTime)
+                .endTime(endTime)
+                .title(title)
+                .content(content)
+                .scheduleDate(scheduleDate)
+                .build();
+    }
 
     private User createUserAndSave(String email, String userCode) {
         User user = User.builder()
@@ -427,4 +433,6 @@ public class GroupScheduleTest {
                 .build();
         return userRepository.save(user);
     }
+
+
 }

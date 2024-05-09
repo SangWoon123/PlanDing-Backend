@@ -1,20 +1,18 @@
 package com.tukorea.planding.domain.user.service;
 
-import com.tukorea.planding.domain.group.dto.response.GroupFavoriteResponse;
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
 import com.tukorea.planding.domain.group.service.query.GroupFavoriteQueryService;
 import com.tukorea.planding.domain.group.service.query.GroupInviteQueryService;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
+import com.tukorea.planding.domain.schedule.common.service.ScheduleQueryService;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.SocialType;
 import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.oauth.details.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

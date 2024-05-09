@@ -1,8 +1,7 @@
-package com.tukorea.planding.domain.schedule.dto;
+package com.tukorea.planding.domain.schedule.common.dto;
 
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
