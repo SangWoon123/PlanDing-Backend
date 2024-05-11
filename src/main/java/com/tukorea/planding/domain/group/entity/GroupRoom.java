@@ -4,6 +4,8 @@ import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -59,6 +61,18 @@ public class GroupRoom extends BaseEntity {
                 .description(groupCreateRequest.description())
                 .owner(owner.getUserCode())
                 .build();
+    }
+
+    public void checkOwner(String userCode) throws BusinessException {
+        if (this.getOwner().equals(userCode)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
+        }
+    }
+
+    public void validateUserNotAlreadyMember(User user) throws BusinessException {
+        if (this.getUserGroups().contains(user)) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
+        }
     }
 
     // 스케줄을 그룹룸에 추가하는 메서드

@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.group.service.query;
 
-import com.tukorea.planding.domain.group.repository.GroupFavoriteRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.favorite.GroupFavoriteRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

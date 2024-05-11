@@ -1,8 +1,8 @@
 package com.tukorea.planding.domain.group.service.query;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepositoryCustom;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;

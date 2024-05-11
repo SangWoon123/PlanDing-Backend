@@ -6,7 +6,7 @@ import com.tukorea.planding.domain.group.dto.response.GroupResponse;
 import com.tukorea.planding.domain.group.dto.response.GroupUserResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.group.repository.GroupRoomRepository;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.query.GroupQueryService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
@@ -29,7 +29,6 @@ public class GroupRoomService {
     private final UserQueryService userQueryService;
     private final UserGroupService userGroupService;
     private final GroupQueryService groupQueryService;
-    private final GroupRoomRepository groupRoomRepository;
 
     @Transactional
     public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {

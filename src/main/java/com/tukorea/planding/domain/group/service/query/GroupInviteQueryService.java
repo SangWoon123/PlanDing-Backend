@@ -2,9 +2,8 @@ package com.tukorea.planding.domain.group.service.query;
 
 import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.InviteStatus;
-import com.tukorea.planding.domain.group.repository.GroupInviteRepository;
-import com.tukorea.planding.domain.group.repository.GroupInviteRepositoryCustom;
-import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.group.repository.invite.GroupInviteRepository;
+import com.tukorea.planding.domain.group.repository.invite.GroupInviteRepositoryCustom;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +31,7 @@ public class GroupInviteQueryService {
         return groupInviteRepositoryCustom.countByInvitedUserCodeAndStatus(userCode, inviteStatus);
     }
 
+    public void delete(Long inviteId) {
+        groupInviteRepository.deleteById(inviteId);
+    }
 }

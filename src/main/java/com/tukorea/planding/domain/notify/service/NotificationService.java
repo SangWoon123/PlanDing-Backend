@@ -1,8 +1,10 @@
 package com.tukorea.planding.domain.notify.service;
 
+import com.tukorea.planding.domain.group.dto.GroupInviteEvent;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleResponse;
 import com.tukorea.planding.domain.notify.entity.Notification;
+import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.repository.EmitterRepositoryImpl;
 import com.tukorea.planding.domain.notify.repository.NotificationRepository;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -12,6 +14,8 @@ import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,7 +34,24 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final EmitterRepositoryImpl emitterRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
+    public void notifyInvitation(final String userCode, final String groupName) {
+        GroupInviteEvent event = new GroupInviteEvent(this, userCode, groupName);
+        eventPublisher.publishEvent(event);
+    }
+
+    @EventListener
+    public void handleGroupInvitedEvent(GroupInviteEvent event) {
+        NotificationScheduleRequest request = NotificationScheduleRequest.builder()
+                .type(NotificationType.INVITE)
+                .groupName(event.getGroupName())
+                .message(event.getGroupName() + "그룹으로 부터 초대되었습니다.")
+                .receiverCode(event.getUserCode())
+                .build();
+
+        send(request);
+    }
 
     public SseEmitter subscribe(String userCode, String lastEventId) {
         String emitterId = makeTimeIncludeId(userCode);
@@ -50,7 +71,6 @@ public class NotificationService {
         return emitter;
     }
 
-    @Async
     public void send(NotificationScheduleRequest notificationScheduleRequest) {
 
         User user = userRepository.findByUserCode(notificationScheduleRequest.getReceiverCode())

@@ -54,12 +54,12 @@ public class GroupInvite {
         this.expiredAt = expiredAt;
     }
 
+
     public void accept() {
         if (this.inviteStatus != InviteStatus.PENDING) {
             throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
         }
         this.inviteStatus = InviteStatus.ACCEPTED;
-
     }
 
     public void decline() {
@@ -67,6 +67,12 @@ public class GroupInvite {
             throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
         }
         this.inviteStatus = InviteStatus.DECLINED;
+    }
+
+    public void checkInvited(String userCode) throws BusinessException {
+        if (!this.invitedUser.getUserCode().equals(userCode)) {
+            throw new BusinessException(ErrorCode.NOTEXIST_INVITE);
+        }
     }
 
     private String generateInviteCode() {

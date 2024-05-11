@@ -32,9 +32,16 @@ public class GroupInviteController {
     //TODO 쿼리스트링Url 변경 고민 ex) api/v1/invitation/accept?{code}
     @Operation(summary = "초대 승낙")
     @GetMapping("/{code}/accept")
-    public CommonResponse<GroupInviteResponse> acceptInvitation(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "code") String code) {
+    public CommonResponse<GroupInviteResponse> acceptInvitation(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String code) {
         GroupInviteResponse groupInviteResponse = groupInviteService.acceptInvitation(userInfo, code);
         return CommonUtils.success(groupInviteResponse);
+    }
+
+    @Operation(summary = "초대 거절")
+    @GetMapping("/{code}/decline")
+    public CommonResponse<?> declineInvitation(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String code) {
+        groupInviteService.declineInvitation(userInfo, code);
+        return CommonUtils.success("초대를 거절하였습니다.");
     }
 
     @Operation(summary = "초대를 받은 목록", description = "아직 초대의 상태를 바꾸지 않은 경우만")
