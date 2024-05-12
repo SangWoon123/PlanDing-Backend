@@ -29,14 +29,6 @@ public class GroupRoomRepositoryCustomImpl implements GroupRoomRepositoryCustom 
     }
 
     @Override
-    public GroupRoom findByGroupId(Long groupId) {
-        return queryFactory.select(groupRoom)
-                .from(groupRoom)
-                .where(groupRoom.id.eq(groupId))
-                .fetchOne();
-    }
-
-    @Override
     public List<User> getGroupUsers(Long groupId) {
         return queryFactory.selectFrom(user)
                 .join(user.userGroup, userGroup)

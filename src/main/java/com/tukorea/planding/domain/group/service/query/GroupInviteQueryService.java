@@ -16,7 +16,6 @@ import java.util.List;
 public class GroupInviteQueryService {
 
     private final GroupInviteRepository groupInviteRepository;
-    private final GroupInviteRepositoryCustom groupInviteRepositoryCustom;
 
     public GroupInvite getInvitationByInviteCode(String inviteCode) {
         return groupInviteRepository.findByGroupInviteCode(inviteCode)
@@ -24,11 +23,11 @@ public class GroupInviteQueryService {
     }
 
     public List<GroupInvite> getPendingInvitationForUser(Long userId) {
-        return groupInviteRepositoryCustom.findPendingInvitationsForUser(userId);
+        return groupInviteRepository.findPendingInvitationsForUser(userId);
     }
 
     public Long countInvitation(String userCode, InviteStatus inviteStatus) {
-        return groupInviteRepositoryCustom.countByInvitedUserCodeAndStatus(userCode, inviteStatus);
+        return groupInviteRepository.countByInvitedUserCodeAndStatus(userCode, inviteStatus);
     }
 
     public void delete(Long inviteId) {

@@ -3,14 +3,16 @@ package com.tukorea.planding.domain.group.service;
 import com.tukorea.planding.domain.group.dto.response.GroupFavoriteResponse;
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.repository.GroupFavoriteRepository;
-import com.tukorea.planding.domain.group.repository.GroupFavoriteRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.favorite.GroupFavoriteRepository;
+import com.tukorea.planding.domain.group.repository.favorite.GroupFavoriteRepositoryCustom;
+import com.tukorea.planding.domain.group.service.query.GroupQueryService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +27,14 @@ public class GroupFavoriteService {
     private final GroupQueryService groupQueryService;
 
     public GroupFavoriteResponse addFavorite(UserInfo userInfo, Long groupId) {
-        User user = userQueryService.getByUserInfo(userInfo.getUserCode());
-        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
 
-        boolean exists = groupFavoriteRepositoryCustom.existsByUserAndGroupRoom(user.getUserCode());
+        boolean exists = groupFavoriteRepositoryCustom.existsByUserAndGroupRoom(userInfo.getUserCode(), groupId);
         if (exists) {
             throw new BusinessException(ErrorCode.FAVORITE_ALREADY_ADD);
         }
+
+        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
 
         GroupFavorite groupFavorite = GroupFavorite.createGroupFavorite(user, groupRoom);
         GroupFavorite save = groupFavoriteRepository.save(groupFavorite);
@@ -40,13 +43,10 @@ public class GroupFavoriteService {
     }
 
     public void deleteFavorite(UserInfo userInfo, Long groupId) {
-        User user = userQueryService.getByUserInfo(userInfo.getUserCode());
-        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
-
-        GroupFavorite groupFavorite = groupFavoriteRepositoryCustom.findByUserAndGroupRoom(user, groupRoom);
-        if (groupFavorite == null) {
+        try {
+            groupFavoriteRepository.deleteByUserIdAndGroupRoomId(userInfo.getId(), groupId);
+        } catch (EmptyResultDataAccessException e) {
             throw new BusinessException(ErrorCode.FAVORITE_ALREADY_DELETE);
         }
-        groupFavoriteRepository.delete(groupFavorite);
     }
 }

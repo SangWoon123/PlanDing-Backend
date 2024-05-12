@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface GroupRoomRepository extends JpaRepository<GroupRoom,Long> {
+public interface GroupRoomRepository extends JpaRepository<GroupRoom, Long>, GroupRoomRepositoryCustom {
     Optional<GroupRoom> findByGroupCode(String groupCode);
 }

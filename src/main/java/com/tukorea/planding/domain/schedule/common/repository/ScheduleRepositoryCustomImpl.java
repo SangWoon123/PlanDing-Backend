@@ -12,7 +12,6 @@ import java.util.List;
 
 import static com.tukorea.planding.domain.schedule.entity.QSchedule.schedule;
 
-@Repository
 @RequiredArgsConstructor
 public class ScheduleRepositoryCustomImpl implements ScheduleRepositoryCustom {
 

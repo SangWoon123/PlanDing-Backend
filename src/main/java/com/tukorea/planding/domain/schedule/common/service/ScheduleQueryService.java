@@ -18,11 +18,10 @@ import java.util.stream.Collectors;
 public class ScheduleQueryService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ScheduleRepositoryCustom scheduleRepositoryCustom;
 
 
     public List<ScheduleResponse> findOverlapSchedule(Long userId, ScheduleRequest scheduleRequest) {
-        List<Schedule> overlapSchedules = scheduleRepositoryCustom.findOverlapSchedules(userId, scheduleRequest.scheduleDate(), scheduleRequest.startTime(), scheduleRequest.endTime());
+        List<Schedule> overlapSchedules = scheduleRepository.findOverlapSchedules(userId, scheduleRequest.scheduleDate(), scheduleRequest.startTime(), scheduleRequest.endTime());
         return overlapSchedules.stream()
                 .map(ScheduleResponse::from)
                 .collect(Collectors.toList());
@@ -38,7 +37,7 @@ public class ScheduleQueryService {
     }
 
     public List<Schedule> showTodaySchedule(Long userId) {
-        return scheduleRepositoryCustom.showTodaySchedule(userId);
+        return scheduleRepository.showTodaySchedule(userId);
     }
 
     public Schedule save(Schedule schedule) {

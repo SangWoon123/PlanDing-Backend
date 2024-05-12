@@ -7,8 +7,5 @@ import java.util.List;
 
 public interface GroupRoomRepositoryCustom {
     List<GroupRoom> findGroupRoomsByUserId(Long userId);
-
-    GroupRoom findByGroupId(Long groupId);
-
     List<User> getGroupUsers(Long groupId);
 }

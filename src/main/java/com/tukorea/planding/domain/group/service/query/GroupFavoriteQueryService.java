@@ -1,5 +1,6 @@
 package com.tukorea.planding.domain.group.service.query;
 
+import com.tukorea.planding.domain.group.repository.favorite.GroupFavoriteRepository;
 import com.tukorea.planding.domain.group.repository.favorite.GroupFavoriteRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GroupFavoriteQueryService {
 
-    private final GroupFavoriteRepositoryCustom groupFavoriteRepositoryCustom;
+    private final GroupFavoriteRepository groupFavoriteRepository;
 
     public Long countMyFavoriteGroup(String userCode) {
-        return groupFavoriteRepositoryCustom.countMyFavoriteGroup(userCode);
+        return groupFavoriteRepository.countMyFavoriteGroup(userCode);
     }
 }

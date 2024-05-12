@@ -18,7 +18,6 @@ import java.util.List;
 public class GroupQueryService {
 
     private final GroupRoomRepository groupRoomRepository;
-    private final GroupRoomRepositoryCustom groupRoomRepositoryCustom;
 
 
     public GroupRoom createGroup(GroupRoom groupRoom) {
@@ -26,7 +25,7 @@ public class GroupQueryService {
     }
 
     public List<GroupRoom> findGroupsByUserId(Long userId) {
-        return groupRoomRepositoryCustom.findGroupRoomsByUserId(userId);
+        return groupRoomRepository.findGroupRoomsByUserId(userId);
     }
 
     public GroupRoom getGroupById(Long groupId) {
@@ -39,7 +38,7 @@ public class GroupQueryService {
     }
 
     public List<User> getGroupUsers(Long groupId) {
-        return groupRoomRepositoryCustom.getGroupUsers(groupId);
+        return groupRoomRepository.getGroupUsers(groupId);
     }
 
 }
