@@ -47,8 +47,8 @@ public class GroupInviteController {
     @Operation(summary = "초대를 받은 목록", description = "아직 초대의 상태를 바꾸지 않은 경우만")
     @GetMapping()
     public CommonResponse<List<GroupInviteResponse>> getInvitations(@AuthenticationPrincipal UserInfo userInfo) {
-        List<GroupInviteResponse> groupInviteRespons = groupInviteService.getInvitations(userInfo);
-        return CommonUtils.success(groupInviteRespons);
+        List<GroupInviteResponse> groupInviteResponse = groupInviteService.getInvitations(userInfo);
+        return CommonUtils.success(groupInviteResponse);
     }
 
 

@@ -64,7 +64,7 @@ public class GroupRoom extends BaseEntity {
     }
 
     public void checkOwner(String userCode) throws BusinessException {
-        if (this.getOwner().equals(userCode)) {
+        if (!this.getOwner().equals(userCode)) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
         }
     }
