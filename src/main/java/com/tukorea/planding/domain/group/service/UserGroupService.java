@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserGroupService {
 
-    private final UserGroupRepositoryCustom userGroupRepositoryCustom;
     private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
     private final GroupRoomRepository groupRoomRepository;
@@ -32,11 +31,11 @@ public class UserGroupService {
         GroupRoom groupRoom = groupRoomRepository.findByGroupCode(groupCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
 
-        if (!userGroupRepositoryCustom.existsByGroupRoomIdAndUserId(groupRoom.getId(), user.getId())) {
+        if (!userGroupRepository.existsByGroupRoomIdAndUserId(groupRoom.getId(), user.getId())) {
             throw new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND);
         }
 
-        UserGroup test = userGroupRepositoryCustom.findUserByGroupId(user.getId(), groupRoom.getId());
+        UserGroup test = userGroupRepository.findUserByGroupId(user.getId(), groupRoom.getId());
         test.setConnected(isConnected);
     }
 

@@ -2,7 +2,7 @@ package com.tukorea.planding.domain.schedule.group.service;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
-import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepository;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
@@ -31,7 +31,7 @@ public class GroupScheduleService {
     private final GroupRoomRepository groupRoomRepository;
     private final UserQueryService userQueryService;
     private final NotificationService notificationService;
-    private final UserGroupRepositoryCustom userGroupRepositoryCustom;
+    private final UserGroupRepository userGroupRepository;
 
     @Transactional
     public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
@@ -60,7 +60,7 @@ public class GroupScheduleService {
         Schedule save = scheduleRepository.save(schedule);
 
         // [4] 그룹에 속해있는 유저 중 접속상태가 false인 유저
-        List<User> notificationUser = userGroupRepositoryCustom.findUserByIsConnectionFalse(groupRoom.getId());
+        List<User> notificationUser = userGroupRepository.findUserByIsConnectionFalse(groupRoom.getId());
 
         // [5] 그룹 스케줄 생성
         String createUrl = groupRoom.getGroupCode() + "/schedule/" + save.getId(); //TODO 추후 수정

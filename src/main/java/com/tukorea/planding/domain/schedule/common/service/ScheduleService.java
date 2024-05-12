@@ -1,6 +1,8 @@
 package com.tukorea.planding.domain.schedule.common.service;
 
+import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepository;
 import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepositoryCustom;
+import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
 import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -24,9 +26,9 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleQueryService scheduleQueryService;
-    private final ScheduleRepositoryCustomImpl scheduleRepositoryCustomImpl;
+    private final ScheduleRepository scheduleRepository;
+    private final UserGroupRepository userGroupRepository;
     private final UserQueryService userQueryService;
-    private final UserGroupRepositoryCustom userGroupRepositoryCustom;
 
     public ScheduleResponse createSchedule(UserInfo userInfo, ScheduleRequest scheduleRequest) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
@@ -73,7 +75,7 @@ public class ScheduleService {
     public List<ScheduleResponse> getWeekSchedule(LocalDate startDate, LocalDate endDate, UserInfo userInfo) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
-        List<Schedule> schedules = scheduleRepositoryCustomImpl.findWeeklyScheduleByUser(startDate, endDate, user);
+        List<Schedule> schedules = scheduleRepository.findWeeklyScheduleByUser(startDate, endDate, user);
 
         List<ScheduleResponse> scheduleResponses = schedules.stream()
                 .map(ScheduleResponse::from)
@@ -106,7 +108,7 @@ public class ScheduleService {
 
     */
     public ScheduleResponse getGroupSchedule(Long groupRoomId, Long scheduleId, UserInfo userInfo) {
-        if (!userGroupRepositoryCustom.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -117,7 +119,7 @@ public class ScheduleService {
 
     public List<ScheduleResponse> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
         // [1] 유저가 그룹룸에 접근할 권리가있는지 확인
-        if (!userGroupRepositoryCustom.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -132,7 +134,7 @@ public class ScheduleService {
 
     public ScheduleResponse updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
         // [1] 그룹룸에 수정하려는 유저가 존재하는지 확인
-        if (!userGroupRepositoryCustom.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -146,7 +148,7 @@ public class ScheduleService {
 
 
     public void deleteScheduleByGroupRoom(Long groupRoomId, Long scheduleId, UserInfo userInfo) {
-        if (!userGroupRepositoryCustom.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
+        if (!userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userInfo.getId())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
         scheduleQueryService.deleteById(scheduleId);

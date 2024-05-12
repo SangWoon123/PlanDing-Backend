@@ -22,13 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupFavoriteService {
 
     private final GroupFavoriteRepository groupFavoriteRepository;
-    private final GroupFavoriteRepositoryCustom groupFavoriteRepositoryCustom;
     private final UserQueryService userQueryService;
     private final GroupQueryService groupQueryService;
 
     public GroupFavoriteResponse addFavorite(UserInfo userInfo, Long groupId) {
 
-        boolean exists = groupFavoriteRepositoryCustom.existsByUserAndGroupRoom(userInfo.getUserCode(), groupId);
+        boolean exists = groupFavoriteRepository.existsByUserAndGroupRoom(userInfo.getUserCode(), groupId);
         if (exists) {
             throw new BusinessException(ErrorCode.FAVORITE_ALREADY_ADD);
         }
