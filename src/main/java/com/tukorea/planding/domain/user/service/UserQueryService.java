@@ -26,4 +26,9 @@ public class UserQueryService {
         return userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
+
+    public User getUserProfile(Long userId) {
+        return userRepository.getUserById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
 }

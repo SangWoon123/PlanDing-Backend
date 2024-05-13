@@ -27,12 +27,6 @@ public class UserController {
     private final AndroidLoginService androidLoginService;
     private final UserService userService;
 
-    @Operation(summary = "유저 정보 가져오기")
-    @GetMapping("/userInfo")
-    public CommonResponse<UserInfo> getUserInfo(@AuthenticationPrincipal UserInfo userInfo) {
-        return CommonUtils.success(userInfo);
-    }
-
     @Operation(summary = "안드로이드 로그인")
     @PostMapping("/login/android/kakao")
     public CommonResponse<AndroidLoginResponse> signupApp(@RequestBody AndroidLoginRequest androidLoginRequest) {

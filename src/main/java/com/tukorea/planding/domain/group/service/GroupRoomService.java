@@ -48,7 +48,6 @@ public class GroupRoomService {
     @Transactional
     public GroupResponse updateGroupNameOrDescription(UserInfo userInfo, GroupUpdateRequest groupUpdateRequest) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-
         GroupRoom groupRoom = groupQueryService.getGroupById(groupUpdateRequest.groupId());
 
         // TODO 그룹의 팀원도 변경가능하도록
@@ -84,8 +83,7 @@ public class GroupRoomService {
     }
 
     public List<GroupUserResponse> getGroupUsers(Long groupId) {
-        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
-        List<User> users = groupQueryService.getGroupUsers(groupRoom.getId());
+        List<User> users = groupQueryService.getGroupUsers(groupId);
         return users.stream()
                 .map(GroupUserResponse::toGroupUserResponse)
                 .collect(Collectors.toList());

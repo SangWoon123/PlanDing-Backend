@@ -21,5 +21,4 @@ public class UserInfo {
     private Role role;
 
     private String userCode;
-
 }

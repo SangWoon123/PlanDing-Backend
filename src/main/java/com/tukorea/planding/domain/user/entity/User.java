@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.user.entity;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
+import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.notify.entity.Notification;
 import com.tukorea.planding.domain.schedule.entity.Schedule;

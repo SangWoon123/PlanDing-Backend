@@ -55,11 +55,16 @@ public class UserService {
 
     //TODO 즐겨찾는 그룹, 그룹 요청
     public ProfileResponse getProfile(UserInfo userInfo) {
+        User userProfile = userQueryService.getUserProfile(userInfo.getId());
         Long groupInvite = groupInviteQueryService.countInvitation(userInfo.getUserCode(), InviteStatus.PENDING);
-        Long groupFavorite = groupFavoriteQueryService.countMyFavoriteGroup(userInfo.getUserCode());
+//        Long groupFavorite = groupFavoriteQueryService.countMyFavoriteGroup(userInfo.getUserCode());
         return ProfileResponse.builder()
+                .userCode(userProfile.getUserCode())
+                .email(userProfile.getEmail())
+                .username(userProfile.getUsername())
+                .profileImage(userProfile.getProfileImage())
                 .groupRequest(groupInvite)
-                .groupFavorite(groupFavorite)
+                .groupFavorite((long) userProfile.getGroupFavorites().size())
                 .build();
     }
 
