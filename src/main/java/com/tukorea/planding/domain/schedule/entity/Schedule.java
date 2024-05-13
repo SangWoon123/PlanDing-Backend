@@ -3,6 +3,8 @@ package com.tukorea.planding.domain.schedule.entity;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -57,6 +59,12 @@ public class Schedule extends BaseEntity {
         this.isComplete = isComplete;
         this.groupRoom = groupRoom;
         this.user = user;
+    }
+
+    public void checkOwnership(Long userId) throws BusinessException {
+        if (!this.user.getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
+        }
     }
 
     public void update(String title, String content, LocalTime startTime, LocalTime endTime) {

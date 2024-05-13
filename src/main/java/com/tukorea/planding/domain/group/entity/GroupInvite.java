@@ -27,9 +27,8 @@ public class GroupInvite {
     @JoinColumn(name = "invited_user_id")
     private User invitedUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inviting_user_id")
-    private User invitingUser;
+    @Column(name = "inviting_user_code", unique = true)
+    private String invitingUserCode;
 
     @Column(name = "group_invite_code", unique = true)
     private String groupInviteCode;
@@ -44,10 +43,10 @@ public class GroupInvite {
     private LocalDateTime expiredAt;
 
     @Builder
-    public GroupInvite(GroupRoom groupRoom, User invitedUser, User invitingUser, InviteStatus inviteStatus, LocalDateTime createdAt, LocalDateTime expiredAt) {
+    public GroupInvite(GroupRoom groupRoom, User invitedUser, String invitingUserCode, InviteStatus inviteStatus, LocalDateTime createdAt, LocalDateTime expiredAt) {
         this.groupRoom = groupRoom;
         this.invitedUser = invitedUser;
-        this.invitingUser = invitingUser;
+        this.invitingUserCode = invitingUserCode;
         this.groupInviteCode = generateInviteCode();
         this.inviteStatus = inviteStatus;
         this.createdAt = createdAt;
@@ -81,7 +80,7 @@ public class GroupInvite {
 
     public static GroupInviteResponse toInviteResponse(GroupInvite groupInvite) {
         return GroupInviteResponse.builder()
-                .invitingUser(groupInvite.getInvitingUser().getUserCode())
+                .invitingUser(groupInvite.getInvitingUserCode())
                 .groupName(groupInvite.getGroupRoom().getName())
                 .inviteCode(groupInvite.getGroupInviteCode())
                 .inviteStatus(groupInvite.getInviteStatus())

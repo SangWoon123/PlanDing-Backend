@@ -1,10 +1,10 @@
-package com.tukorea.planding.domain.schedule.group.controller;
+package com.tukorea.planding.domain.schedule.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.schedule.group.service.GroupScheduleService;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.service.GroupScheduleService;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;

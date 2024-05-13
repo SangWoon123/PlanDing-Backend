@@ -1,15 +1,15 @@
-package com.tukorea.planding.domain.schedule.common.service;
+package com.tukorea.planding.domain.schedule.service;
 
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustom;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +25,10 @@ public class ScheduleQueryService {
         return overlapSchedules.stream()
                 .map(ScheduleResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public List<Schedule> findWeeklyScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId) {
+        return scheduleRepository.findWeeklyScheduleByUser(startDate, endDate, userId);
     }
 
     public Schedule findScheduleById(Long scheduleId) {

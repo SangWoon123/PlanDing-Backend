@@ -1,11 +1,11 @@
-package com.tukorea.planding.domain.schedule.common.controller;
+package com.tukorea.planding.domain.schedule.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
-import com.tukorea.planding.domain.schedule.common.service.ScheduleService;
+import com.tukorea.planding.domain.schedule.service.ScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,13 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
+    @Operation(summary = "오늘 스케줄 조회")
+    @GetMapping("/today")
+    public CommonResponse<List<ScheduleResponse>> showTodaySchedule(@AuthenticationPrincipal UserInfo userInfo) {
+        List<ScheduleResponse> responses = scheduleService.showTodaySchedule(userInfo);
+        return CommonUtils.success(responses);
+    }
 
     @Operation(summary = "공통: 스케쥴 생성을 할 때 내가 포함된 모든 그룹, 개인 시간때에 스케쥴을 확인")
     @PostMapping("/overlap")

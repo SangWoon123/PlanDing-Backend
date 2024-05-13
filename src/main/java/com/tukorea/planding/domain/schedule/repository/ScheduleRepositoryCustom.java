@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.common.repository;
+package com.tukorea.planding.domain.schedule.repository;
 
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.user.entity.User;
@@ -15,7 +15,7 @@ public interface ScheduleRepositoryCustom {
      * @param endDate   까지 검색할 날짜
      * @return List<Schedule>
      */
-    List<Schedule> findWeeklyScheduleByUser(LocalDate startDate, LocalDate endDate, User user);
+    List<Schedule> findWeeklyScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId);
 
     /**
      * 스케줄을 작성할때 작성한 스케줄과 겹치는 스케줄 조회

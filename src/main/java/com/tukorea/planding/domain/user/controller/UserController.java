@@ -3,7 +3,6 @@ package com.tukorea.planding.domain.user.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.AndroidLoginResponse;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
@@ -45,12 +44,5 @@ public class UserController {
     @GetMapping()
     public CommonResponse<List<GroupRoom>> searchFavorite(@AuthenticationPrincipal UserInfo userInfo) {
         return CommonUtils.success(userService.findFavoriteGroupsByUserId(userInfo));
-    }
-
-    @Operation(summary = "오늘 스케줄 조회")
-    @GetMapping("/today")
-    public CommonResponse<List<ScheduleResponse>> showTodaySchedule(@AuthenticationPrincipal UserInfo userInfo) {
-        List<ScheduleResponse> responses = userService.showTodaySchedule(userInfo);
-        return CommonUtils.success(responses);
     }
 }

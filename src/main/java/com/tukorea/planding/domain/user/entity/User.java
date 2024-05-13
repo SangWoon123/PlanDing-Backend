@@ -60,6 +60,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<GroupFavorite> groupFavorites = new ArrayList<>();
 
+    @OneToMany(mappedBy = "invitedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<GroupInvite> groupInvites = new ArrayList<>();
+
     @Builder
     public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode) {
         this.email = email;
