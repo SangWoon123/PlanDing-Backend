@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/invite")
+@RequestMapping("/api/v1/invitation")
 public class GroupInvitationController {
     private final GroupInviteService2 groupInviteService2;
 
