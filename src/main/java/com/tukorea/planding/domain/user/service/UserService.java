@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserQueryService userQueryService;
-    private final ScheduleQueryService scheduleQueryService;
+
 
     @Transactional(readOnly = true)
     public List<GroupRoom> findFavoriteGroupsByUserId(UserInfo userInfo) {
@@ -32,14 +32,16 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public User createUserFromRequest(AndroidLoginRequest androidLoginRequest) {
+        String userCode = generateUniqueUserCode();
         User user = User.builder()
                 .socialId(androidLoginRequest.socialId())
                 .socialType(SocialType.KAKAO)
                 .username(androidLoginRequest.profileNickname())
                 .email(androidLoginRequest.accountEmail())
                 .profileImage(androidLoginRequest.profileImage())
-                .userCode(User.createCode())
+                .userCode(userCode)
                 .role(Role.USER)
                 .build();
 
@@ -59,5 +61,13 @@ public class UserService {
                 .groupFavorite((long) userProfile.getGroupFavorites().size())
                 .role(Role.USER)
                 .build();
+    }
+
+    public String generateUniqueUserCode() {
+        String userCode;
+        do {
+            userCode = User.createCode();
+        } while (userQueryService.existsByUserCode(userCode));
+        return userCode;
     }
 }

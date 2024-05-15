@@ -45,7 +45,7 @@ public class User extends BaseEntity {
     @Column(name = "social_id")
     private String socialId;
 
-    @Column(name = "user_code", nullable = false)
+    @Column(name = "user_code", nullable = false, unique = true)
     private String userCode;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

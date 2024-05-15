@@ -34,7 +34,7 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
+    public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo, String userCode) {
         return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getOAuth2Id())
@@ -42,7 +42,7 @@ public class OAuthAttributes {
                 .username(oauth2UserInfo.getNickname())
                 .profileImage(oauth2UserInfo.getProfileImage())
                 .role(Role.USER)
-                .userCode(User.createCode())
+                .userCode(userCode)
                 .build();
     }
 }
