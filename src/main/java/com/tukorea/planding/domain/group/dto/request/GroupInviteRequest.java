@@ -1,11 +1,11 @@
 package com.tukorea.planding.domain.group.dto.request;
 
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
-public record GroupInviteRequest(
-        Long groupId,
-        String userCode
-) {
-
+@Data
+public class GroupInviteRequest{
+    private Long groupId;
+    private String userCode;
 }

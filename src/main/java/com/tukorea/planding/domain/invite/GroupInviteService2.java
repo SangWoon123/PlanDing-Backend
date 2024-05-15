@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,19 +38,19 @@ public class GroupInviteService2 {
     @Transactional
     public GroupInviteDTO inviteGroupRoom(UserInfo userInfo, GroupInviteRequest groupInviteRequest) {
         // 초대하는 사용자와 초대 대상 사용자가 같은지 확인
-        if (userInfo.getUserCode().equals(groupInviteRequest.userCode())) {
+        if (userInfo.getUserCode().equals(groupInviteRequest.getUserCode())) {
             throw new BusinessException(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
 
         GroupInviteDTO groupInviteDTO = new GroupInviteDTO();
-        groupInviteDTO.setGroupRoomId(groupInviteRequest.groupId());
+        groupInviteDTO.setGroupRoomId(groupInviteRequest.getGroupId());
         groupInviteDTO.setInvitingUserId(userInfo.getId());
-        groupInviteDTO.setInvitedUserCode(groupInviteRequest.userCode());
+        groupInviteDTO.setInvitedUserCode(groupInviteRequest.getUserCode());
         groupInviteDTO.setCreatedAt(LocalDateTime.now());
         groupInviteDTO.setExpiredAt(LocalDateTime.now().plusDays(1));
-        groupInviteDTO.setInviteCode("IN"+LocalDateTime.now());
+        groupInviteDTO.setInviteCode("IN" + LocalDateTime.now());
 
-        redisGroupInviteService.createInvitation(groupInviteDTO);
+        redisGroupInviteService.createInvitation(groupInviteRequest.getUserCode(), groupInviteDTO);
 
         return groupInviteDTO;
     }
@@ -63,7 +64,11 @@ public class GroupInviteService2 {
         final UserGroup userGroup = UserGroup.createUserGroup(user, group);
         userGroupService.save(userGroup);
 
-        redisGroupInviteService.deleteInvitation(code);
+        redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), code);
+    }
+
+    public List<GroupInviteDTO> getInvitations(UserInfo userInfo) {
+        return redisGroupInviteService.getAllInvitations(userInfo.getUserCode());
     }
 
 }

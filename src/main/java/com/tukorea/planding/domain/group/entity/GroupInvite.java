@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -76,7 +77,7 @@ public class GroupInvite {
     }
 
     private String generateInviteCode() {
-        return "INV-" + LocalDateTime.now().toString();
+        return "IN" + UUID.randomUUID().toString();
     }
 
     public static GroupInviteResponse toInviteResponse(GroupInvite groupInvite) {

@@ -93,7 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         saveAuthentication(userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE)));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)));
 
         filterChain.doFilter(request, response);
     }

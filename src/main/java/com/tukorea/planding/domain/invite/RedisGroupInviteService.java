@@ -2,13 +2,14 @@ package com.tukorea.planding.domain.invite;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tukorea.planding.domain.invite.GroupInviteDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,25 +18,31 @@ public class RedisGroupInviteService {
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public void createInvitation(GroupInviteDTO inviteDTO) {
-        String key = "invite:" + inviteDTO.getInviteCode();
-        String value = convertObjectToJson(inviteDTO);
+    // 초대 생성
+    public void createInvitation(String userCode, GroupInviteDTO inviteDTO) {
+        String key = "userInvites:" + userCode; // 유저별 키
+        String field = inviteDTO.getInviteCode(); // 초대 코드를 필드로 사용
+        String value = convertObjectToJson(inviteDTO); // 초대 정보를 JSON 문자열로 변환
 
         if (value != null) {
-            redisTemplate.opsForValue().set(key, value, Duration.between(LocalDateTime.now(), inviteDTO.getExpiredAt()));
+            redisTemplate.opsForHash().put(key, field, value);
         }
     }
 
-    public GroupInviteDTO getInvitation(String inviteCode) {
-        String key = "invite:" + inviteCode;
-        String value = redisTemplate.opsForValue().get(key);
+    // 유저별 모든 초대 조회
+    public List<GroupInviteDTO> getAllInvitations(String userCode) {
+        String key = "userInvites:" + userCode;
+        List<Object> values = redisTemplate.opsForHash().values(key);
 
-        return convertJsonToObject(value, GroupInviteDTO.class);
+        return values.stream()
+                .map(value -> convertJsonToObject((String) value, GroupInviteDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public void deleteInvitation(String inviteCode) {
-        String key = "invite:" + inviteCode;
-        redisTemplate.delete(key);
+    // 특정 초대 삭제
+    public void deleteInvitation(String userCode, String inviteCode) {
+        String key = "userInvites:" + userCode;
+        redisTemplate.opsForHash().delete(key, inviteCode);
     }
 
     private String convertObjectToJson(Object obj) {
