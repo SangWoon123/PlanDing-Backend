@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.schedule.attedance.dto;
+package com.tukorea.planding.domain.schedule.dto;
 
 import com.tukorea.planding.domain.schedule.entity.ScheduleStatus;
 import lombok.Builder;

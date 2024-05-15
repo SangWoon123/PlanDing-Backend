@@ -2,12 +2,7 @@ package com.tukorea.planding.domain.user.service;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.entity.InviteStatus;
-import com.tukorea.planding.domain.group.service.query.GroupFavoriteQueryService;
-import com.tukorea.planding.domain.group.service.query.GroupInviteQueryService;
-import com.tukorea.planding.domain.schedule.common.dto.ScheduleResponse;
-import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.common.service.ScheduleQueryService;
+import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -26,27 +21,27 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserQueryService userQueryService;
-    private final ScheduleQueryService scheduleQueryService;
-    private final GroupInviteQueryService groupInviteQueryService;
-    private final GroupFavoriteQueryService groupFavoriteQueryService;
+
 
     @Transactional(readOnly = true)
     public List<GroupRoom> findFavoriteGroupsByUserId(UserInfo userInfo) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-        // 즐겨찾기된 그룹 목록을 반환
-        return user.getGroupFavorites().stream()
-                .map(GroupFavorite::getGroupRoom) // GroupFavorite 엔티티에서 GroupRoom을 가져오는 메서드 가정
+        return userQueryService.getUserByUserCode(userInfo.getUserCode())
+                .getGroupFavorites()
+                .stream()
+                .map(GroupFavorite::getGroupRoom)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public User createUserFromRequest(AndroidLoginRequest androidLoginRequest) {
+        String userCode = generateUniqueUserCode();
         User user = User.builder()
                 .socialId(androidLoginRequest.socialId())
                 .socialType(SocialType.KAKAO)
                 .username(androidLoginRequest.profileNickname())
                 .email(androidLoginRequest.accountEmail())
                 .profileImage(androidLoginRequest.profileImage())
-                .userCode(User.createCode())
+                .userCode(userCode)
                 .role(Role.USER)
                 .build();
 
@@ -54,25 +49,25 @@ public class UserService {
     }
 
     //TODO 즐겨찾는 그룹, 그룹 요청
+    // N+1문제는 발생하지 않지만 user조회쿼리 3개나감
     public ProfileResponse getProfile(UserInfo userInfo) {
         User userProfile = userQueryService.getUserProfile(userInfo.getId());
-        Long groupInvite = groupInviteQueryService.countInvitation(userInfo.getUserCode(), InviteStatus.PENDING);
-//        Long groupFavorite = groupFavoriteQueryService.countMyFavoriteGroup(userInfo.getUserCode());
         return ProfileResponse.builder()
                 .userCode(userProfile.getUserCode())
                 .email(userProfile.getEmail())
                 .username(userProfile.getUsername())
                 .profileImage(userProfile.getProfileImage())
-                .groupRequest(groupInvite)
+                .groupRequest((long) userProfile.getGroupInvites().size())
                 .groupFavorite((long) userProfile.getGroupFavorites().size())
+                .role(Role.USER)
                 .build();
     }
 
-    public List<ScheduleResponse> showTodaySchedule(UserInfo userInfo) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-        List<Schedule> schedules = scheduleQueryService.showTodaySchedule(user.getId());
-        return schedules.stream()
-                .map(ScheduleResponse::from)
-                .collect(Collectors.toList());
+    public String generateUniqueUserCode() {
+        String userCode;
+        do {
+            userCode = User.createCode();
+        } while (userQueryService.existsByUserCode(userCode));
+        return userCode;
     }
 }

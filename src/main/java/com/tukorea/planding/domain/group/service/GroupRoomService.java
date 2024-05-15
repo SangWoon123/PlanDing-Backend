@@ -47,11 +47,10 @@ public class GroupRoomService {
 
     @Transactional
     public GroupResponse updateGroupNameOrDescription(UserInfo userInfo, GroupUpdateRequest groupUpdateRequest) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
         GroupRoom groupRoom = groupQueryService.getGroupById(groupUpdateRequest.groupId());
 
         // TODO 그룹의 팀원도 변경가능하도록
-        if (!groupRoom.getOwner().equals(user.getUserCode())) {
+        if (!groupRoom.getOwner().equals(userInfo.getUserCode())) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -73,10 +72,7 @@ public class GroupRoomService {
 
     // 유저가 속한 그룹룸 가져오기
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-
-        List<GroupRoom> groupRooms = groupQueryService.findGroupsByUserId(user.getId());
-
+        List<GroupRoom> groupRooms = groupQueryService.findGroupsByUserId(userInfo.getId());
         return groupRooms.stream()
                 .map(this::toGroupResponse)
                 .collect(Collectors.toList());

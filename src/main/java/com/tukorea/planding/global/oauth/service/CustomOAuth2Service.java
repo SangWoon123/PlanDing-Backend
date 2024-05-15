@@ -3,6 +3,7 @@ package com.tukorea.planding.global.oauth.service;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.SocialType;
 import com.tukorea.planding.domain.user.entity.User;
+import com.tukorea.planding.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,14 +23,15 @@ import java.util.Map;
 public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String registrationId=userRequest.getClientRegistration().getRegistrationId();
-        SocialType socialType=SocialType.getSocialType(registrationId);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        SocialType socialType = SocialType.getSocialType(registrationId);
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName(); // OAuth2 로그인 시 키(PK)가 되는 값
 
@@ -39,7 +41,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
 
         User createdUser = getUser(extractAttributes, socialType);
 
-        log.info("["+registrationId+"]:OAuth 객체 생성");
+        log.info("[" + registrationId + "]:OAuth 객체 생성");
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(createdUser.getRole().getAuthority())),
                 attributes,
@@ -56,16 +58,19 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
         User findUser = userRepository.findBySocialTypeAndSocialId(socialType,
                 attributes.getOauth2UserInfo().getOAuth2Id()).orElse(null);
 
-        if(findUser == null) {
+        if (findUser == null) {
             return saveUser(attributes, socialType);
         }
 
         log.info("기존 유저 유저 [userCode = " + findUser.getUserCode() + "]");
         return findUser;
     }
+
     private User saveUser(OAuthAttributes attributes, SocialType socialType) {
         log.info("신규 회원가입");
-        User createdUser = attributes.toEntity(socialType, attributes.getOauth2UserInfo());
+        String userCode = userService.generateUniqueUserCode();
+        User createdUser = attributes.toEntity(socialType, attributes.getOauth2UserInfo(), userCode);
         return userRepository.save(createdUser);
     }
+
 }

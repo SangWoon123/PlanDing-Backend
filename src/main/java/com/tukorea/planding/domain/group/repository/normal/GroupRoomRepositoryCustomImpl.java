@@ -31,7 +31,7 @@ public class GroupRoomRepositoryCustomImpl implements GroupRoomRepositoryCustom 
     @Override
     public List<User> getGroupUsers(Long groupId) {
         return queryFactory.selectFrom(user)
-                .join(user.userGroup, userGroup)
+                .innerJoin(user.userGroup, userGroup)
                 .where(userGroup.groupRoom.id.eq(groupId))
                 .fetch();
     }

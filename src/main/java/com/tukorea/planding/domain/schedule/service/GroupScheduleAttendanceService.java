@@ -1,10 +1,9 @@
-package com.tukorea.planding.domain.schedule.attedance.service;
+package com.tukorea.planding.domain.schedule.service;
 
-import com.tukorea.planding.domain.schedule.attedance.dto.GroupScheduleAttendanceRequest;
+import com.tukorea.planding.domain.schedule.dto.GroupScheduleAttendanceRequest;
 import com.tukorea.planding.domain.schedule.entity.GroupScheduleAttendance;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.attedance.repository.GroupScheduleAttendanceRepository;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.repository.GroupScheduleAttendanceRepository;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
@@ -20,13 +19,12 @@ public class GroupScheduleAttendanceService {
 
     private final GroupScheduleAttendanceRepository groupScheduleAttendanceRepository;
     private final UserQueryService userQueryService;
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleQueryService scheduleQueryService;
 
     @Transactional
     public void participationGroupSchedule(UserInfo userInfo, GroupScheduleAttendanceRequest request) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-        Schedule schedule = scheduleRepository.findById(request.scheduleId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
+        Schedule schedule = scheduleQueryService.findScheduleById(request.scheduleId());
 
         GroupScheduleAttendance attendance = groupScheduleAttendanceRepository
                 .findByUserIdAndScheduleId(user.getId(), schedule.getId())
