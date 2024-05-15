@@ -80,11 +80,7 @@ public class GroupInvite {
     }
 
     private String generateInviteCode() {
-<<<<<<< HEAD
-        return "IN" + UUID.randomUUID().toString();
-=======
         return "INV"+UUID.randomUUID().toString();
->>>>>>> main
     }
 
     public static GroupInviteResponse toInviteResponse(GroupInvite groupInvite) {
