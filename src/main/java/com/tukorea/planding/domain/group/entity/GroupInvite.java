@@ -8,10 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-<<<<<<< HEAD
-=======
-import java.time.format.DateTimeFormatter;
->>>>>>> main
 import java.util.UUID;
 
 @Getter

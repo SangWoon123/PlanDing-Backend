@@ -8,5 +8,7 @@ import java.util.List;
 public interface UserGroupRepositoryCustom {
     boolean existsByGroupRoomIdAndUserId(Long groupRoomId, Long userId);
     List<User> findUserByIsConnectionFalse(Long groupRoomId);
-    public UserGroup findUserByGroupId(Long userId, Long groupRoomId);
+     UserGroup findUserByGroupId(Long userId, Long groupRoomId);
+    boolean existsByUserCodeAndGroupId(String userCode, Long groupId);
+
 }

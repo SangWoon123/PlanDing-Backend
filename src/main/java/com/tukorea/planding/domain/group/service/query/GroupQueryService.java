@@ -3,6 +3,7 @@ package com.tukorea.planding.domain.group.service.query;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
 import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepositoryCustom;
+import com.tukorea.planding.domain.group.repository.usergroup.UserGroupRepository;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GroupQueryService {
 
     private final GroupRoomRepository groupRoomRepository;
+    private final UserGroupRepository userGroupRepository;
 
 
     public GroupRoom createGroup(GroupRoom groupRoom) {
@@ -37,8 +39,15 @@ public class GroupQueryService {
         groupRoomRepository.delete(groupRoom);
     }
 
+    public boolean existById(Long groupId) {
+        return groupRoomRepository.existsById(groupId);
+    }
+
     public List<User> getGroupUsers(Long groupId) {
         return groupRoomRepository.getGroupUsers(groupId);
     }
 
+    public boolean existGroupInUser(String userCode, Long groupId) {
+        return userGroupRepository.existsByUserCodeAndGroupId(userCode, groupId);
+    }
 }
