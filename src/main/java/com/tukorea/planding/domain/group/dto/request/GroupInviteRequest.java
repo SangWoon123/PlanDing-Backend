@@ -7,5 +7,5 @@ public record GroupInviteRequest(
         Long groupId,
         String userCode
 ) {
-
+    
 }
