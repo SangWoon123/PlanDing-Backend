@@ -30,21 +30,21 @@ public class GroupInviteService {
     @Transactional
     public GroupInviteMessageResponse inviteGroupRoom(UserInfo userInfo, GroupInviteRequest groupInviteRequest) {
         // 초대하는 사용자와 초대 대상 사용자가 같은지 확인
-        if (userInfo.getUserCode().equals(groupInviteRequest.getUserCode())) {
+        if (userInfo.getUserCode().equals(groupInviteRequest.userCode())) {
             throw new BusinessException(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
 
-        if (!groupQueryService.getGroupById(groupInviteRequest.getGroupId()).getOwner().equals(userInfo.getUserCode())) {
+        if (!groupQueryService.getGroupById(groupInviteRequest.groupId()).getOwner().equals(userInfo.getUserCode())) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
         }
 
-        if (groupQueryService.existGroupInUser(groupInviteRequest.getUserCode(), groupInviteRequest.getGroupId())) {
+        if (groupQueryService.existGroupInUser(groupInviteRequest.userCode(), groupInviteRequest.groupId())) {
             throw new BusinessException(ErrorCode.USER_ALREADY_IN_GROUP);
         }
 
-        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create("IN" + UUID.randomUUID(), groupInviteRequest.getGroupId(), groupInviteRequest.getUserCode(), userInfo.getId());
+        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create("IN" + UUID.randomUUID(), groupInviteRequest.groupId(), groupInviteRequest.userCode(), userInfo.getId());
 
-        redisGroupInviteService.createInvitation(groupInviteRequest.getUserCode(), groupInviteMessageResponse);
+        redisGroupInviteService.createInvitation(groupInviteRequest.userCode(), groupInviteMessageResponse);
 
         return groupInviteMessageResponse;
     }
