@@ -1,11 +1,19 @@
 package com.tukorea.planding.domain.group.service;
 
+import com.tukorea.planding.domain.group.dto.GroupInviteEvent;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+<<<<<<<HEAD
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.group.service.query.GroupQueryService;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.notify.service.NotificationService;
+=======
+import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
+import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.entity.UserGroup;
+import com.tukorea.planding.domain.group.service.query.GroupQueryService;
+>>>>>>>groupInvite
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
@@ -31,34 +39,33 @@ public class GroupInviteService {
     @Transactional
     public GroupInviteMessageResponse inviteGroupRoom(UserInfo userInfo, GroupInviteRequest groupInviteRequest) {
         // 초대하는 사용자와 초대 대상 사용자가 같은지 확인
-        if (userInfo.getUserCode().equals(groupInviteRequest.getUserCode())) {
+        if (userInfo.getUserCode().equals(groupInviteRequest.userCode())) {
             throw new BusinessException(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
-
         // 그룹이 존재하는지
-        if (!groupQueryService.existById(groupInviteRequest.getGroupId())) {
+        if (!groupQueryService.existById(groupInviteRequest.groupId())) {
             throw new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND);
         }
 
-        //그룹에 속해있는지
-        // 사용자가 이미 그룹에 속해 있는지 확인
-        if (groupQueryService.existGroupInUser(groupInviteRequest.getUserCode(), groupInviteRequest.getGroupId())) {
+        GroupRoom group = groupQueryService.getGroupById(groupInviteRequest.groupId());
+        if (!group.getOwner().equals(userInfo.getUserCode())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
+        }
+
+        if (groupQueryService.existGroupInUser(groupInviteRequest.userCode(), groupInviteRequest.groupId())) {
             throw new BusinessException(ErrorCode.USER_ALREADY_IN_GROUP);
         }
 
-        GroupRoom groupRoom = groupQueryService.getGroupById(groupInviteRequest.getGroupId());
+        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create("IN" + UUID.randomUUID(), groupInviteRequest.groupId(), groupInviteRequest.userCode(), userInfo.getId());
 
+        redisGroupInviteService.createInvitation(groupInviteRequest.userCode(), groupInviteMessageResponse);
 
-        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create(
-                "INV" + UUID.randomUUID()
-                , groupInviteRequest.getGroupId()
-                , groupInviteRequest.getUserCode()
-                , userInfo.getId());
+        GroupInviteEvent event = GroupInviteEvent.builder()
+                .groupName(group.getName())
+                .userCode(groupInviteRequest.userCode())
+                .build();
 
-
-        redisGroupInviteService.createInvitation(groupInviteRequest.getUserCode(), groupInviteMessageResponse);
-
-        notificationService.notifyInvitation(groupInviteRequest.getUserCode(), groupRoom.getName());
+        notificationService.handleGroupInvitedEvent(event);
 
         return groupInviteMessageResponse;
     }
@@ -79,9 +86,7 @@ public class GroupInviteService {
     }
 
     @Transactional
-    public void declineInvitation(UserInfo userInfo, String code) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-        redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), code);
+    public void declineInvitation(UserInfo userInfo, String inviteCode) {
+        redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), inviteCode);
     }
-
 }

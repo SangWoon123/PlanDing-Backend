@@ -8,4 +8,5 @@ import java.util.List;
 public interface GroupRoomRepositoryCustom {
     List<GroupRoom> findGroupRoomsByUserId(Long userId);
     List<User> getGroupUsers(Long groupId);
+
 }

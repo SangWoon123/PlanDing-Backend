@@ -29,6 +29,7 @@ public enum ErrorCode {
     USER_ALREADY_INVITED("GROUP-005", "이미 그룹룸에 초대되었습니다.", HttpStatus.UNAUTHORIZED),
     FAVORITE_ALREADY_ADD("GROUP-006", "이미 즐겨찾기에 등록하였습니다.", HttpStatus.UNAUTHORIZED),
     FAVORITE_ALREADY_DELETE("GROUP-007", "즐겨찾기에 등록된 그룹이 아닙니다.", HttpStatus.UNAUTHORIZED),
+    USER_ALREADY_IN_GROUP("GROUP-008", "이미 그룹에 존재하는 유저입니다.", HttpStatus.CONFLICT),
 
     /**
      * Invite Error

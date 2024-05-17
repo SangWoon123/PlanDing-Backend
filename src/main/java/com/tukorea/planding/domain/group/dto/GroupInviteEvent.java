@@ -1,9 +1,13 @@
 package com.tukorea.planding.domain.group.dto;
 
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.Clock;
 
+@Getter
+@Builder
 public class GroupInviteEvent extends ApplicationEvent {
 
     private final String userCode;
@@ -15,11 +19,4 @@ public class GroupInviteEvent extends ApplicationEvent {
         this.groupName = groupName;
     }
 
-    public String getUserCode() {
-        return userCode;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
 }
