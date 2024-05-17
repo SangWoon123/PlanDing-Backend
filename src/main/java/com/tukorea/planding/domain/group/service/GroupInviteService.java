@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,15 @@ public class GroupInviteService {
             throw new BusinessException(ErrorCode.CANNOT_INVITE_YOURSELF);
         }
 
-        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create("IN" + LocalDateTime.now(), groupInviteRequest.getGroupId(), groupInviteRequest.getUserCode(), userInfo.getId());
+        if (!groupQueryService.getGroupById(groupInviteRequest.getGroupId()).getOwner().equals(userInfo.getUserCode())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
+        }
+
+        if (groupQueryService.existGroupInUser(groupInviteRequest.getUserCode(), groupInviteRequest.getGroupId())) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_IN_GROUP);
+        }
+
+        GroupInviteMessageResponse groupInviteMessageResponse = GroupInviteMessageResponse.create("IN" + UUID.randomUUID(), groupInviteRequest.getGroupId(), groupInviteRequest.getUserCode(), userInfo.getId());
 
         redisGroupInviteService.createInvitation(groupInviteRequest.getUserCode(), groupInviteMessageResponse);
 
@@ -44,7 +53,6 @@ public class GroupInviteService {
     public void acceptInvitation(UserInfo userInfo, String code, Long groupId) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
         GroupRoom group = groupQueryService.getGroupById(groupId);
-
 
         final UserGroup userGroup = UserGroup.createUserGroup(user, group);
         userGroupService.save(userGroup);
@@ -57,6 +65,6 @@ public class GroupInviteService {
     }
 
     public void declineInvitation(UserInfo userInfo, String inviteCode) {
-        redisGroupInviteService.deleteInvitation(userInfo.getUserCode(),inviteCode);
+        redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), inviteCode);
     }
 }
