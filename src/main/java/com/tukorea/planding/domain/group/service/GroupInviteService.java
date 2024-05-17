@@ -2,18 +2,11 @@ package com.tukorea.planding.domain.group.service;
 
 import com.tukorea.planding.domain.group.dto.GroupInviteEvent;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
-<<<<<<<HEAD
+import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.group.service.query.GroupQueryService;
-import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.notify.service.NotificationService;
-=======
-import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.group.service.query.GroupQueryService;
->>>>>>>groupInvite
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
