@@ -53,12 +53,7 @@ public class GroupInviteService {
 
         redisGroupInviteService.createInvitation(groupInviteRequest.userCode(), groupInviteMessageResponse);
 
-        GroupInviteEvent event = GroupInviteEvent.builder()
-                .groupName(group.getName())
-                .userCode(groupInviteRequest.userCode())
-                .build();
-
-        notificationService.handleGroupInvitedEvent(event);
+        notificationService.notifyInvitation(groupInviteRequest.userCode(), group.getName());
 
         return groupInviteMessageResponse;
     }
