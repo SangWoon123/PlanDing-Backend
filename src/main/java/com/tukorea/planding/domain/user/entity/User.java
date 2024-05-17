@@ -1,7 +1,6 @@
 package com.tukorea.planding.domain.user.entity;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
-import com.tukorea.planding.domain.group.entity.GroupInvite;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.notify.entity.Notification;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
@@ -60,8 +59,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<GroupFavorite> groupFavorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "invitedUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<GroupInvite> groupInvites = new ArrayList<>();
 
     @Builder
     public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode) {

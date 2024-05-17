@@ -57,7 +57,6 @@ public class UserService {
                 .email(userProfile.getEmail())
                 .username(userProfile.getUsername())
                 .profileImage(userProfile.getProfileImage())
-                .groupRequest((long) userProfile.getGroupInvites().size())
                 .groupFavorite((long) userProfile.getGroupFavorites().size())
                 .role(Role.USER)
                 .build();
