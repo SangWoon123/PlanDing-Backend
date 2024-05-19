@@ -21,7 +21,6 @@ public class GroupQueryService {
     private final GroupRoomRepository groupRoomRepository;
     private final UserGroupRepository userGroupRepository;
 
-
     public GroupRoom createGroup(GroupRoom groupRoom) {
         return groupRoomRepository.save(groupRoom);
     }
@@ -34,6 +33,12 @@ public class GroupQueryService {
         return groupRoomRepository.findById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
     }
+
+    public GroupRoom getGroupByCode(String groupCode) {
+        return groupRoomRepository.findByGroupCode(groupCode)
+                .orElseThrow(() -> new BusinessException(ErrorCode.GROUP_ROOM_NOT_FOUND));
+    }
+
 
     public void delete(GroupRoom groupRoom) {
         groupRoomRepository.delete(groupRoom);

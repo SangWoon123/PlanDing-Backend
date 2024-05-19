@@ -3,7 +3,7 @@ package com.tukorea.planding.global.error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.global.config.security.SecurityConfig;
 import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
-import com.tukorea.planding.domain.schedule.controller.ScheduleController;
+import com.tukorea.planding.domain.schedule.controller.PersonalScheduleController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(controllers = {ScheduleController.class, GlobalExceptionController.class},excludeFilters = {
+@WebMvcTest(controllers = {PersonalScheduleController.class, GlobalExceptionController.class},excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, JwtAuthenticationFilter.class})})
 class GlobalExceptionControllerTest {
 

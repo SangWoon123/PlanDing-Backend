@@ -6,6 +6,7 @@ import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.group.service.query.GroupQueryService;
+import com.tukorea.planding.domain.group.service.query.UserGroupQueryService;
 import com.tukorea.planding.domain.notify.service.NotificationService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
@@ -24,7 +25,7 @@ import java.util.UUID;
 public class GroupInviteService {
     private final UserQueryService userQueryService;
     private final GroupQueryService groupQueryService;
-    private final UserGroupService userGroupService;
+    private final UserGroupQueryService userGroupQueryService;
     private final NotificationService notificationService;
     private final RedisGroupInviteService redisGroupInviteService;
 
@@ -64,7 +65,7 @@ public class GroupInviteService {
         GroupRoom group = groupQueryService.getGroupById(groupId);
 
         final UserGroup userGroup = UserGroup.createUserGroup(user, group);
-        userGroupService.save(userGroup);
+        userGroupQueryService.save(userGroup);
 
         redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), code);
     }

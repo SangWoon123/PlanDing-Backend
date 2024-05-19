@@ -1,7 +1,8 @@
 package com.tukorea.planding.domain.schedule.service;
 
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
+import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.global.error.BusinessException;

@@ -36,8 +36,8 @@ public class GroupRoom extends BaseEntity {
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<UserGroup> userGroups = new HashSet<>();
 
-    @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Schedule> schedules = new ArrayList<>();
+//    @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private final List<Schedule> schedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<GroupFavorite> groupFavorites = new ArrayList<>();
@@ -75,10 +75,10 @@ public class GroupRoom extends BaseEntity {
         }
     }
 
-    // 스케줄을 그룹룸에 추가하는 메서드
-    public void addSchedule(Schedule schedule) {
-        this.schedules.add(schedule);
-    }
+//    // 스케줄을 그룹룸에 추가하는 메서드
+//    public void addSchedule(Schedule schedule) {
+//        this.schedules.add(schedule);
+//    }
 
     public void updateNameOrDes(String name, String description) {
         if (name != null && !name.equals(this.name)) {

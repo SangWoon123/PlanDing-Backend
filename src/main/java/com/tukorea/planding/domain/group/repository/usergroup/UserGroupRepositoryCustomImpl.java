@@ -50,4 +50,11 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
 
         return count > 0;
     }
+
+    @Override
+    public List<UserGroup> findAllUsersByGroupId(Long groupRoomId) {
+        return queryFactory.selectFrom(userGroup)
+                .where(userGroup.groupRoom.id.eq(groupRoomId))
+                .fetch();
+    }
 }

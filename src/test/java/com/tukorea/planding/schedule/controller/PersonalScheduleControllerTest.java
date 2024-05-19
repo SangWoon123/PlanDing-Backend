@@ -1,12 +1,12 @@
 package com.tukorea.planding.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tukorea.planding.domain.schedule.controller.ScheduleController;
+import com.tukorea.planding.domain.schedule.controller.PersonalScheduleController;
 import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.global.config.security.SecurityConfig;
 import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
-import com.tukorea.planding.domain.schedule.dto.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.service.ScheduleService;
+import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.service.PersonalScheduleService;
 import com.tukorea.planding.domain.user.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,15 +31,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 @ExtendWith(MockitoExtension.class)
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(controllers = {ScheduleController.class}, excludeFilters = {
+@WebMvcTest(controllers = {PersonalScheduleController.class}, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, JwtAuthenticationFilter.class})})
-class ScheduleControllerTest {
+class PersonalScheduleControllerTest {
 
     @MockBean
-    private ScheduleService scheduleService;
+    private PersonalScheduleService personalScheduleService;
 
     @InjectMocks
-    private ScheduleController scheduleController;
+    private PersonalScheduleController personalScheduleController;
 
     @Autowired
     MockMvc mockMvc;
@@ -58,7 +58,7 @@ class ScheduleControllerTest {
                 .title("test")
                 .build();
 
-        given(scheduleService.createSchedule(UserMapper.toUserInfo(user),schedule)).willThrow(UsernameNotFoundException.class);
+        given(personalScheduleService.createSchedule(UserMapper.toUserInfo(user),schedule)).willThrow(UsernameNotFoundException.class);
 
 
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/schedule")

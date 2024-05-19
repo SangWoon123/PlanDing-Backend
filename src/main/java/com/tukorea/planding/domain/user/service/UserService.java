@@ -58,6 +58,7 @@ public class UserService {
                 .username(userProfile.getUsername())
                 .profileImage(userProfile.getProfileImage())
                 .groupFavorite((long) userProfile.getGroupFavorites().size())
+                .groupRequest((long) 0)
                 .role(Role.USER)
                 .build();
     }

@@ -7,23 +7,27 @@ import com.tukorea.planding.domain.group.service.GroupInviteService;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Group Invite", description = "그룹 초대 관련")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/invitation")
 public class GroupInviteController {
     private final GroupInviteService groupInviteService;
 
+    @Operation(summary = "유저에게 초대를 보낸다")
     @PostMapping()
     public CommonResponse<GroupInviteMessageResponse> invite(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupInviteRequest groupInviteRequest) {
         return CommonUtils.success(groupInviteService.inviteGroupRoom(userInfo, groupInviteRequest));
     }
 
+    @Operation(summary = "초대를 수락한다")
     @GetMapping("/accept/{groupId}/{code}")
     public CommonResponse<?> accept(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "groupId") Long groupId, @PathVariable(name = "code") String code) {
         groupInviteService.acceptInvitation(userInfo, code, groupId);
@@ -37,6 +41,7 @@ public class GroupInviteController {
         return CommonUtils.success(groupInviteResponse);
     }
 
+    @Operation(summary = "초대를 거절한다.")
     @DeleteMapping("/decline/{code}")
     public CommonResponse<?> declineInvitation(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "code") String code) {
         groupInviteService.declineInvitation(userInfo, code);

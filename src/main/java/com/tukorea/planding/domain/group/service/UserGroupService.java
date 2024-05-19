@@ -37,15 +37,4 @@ public class UserGroupService {
         test.setConnected(isConnected);
     }
 
-    public void save(UserGroup userGroup) {
-        userGroupRepository.save(userGroup);
-    }
-
-    public void checkUserAccessToGroupRoom(Long groupRoomId, Long userId) {
-        boolean exists = userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userId);
-        if (!exists) {
-            throw new BusinessException(ErrorCode.ACCESS_DENIED);
-        }
-    }
-
 }

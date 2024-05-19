@@ -37,4 +37,6 @@ public interface ScheduleRepositoryCustom {
     List<Schedule> findOverlapSchedules(Long userId, LocalDate date, LocalTime startDate, LocalTime endDate);
 
     List<Schedule> showTodaySchedule(Long userId);
+
+    List<Schedule> findByGroupRoomId(Long groupRoomId);
 }

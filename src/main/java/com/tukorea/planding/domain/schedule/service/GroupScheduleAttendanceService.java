@@ -1,6 +1,6 @@
 package com.tukorea.planding.domain.schedule.service;
 
-import com.tukorea.planding.domain.schedule.dto.GroupScheduleAttendanceRequest;
+import com.tukorea.planding.domain.schedule.dto.request.GroupScheduleAttendanceRequest;
 import com.tukorea.planding.domain.schedule.entity.GroupScheduleAttendance;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.repository.GroupScheduleAttendanceRepository;

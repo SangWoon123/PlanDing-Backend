@@ -41,30 +41,29 @@ public class Schedule extends BaseEntity {
     @Column(name = "complete", nullable = false)
     private boolean isComplete;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_room_id")
-    private GroupRoom groupRoom;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ScheduleType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "personal_schedule_id")
+    private PersonalSchedule personalSchedule;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_schedule_id")
+    private GroupSchedule groupSchedule;
 
     @Builder
-    public Schedule(String title, String content, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, boolean isComplete, GroupRoom groupRoom, User user) {
+    public Schedule(String title, String content, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, boolean isComplete, ScheduleType type, PersonalSchedule personalSchedule, GroupSchedule groupSchedule) {
         this.title = title;
         this.content = content;
         this.scheduleDate = scheduleDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isComplete = isComplete;
-        this.groupRoom = groupRoom;
-        this.user = user;
-    }
-
-    public void checkOwnership(Long userId) throws BusinessException {
-        if (!this.user.getId().equals(userId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_SCHEDULE);
-        }
+        this.type = type;
+        this.personalSchedule = personalSchedule;
+        this.groupSchedule = groupSchedule;
     }
 
     public void update(String title, String content, LocalTime startTime, LocalTime endTime) {
@@ -77,18 +76,4 @@ public class Schedule extends BaseEntity {
         Optional.ofNullable(startTime).ifPresent(value -> this.startTime = value);
         Optional.ofNullable(endTime).ifPresent(value -> this.endTime = value);
     }
-
-    public void toggleComplete() {
-        if (isComplete) {
-            this.isComplete = false;
-            return;
-        }
-        this.isComplete = true;
-    }
-
-    public void addUser(User user) {
-        this.user = user;
-        user.getSchedules().add(this);
-    }
-
 }
