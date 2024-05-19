@@ -7,6 +7,7 @@ import com.tukorea.planding.domain.notify.entity.Notification;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.repository.EmitterRepositoryImpl;
 import com.tukorea.planding.domain.notify.repository.NotificationRepository;
+import com.tukorea.planding.domain.schedule.service.GroupScheduleCreatedEvent;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.repository.UserRepository;
@@ -41,6 +42,10 @@ public class NotificationService {
         eventPublisher.publishEvent(event);
     }
 
+    public void notifyGroupSchedule(final String userCode, final String schedule) {
+
+    }
+
     @EventListener
     public void handleGroupInvitedEvent(GroupInviteEvent event) {
         NotificationScheduleRequest request = NotificationScheduleRequest.builder()
@@ -48,6 +53,19 @@ public class NotificationService {
                 .groupName(event.getGroupName())
                 .message(event.getGroupName() + "그룹으로 부터 초대되었습니다.")
                 .receiverCode(event.getUserCode())
+                .build();
+
+        send(request);
+    }
+
+    @EventListener
+    public void handleGroupScheduleCreatedEvent(GroupScheduleCreatedEvent event) {
+        NotificationScheduleRequest request = NotificationScheduleRequest.builder()
+                .type(NotificationType.GROUP_SCHEDULE)
+                .groupName(event.getGroupName())
+                .message("새로운 그룹 스케줄이 생성되었습니다: " + event.getScheduleTitle())
+                .receiverCode(event.getUserCode())
+                .url(event.getUrl())
                 .build();
 
         send(request);
