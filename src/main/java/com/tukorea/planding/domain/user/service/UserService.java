@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.user.service;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.service.RedisGroupInviteService;
 import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserQueryService userQueryService;
+    private final RedisGroupInviteService redisGroupInviteService;
 
 
     @Transactional(readOnly = true)
@@ -58,7 +60,7 @@ public class UserService {
                 .username(userProfile.getUsername())
                 .profileImage(userProfile.getProfileImage())
                 .groupFavorite((long) userProfile.getGroupFavorites().size())
-                .groupRequest((long) 0)
+                .groupRequest((long) redisGroupInviteService.getAllInvitations(userInfo.getUserCode()).size())
                 .role(Role.USER)
                 .build();
     }
