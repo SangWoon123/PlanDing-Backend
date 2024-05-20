@@ -17,6 +17,8 @@ import com.tukorea.planding.domain.schedule.repository.GroupScheduleRepository;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
+import com.tukorea.planding.global.error.BusinessException;
+import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,21 +37,18 @@ public class GroupScheduleService {
 
     private final ScheduleQueryService scheduleQueryService;
     private final GroupQueryService groupQueryService;
-    private final UserQueryService userQueryService;
-    private final UserGroupRepository userGroupRepository;
+    private final UserGroupQueryService userGroupQueryService;
 
     private final GroupScheduleRepository groupScheduleRepository;
     private final GroupScheduleAttendanceRepository groupScheduleAttendanceRepository;
-    private final UserGroupQueryService userGroupQueryService;
     private final ApplicationEventPublisher eventPublisher;
 
 
     @Transactional
     public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
-        User user = userQueryService.getUserByUserCode(requestSchedule.userCode());
         GroupRoom groupRoom = groupQueryService.getGroupByCode(groupCode);
 
-        userGroupQueryService.checkUserAccessToGroupRoom(groupRoom.getId(), user.getId());
+        checkUserAccessToGroupRoom(groupRoom.getId(), requestSchedule.userId());
 
         GroupSchedule groupSchedule = GroupSchedule.builder()
                 .groupRoom(groupRoom)
@@ -70,25 +69,11 @@ public class GroupScheduleService {
         groupScheduleRepository.save(groupSchedule);
         Schedule savedSchedule = scheduleQueryService.save(newSchedule);
 
-        List<User> notificationUsers = userGroupRepository.findUserByIsConnectionFalse(groupRoom.getId());
-
-        notificationUsers.forEach(member -> {
-            GroupScheduleCreatedEvent event = new GroupScheduleCreatedEvent(this, member.getUserCode(), groupRoom.getName(), savedSchedule.getTitle(), "/groupRoom/" + groupRoom.getId() + "/" + savedSchedule.getId());
-            eventPublisher.publishEvent(event);
-        });
+        notifyUsers(groupRoom, savedSchedule);
 
         return ScheduleResponse.from(savedSchedule);
     }
 
-    /*
-    그룹룸 스케줄관련 코드
-
-    */
-
-    // 그룹룸에서 스케줄을 찾아
-    // 스케줄과 유저의 참여여부를 비교
-    // 현재 쿼리 8번
-    // 유저 , 스케줄, 그룹, 그룹유저, 참여여부 2명 조회
     @Transactional(readOnly = true)
     public GroupScheduleResponse getGroupScheduleById(UserInfo userInfo, Long groupRoomId, Long scheduleId) {
         checkUserAccessToGroupRoom(groupRoomId, userInfo.getId());
@@ -129,7 +114,9 @@ public class GroupScheduleService {
 
     // 유저가 그룹룸에 접근할 권리가있는지 확인
     private void checkUserAccessToGroupRoom(Long groupRoomId, Long userId) {
-        userGroupQueryService.checkUserAccessToGroupRoom(groupRoomId, userId);
+        if (!userGroupQueryService.checkUserAccessToGroupRoom(groupRoomId, userId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+        }
     }
 
     private List<UserScheduleAttendance> getUserScheduleAttendances(GroupRoom groupRoom, Long scheduleId) {
@@ -143,5 +130,15 @@ public class GroupScheduleService {
                 .collect(Collectors.toList());
     }
 
-
+    private void notifyUsers(GroupRoom groupRoom, Schedule savedSchedule) {
+        List<User> notificationUsers = userGroupQueryService.findUserByIsConnectionFalse(groupRoom.getId());
+        notificationUsers.forEach(member -> {
+            GroupScheduleCreatedEvent event = new GroupScheduleCreatedEvent(this,
+                    member.getUserCode(),
+                    groupRoom.getName(),
+                    savedSchedule.getTitle(),
+                    "/groupRoom/" + groupRoom.getId() + "/" + savedSchedule.getId());
+            eventPublisher.publishEvent(event);
+        });
+    }
 }

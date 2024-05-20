@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 @Builder
 public record ScheduleRequest(
-        String userCode,
+        Long userId,
         String title,
         String content,
         LocalDate scheduleDate,

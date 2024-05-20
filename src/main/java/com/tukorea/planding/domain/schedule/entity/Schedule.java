@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.schedule.entity;
 
 import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.error.BusinessException;

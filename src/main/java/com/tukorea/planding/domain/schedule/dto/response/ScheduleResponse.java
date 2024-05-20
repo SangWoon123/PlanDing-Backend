@@ -37,6 +37,6 @@ public record ScheduleResponse(
 
 
     public static Comparator<ScheduleResponse> getComparatorByStartTime() {
-        return Comparator.comparing(schedule -> schedule.startTime());
+        return Comparator.comparing(ScheduleResponse::startTime);
     }
 }
