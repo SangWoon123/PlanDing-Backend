@@ -16,11 +16,20 @@ public class AndroidLoginService {
 
     private final JwtTokenHandler jwtTokenHandler;
     private final UserService userService;
+    private final UserQueryService userQueryService;
 
     public AndroidLoginResponse signupApp(AndroidLoginRequest androidLoginRequest) {
-        User user = userService.createUserFromRequest(androidLoginRequest);
+
+        User user = userQueryService.findByEmail(androidLoginRequest.accountEmail());
+
+        if (user == null) {
+            // 유저가 존재하지 않으면 회원가입
+            user = userService.createUserFromRequest(androidLoginRequest);
+        }
+
         String accessToken = jwtTokenHandler.generateAccessToken(user.getId(), user.getUserCode());
         String refreshToken = jwtTokenHandler.generateRefreshToken(user.getId(), user.getUserCode());
+
         return UserMapper.toAndroidLoginResponse(user, accessToken, refreshToken);
     }
 }
