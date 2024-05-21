@@ -1,4 +1,4 @@
-package com.tukorea.planding.schedule.service;
+package com.tukorea.planding.domain.schedule.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,8 +14,6 @@ import com.tukorea.planding.domain.schedule.dto.response.GroupScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.entity.ScheduleType;
-import com.tukorea.planding.domain.schedule.service.GroupScheduleService;
-import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
 import com.tukorea.planding.domain.schedule.entity.GroupSchedule;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupScheduleServiceTestUnit {
+public class GroupScheduleServiceUnitTest {
 
     @InjectMocks
     private GroupScheduleService groupScheduleService;

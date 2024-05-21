@@ -1,4 +1,4 @@
-package com.tukorea.planding.group.service;
+package com.tukorea.planding.domain.group.service;
 
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;

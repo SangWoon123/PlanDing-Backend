@@ -1,20 +1,16 @@
-package com.tukorea.planding.group.service;
+package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
-import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
-import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
-import com.tukorea.planding.domain.group.dto.response.GroupResponse;
-import com.tukorea.planding.domain.group.service.GroupRoomService;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
+import com.tukorea.planding.domain.group.entity.GroupRoom;
+import com.tukorea.planding.domain.group.repository.normal.GroupRoomRepository;
 import com.tukorea.planding.domain.group.service.GroupInviteService;
+import com.tukorea.planding.domain.group.service.GroupRoomService;
 import com.tukorea.planding.domain.group.service.UserGroupService;
 import com.tukorea.planding.domain.group.service.query.UserGroupQueryService;
+import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.domain.user.repository.UserRepository;
-import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.oauth.details.Role;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class GroupInviteServiceTest {
+class GroupInviteServiceTestINT {
 
     @Autowired
     private UserGroupService userGroupService;

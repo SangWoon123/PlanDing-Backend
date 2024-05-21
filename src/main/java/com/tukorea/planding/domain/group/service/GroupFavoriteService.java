@@ -27,8 +27,7 @@ public class GroupFavoriteService {
 
     public GroupFavoriteResponse addFavorite(UserInfo userInfo, Long groupId) {
 
-        boolean exists = groupFavoriteRepository.existsByUserAndGroupRoom(userInfo.getUserCode(), groupId);
-        if (exists) {
+        if (groupFavoriteRepository.existsByUserAndGroupRoom(userInfo.getUserCode(), groupId)) {
             throw new BusinessException(ErrorCode.FAVORITE_ALREADY_ADD);
         }
 
