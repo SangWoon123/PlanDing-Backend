@@ -64,31 +64,12 @@ public class GroupRoom extends BaseEntity {
                 .build();
     }
 
-    public void checkOwner(String userCode) throws BusinessException {
-        if (!this.getOwner().equals(userCode)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_GROUP_ROOM_INVITATION);
-        }
+    public void updateName(String name) {
+        this.name = name;
     }
 
-    public void validateUserNotAlreadyMember(User user) throws BusinessException {
-        if (this.getUserGroups().contains(user)) {
-            throw new BusinessException(ErrorCode.USER_ALREADY_INVITED);
-        }
+    public void updateDescription(String description) {
+        this.description = description;
     }
-
-//    // 스케줄을 그룹룸에 추가하는 메서드
-//    public void addSchedule(Schedule schedule) {
-//        this.schedules.add(schedule);
-//    }
-
-    public void updateNameOrDes(String name, String description) {
-        if (name != null && !name.equals(this.name)) {
-            this.name = name;
-        }
-        if (description != null && !description.equals(this.description)) {
-            this.description = description;
-        }
-    }
-
 
 }

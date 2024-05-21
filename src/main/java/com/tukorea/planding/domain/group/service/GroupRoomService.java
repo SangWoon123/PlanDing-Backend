@@ -55,7 +55,8 @@ public class GroupRoomService {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
 
-        groupRoom.updateNameOrDes(groupUpdateRequest.name(), groupUpdateRequest.description());
+        groupRoom.updateName(groupUpdateRequest.name());
+        groupRoom.updateDescription(groupUpdateRequest.description());
 
         return toGroupResponse(groupRoom);
     }
