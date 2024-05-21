@@ -46,10 +46,6 @@ public class GroupRoomServiceTestUnit {
     private GroupInviteService groupInviteService;
 
 
-    @Mock
-    private NotificationService notificationService;
-
-
     private User testUserA;
     private User testUserB;
     private GroupRoom groupRoom;
