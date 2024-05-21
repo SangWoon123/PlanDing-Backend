@@ -1,26 +1,20 @@
 package com.tukorea.planding.schedule.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.entity.ScheduleType;
 import com.tukorea.planding.domain.schedule.repository.PersonalScheduleRepository;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustom;
-import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.global.config.QueryDslConfig;
 import com.tukorea.planding.global.oauth.details.Role;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -99,6 +93,17 @@ public class ScheduleRepositoryTest {
         // then
         assertThat(result).isNotEmpty();
         assertThat(result.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 오늘_스케줄_가져오기() {
+        Schedule schedule=createAndSaveSchedule(LocalTime.now(), LocalTime.now().plusHours(1));
+        scheduleRepository.save(schedule);
+
+        List<Schedule> result = scheduleRepository.showTodaySchedule(testUser.getId());
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.size()).isEqualTo(1);
     }
 
 }
