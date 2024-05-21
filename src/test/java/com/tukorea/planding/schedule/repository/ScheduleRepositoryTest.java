@@ -1,18 +1,25 @@
 package com.tukorea.planding.schedule.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepository;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustom;
-import com.tukorea.planding.domain.schedule.common.repository.ScheduleRepositoryCustomImpl;
+import com.tukorea.planding.domain.schedule.entity.ScheduleType;
+import com.tukorea.planding.domain.schedule.repository.PersonalScheduleRepository;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustom;
+import com.tukorea.planding.domain.schedule.repository.ScheduleRepositoryCustomImpl;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.repository.UserRepository;
+import com.tukorea.planding.global.config.QueryDslConfig;
 import com.tukorea.planding.global.oauth.details.Role;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,45 +31,41 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
-@Transactional
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+@Import(QueryDslConfig.class)
 public class ScheduleRepositoryTest {
 
-    private final ScheduleRepositoryCustom repository;
-    private final UserRepository userRepository;
-    private final ScheduleRepository scheduleRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+    @Autowired
+    private PersonalScheduleRepository personalScheduleRepository;
+
     private User testUser;
-
-    public ScheduleRepositoryTest(EntityManager entityManager, UserRepository userRepository, ScheduleRepository scheduleRepository) {
-        this.repository = new ScheduleRepositoryCustomImpl(new JPAQueryFactory(entityManager));
-        this.userRepository = userRepository;
-        this.scheduleRepository = scheduleRepository;
-    }
-
 
     @BeforeEach
     public void setUp() {
-        final String email = "test@google.com";
-        final String userCode = "#test";
-
-        User user = User.builder()
-                .userCode(userCode)
-                .email(email)
+        testUser = userRepository.save(User.builder()
+                .userCode("#test")
+                .email("email")
                 .role(Role.USER)
-                .build();
-
-        testUser = userRepository.save(user);
+                .build());
     }
 
-    private Schedule createAndSaveSchedule(User user, LocalTime startTime, LocalTime endTime) {
+    private Schedule createAndSaveSchedule(LocalTime startTime, LocalTime endTime) {
+        PersonalSchedule personalSchedule = personalScheduleRepository.save(PersonalSchedule.builder()
+                .user(testUser)
+                .build());
         return Schedule.builder()
-                .user(user)
                 .scheduleDate(LocalDate.now())
                 .title("title")
                 .content("content")
                 .startTime(startTime)
                 .endTime(endTime)
+                .personalSchedule(personalSchedule)
+                .type(ScheduleType.PERSONAL)
                 .build();
     }
 
@@ -73,16 +76,16 @@ public class ScheduleRepositoryTest {
 
         LocalTime startTime = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(9, 0);
-        Schedule schedule1 = createAndSaveSchedule(testUser, startTime, endTime);
+        Schedule schedule1 = createAndSaveSchedule(startTime, endTime);
 
         LocalTime startTime2 = LocalTime.of(9, 0);
         LocalTime endTime2 = LocalTime.of(11, 0);
-        Schedule schedule2 = createAndSaveSchedule(testUser, startTime2, endTime2);
+        Schedule schedule2 = createAndSaveSchedule(startTime2, endTime2);
 
 
         LocalTime startTime3 = LocalTime.of(9, 0);
         LocalTime endTime3 = LocalTime.of(9, 30);
-        Schedule schedule3 = createAndSaveSchedule(testUser, startTime3, endTime3);
+        Schedule schedule3 = createAndSaveSchedule(startTime3, endTime3);
 
         schedules.add(schedule1);
         schedules.add(schedule2);
@@ -91,7 +94,7 @@ public class ScheduleRepositoryTest {
         scheduleRepository.saveAll(schedules);
 
         // when
-        List<Schedule> result = repository.findOverlapSchedules(testUser.getId(), LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(10, 0));
+        List<Schedule> result = scheduleRepository.findOverlapSchedules(testUser.getId(), LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(10, 0));
 
         // then
         assertThat(result).isNotEmpty();
