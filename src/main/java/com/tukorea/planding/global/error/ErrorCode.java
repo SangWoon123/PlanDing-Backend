@@ -30,6 +30,7 @@ public enum ErrorCode {
     FAVORITE_ALREADY_ADD("GROUP-006", "이미 즐겨찾기에 등록하였습니다.", HttpStatus.UNAUTHORIZED),
     FAVORITE_ALREADY_DELETE("GROUP-007", "즐겨찾기에 등록된 그룹이 아닙니다.", HttpStatus.UNAUTHORIZED),
     USER_ALREADY_IN_GROUP("GROUP-008", "이미 그룹에 존재하는 유저입니다.", HttpStatus.CONFLICT),
+    FILE_UPLOAD_ERROR("GROUP-009", "썸네일 업로드중 오류가 발생했습니다.", HttpStatus.BAD_REQUEST),
 
     /**
      * Invite Error

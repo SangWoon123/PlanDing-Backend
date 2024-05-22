@@ -9,9 +9,10 @@ public record GroupResponse(
         String name,
         String description,
         String code,
-        String ownerCode
+        String ownerCode,
+        String thumbnailPath
 ) {
     public static GroupResponse from(GroupRoom groupRoom) {
-        return new GroupResponse(groupRoom.getId(), groupRoom.getName(), groupRoom.getDescription(), groupRoom.getGroupCode(), groupRoom.getOwner());
+        return new GroupResponse(groupRoom.getId(), groupRoom.getName(), groupRoom.getDescription(), groupRoom.getGroupCode(), groupRoom.getOwner(), groupRoom.getThumbnail());
     }
 }

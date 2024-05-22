@@ -12,13 +12,16 @@ import com.tukorea.planding.domain.group.service.query.UserGroupQueryService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
+import com.tukorea.planding.global.config.s3.S3Uploader;
 import com.tukorea.planding.global.error.BusinessException;
 import com.tukorea.planding.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,14 +33,14 @@ public class GroupRoomService {
     private final UserQueryService userQueryService;
     private final UserGroupQueryService userGroupQueryService;
     private final GroupQueryService groupQueryService;
+    private final GroupRoomFactory groupRoomFactory;
 
     @Transactional
-    public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom) {
+    public GroupResponse createGroupRoom(UserInfo userInfo, GroupCreateRequest createGroupRoom, MultipartFile thumbnailFile) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
-        GroupRoom newGroupRoom = GroupRoom.createGroupRoom(createGroupRoom, user);
+        GroupRoom newGroupRoom = groupRoomFactory.createGroupRoom(createGroupRoom, user, thumbnailFile);
         GroupRoom savedGroupRoom = groupQueryService.createGroup(newGroupRoom);
-
         final UserGroup userGroup = UserGroup.createUserGroup(user, savedGroupRoom);
 
         // 중간테이블에 유저, 그룹 정보 저장

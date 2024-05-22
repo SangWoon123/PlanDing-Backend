@@ -34,6 +34,9 @@ public class GroupRoom extends BaseEntity {
     @Column(name = "group_code", nullable = false, unique = true)
     private String groupCode; // 그룹방 고유 식별값
 
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
     @OneToMany(mappedBy = "groupRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<UserGroup> userGroups = new HashSet<>();
 
@@ -70,6 +73,10 @@ public class GroupRoom extends BaseEntity {
 
     public void updateDescription(String description) {
         this.description = description;
+    }
+
+    public void updateThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
 }

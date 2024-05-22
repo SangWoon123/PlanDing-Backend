@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class GroupRoomController {
 
     private final GroupRoomService groupRoomService;
 
+    //TODO: 그룹 클릭시 보여지는 데이터
+
     @Operation(summary = "그룹에 속한 유저 조회")
     @GetMapping("/{groupId}")
     public CommonResponse<?> getUserByGroup(@PathVariable Long groupId) {
@@ -33,8 +36,10 @@ public class GroupRoomController {
 
     @Operation(summary = "그룹 생성")
     @PostMapping()
-    public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo, @RequestBody GroupCreateRequest createGroupRoom) {
-        GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom);
+    public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo,
+                                                         @RequestPart(value = "request") GroupCreateRequest createGroupRoom,
+                                                         @RequestPart(value = "thumbnail") MultipartFile thumbnailFile) {
+        GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom, thumbnailFile);
         return CommonUtils.success(groupResponse);
     }
 
