@@ -42,10 +42,6 @@ public class NotificationService {
         eventPublisher.publishEvent(event);
     }
 
-    public void notifyGroupSchedule(final String userCode, final String schedule) {
-
-    }
-
     @EventListener
     public void handleGroupInvitedEvent(GroupInviteEvent event) {
         NotificationScheduleRequest request = NotificationScheduleRequest.builder()

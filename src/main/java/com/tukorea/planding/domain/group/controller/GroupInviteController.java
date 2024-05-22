@@ -3,6 +3,7 @@ package com.tukorea.planding.domain.group.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteAcceptResponse;
 import com.tukorea.planding.domain.group.service.GroupInviteService;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -29,9 +30,9 @@ public class GroupInviteController {
 
     @Operation(summary = "초대를 수락한다")
     @GetMapping("/accept/{groupId}/{code}")
-    public CommonResponse<?> accept(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "groupId") Long groupId, @PathVariable(name = "code") String code) {
-        groupInviteService.acceptInvitation(userInfo, code, groupId);
-        return CommonUtils.success("수락완료");
+    public CommonResponse<GroupInviteAcceptResponse> accept(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "groupId") Long groupId, @PathVariable(name = "code") String code) {
+        GroupInviteAcceptResponse response = groupInviteService.acceptInvitation(userInfo, code, groupId);
+        return CommonUtils.success(response);
     }
 
     @Operation(summary = "초대를 받은 목록", description = "아직 초대의 상태를 바꾸지 않은 경우만")

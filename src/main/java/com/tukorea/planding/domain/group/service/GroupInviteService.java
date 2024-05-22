@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.group.service;
 
 import com.tukorea.planding.domain.group.dto.GroupInviteEvent;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
+import com.tukorea.planding.domain.group.dto.response.GroupInviteAcceptResponse;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
@@ -60,7 +61,7 @@ public class GroupInviteService {
     }
 
     @Transactional
-    public void acceptInvitation(UserInfo userInfo, String code, Long groupId) {
+    public GroupInviteAcceptResponse acceptInvitation(UserInfo userInfo, String code, Long groupId) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
         GroupRoom group = groupQueryService.getGroupById(groupId);
 
@@ -68,6 +69,8 @@ public class GroupInviteService {
         userGroupQueryService.save(userGroup);
 
         redisGroupInviteService.deleteInvitation(userInfo.getUserCode(), code);
+
+        return GroupInviteAcceptResponse.builder().groupId(groupId).build();
     }
 
     public List<GroupInviteMessageResponse> getInvitations(UserInfo userInfo) {
