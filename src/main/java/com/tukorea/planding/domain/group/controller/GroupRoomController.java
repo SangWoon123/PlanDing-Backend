@@ -26,6 +26,12 @@ public class GroupRoomController {
     private final GroupRoomService groupRoomService;
 
     //TODO: 그룹 클릭시 보여지는 데이터
+    @Operation(summary = "메인페이지 API", description = "내 그룹 가져오기")
+    @GetMapping()
+    public CommonResponse<List<GroupResponse>> getAllGroupRoomByUser(@AuthenticationPrincipal UserInfo userInfo) {
+        List<GroupResponse> groupResponses = groupRoomService.getAllGroupRoomByUser(userInfo);
+        return CommonUtils.success(groupResponses);
+    }
 
     @Operation(summary = "그룹에 속한 유저 조회")
     @GetMapping("/{groupId}")
@@ -55,12 +61,5 @@ public class GroupRoomController {
     public CommonResponse<?> deleteGroup(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
         groupRoomService.deleteGroup(userInfo, groupId);
         return CommonUtils.success("그룹삭제 완료.");
-    }
-
-    @Operation(summary = "내 그룹 가져오기")
-    @GetMapping("/myGroup")
-    public CommonResponse<List<GroupResponse>> getAllGroupRoomByUser(@AuthenticationPrincipal UserInfo userInfo) {
-        List<GroupResponse> groupResponses = groupRoomService.getAllGroupRoomByUser(userInfo);
-        return CommonUtils.success(groupResponses);
     }
 }
