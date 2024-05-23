@@ -11,6 +11,7 @@ import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,6 @@ public class GroupRoomController {
 
     private final GroupRoomService groupRoomService;
 
-    //TODO: 그룹 클릭시 보여지는 데이터
     @Operation(summary = "메인페이지 API", description = "내 그룹 가져오기")
     @GetMapping()
     public CommonResponse<List<GroupResponse>> getAllGroupRoomByUser(@AuthenticationPrincipal UserInfo userInfo) {
@@ -41,7 +41,7 @@ public class GroupRoomController {
     }
 
     @Operation(summary = "그룹 생성")
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo,
                                                          @RequestPart(value = "request") GroupCreateRequest createGroupRoom,
                                                          @RequestPart(value = "thumbnail") MultipartFile thumbnailFile) {
