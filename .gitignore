@@ -39,5 +39,7 @@ out/
 application-dev.yml
 application-prod.yml
 application-test.yml
+application-testprod.yml
 docker-compose.yml
 deploy-test-server.sh
+/src/main/resources/firebase
