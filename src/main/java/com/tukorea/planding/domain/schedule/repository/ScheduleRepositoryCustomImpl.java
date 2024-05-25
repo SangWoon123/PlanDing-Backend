@@ -1,6 +1,7 @@
 package com.tukorea.planding.domain.schedule.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import lombok.RequiredArgsConstructor;
 
@@ -74,6 +75,14 @@ public class ScheduleRepositoryCustomImpl implements ScheduleRepositoryCustom {
         return queryFactory.selectFrom(schedule)
                 .join(schedule.groupSchedule, groupSchedule)
                 .where(groupSchedule.groupRoom.id.eq(groupRoomId))
+                .fetch();
+    }
+
+    @Override
+    public List<Schedule> findByUserAndScheduleDateBetween(Long userId, LocalDate startOfWeek, LocalDate endOfWeek) {
+        return queryFactory.selectFrom(schedule)
+                .join(schedule.personalSchedule)
+                .where(personalSchedule.user.id.eq(userId).and(schedule.scheduleDate.between(startOfWeek, endOfWeek)))
                 .fetch();
     }
 }

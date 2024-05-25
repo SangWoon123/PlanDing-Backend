@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,20 @@ public class PersonalScheduleService {
     private final ScheduleQueryService scheduleQueryService;
     private final UserQueryService userQueryService;
     private final PersonalScheduleRepository personalScheduleRepository;
+
+    // 메인페이지
+    public List<ScheduleResponse> getAllSchedule(UserInfo userInfo, int weekOffset) {
+
+        LocalDate today = LocalDate.now().plusWeeks(weekOffset);
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
+
+        List<Schedule> schedules = scheduleQueryService.findByUserAndScheduleDateBetween(userInfo.getId(), startOfWeek, endOfWeek);
+
+        return schedules.stream()
+                .map(ScheduleResponse::from)
+                .collect(Collectors.toList());
+    }
 
     public PersonalScheduleResponse createSchedule(UserInfo userInfo, ScheduleRequest scheduleRequest) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());

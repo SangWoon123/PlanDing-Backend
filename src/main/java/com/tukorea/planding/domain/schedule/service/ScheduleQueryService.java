@@ -56,4 +56,8 @@ public class ScheduleQueryService {
     public void deleteById(Long scheduleId) {
         scheduleRepository.deleteById(scheduleId);
     }
+
+    public List<Schedule> findByUserAndScheduleDateBetween(Long userId, LocalDate startOfWeek, LocalDate endOfWeek) {
+        return scheduleRepository.findByUserAndScheduleDateBetween(userId, startOfWeek, endOfWeek);
+    }
 }

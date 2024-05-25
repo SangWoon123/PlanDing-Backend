@@ -39,4 +39,6 @@ public interface ScheduleRepositoryCustom {
     List<Schedule> showTodaySchedule(Long userId);
 
     List<Schedule> findByGroupRoomId(Long groupRoomId);
+
+    List<Schedule> findByUserAndScheduleDateBetween(Long userId, LocalDate startOfWeek, LocalDate endOfWeek);
 }

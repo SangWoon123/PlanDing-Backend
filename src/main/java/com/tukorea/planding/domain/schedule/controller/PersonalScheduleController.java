@@ -26,6 +26,14 @@ public class PersonalScheduleController {
 
     private final PersonalScheduleService personalScheduleService;
 
+    @Operation(summary = "개인 메인 페이지 API")
+    @GetMapping()
+    public CommonResponse<List<ScheduleResponse>> getWeekSchedule(@AuthenticationPrincipal UserInfo userInfo,
+                                                                  @RequestParam int weekOffset) {
+        List<ScheduleResponse> responses = personalScheduleService.getAllSchedule(userInfo, weekOffset);
+        return CommonUtils.success(responses);
+    }
+
     @Operation(summary = "개인 스케줄: 생성")
     @PostMapping()
     public CommonResponse<PersonalScheduleResponse> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody ScheduleRequest scheduleRequest) {
