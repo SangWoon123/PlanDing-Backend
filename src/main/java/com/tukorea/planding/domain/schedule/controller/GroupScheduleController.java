@@ -36,28 +36,28 @@ public class GroupScheduleController {
 
 
     @Operation(summary = "그룹 스케줄: 작성 목록 조회")
-    @GetMapping("/api/v1/groupRoom/{groupRoomId}")
+    @GetMapping("/api/v1/group-rooms/{groupRoomId}")
     public CommonResponse<List<GroupScheduleResponse>> getSchedulesByGroupRoom(@PathVariable Long groupRoomId, @AuthenticationPrincipal UserInfo userInfo) {
         List<GroupScheduleResponse> scheduleResponses = groupScheduleService.getSchedulesByGroupRoom(groupRoomId, userInfo);
         return CommonUtils.success(scheduleResponses);
     }
 
     @Operation(summary = "그룹 스케줄: 조회")
-    @GetMapping("/api/v1/groupRoom/{groupRoomId}/{scheduleId}")
+    @GetMapping("/api/v1/group-rooms/{groupRoomId}/{scheduleId}")
     public CommonResponse<GroupScheduleResponse> getGroupSchedule(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @AuthenticationPrincipal UserInfo userInfo) {
         GroupScheduleResponse scheduleResponses = groupScheduleService.getGroupScheduleById(userInfo, groupRoomId, scheduleId);
         return CommonUtils.success(scheduleResponses);
     }
 
     @Operation(summary = "그룹 스케줄: 스케줄 수정")
-    @PatchMapping("/api/v1/groupRoom/{groupRoomId}/{scheduleId}")
+    @PatchMapping("/api/v1/group-rooms/{groupRoomId}/{scheduleId}")
     public CommonResponse<ScheduleResponse> updateScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @RequestBody ScheduleRequest scheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
         ScheduleResponse scheduleResponse = groupScheduleService.updateScheduleByGroupRoom(groupRoomId, scheduleId, scheduleRequest, userInfo);
         return CommonUtils.success(scheduleResponse);
     }
 
     @Operation(summary = "그룹 스케줄: 스케줄 삭제")
-    @DeleteMapping("/api/v1/groupRoom/{groupRoomId}/{scheduleId}")
+    @DeleteMapping("/api/v1/group-rooms/{groupRoomId}/{scheduleId}")
     public ResponseEntity<ScheduleResponse> deleteScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @AuthenticationPrincipal UserInfo userInfo) {
         groupScheduleService.deleteScheduleByGroupRoom(groupRoomId, scheduleId, userInfo);
         return new ResponseEntity<>(HttpStatus.OK);
