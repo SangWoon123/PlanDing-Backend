@@ -5,7 +5,6 @@ import com.tukorea.planding.domain.schedule.entity.ScheduleType;
 import lombok.Builder;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 
 @Builder
@@ -14,8 +13,8 @@ public record ScheduleResponse(
         String title,
         String content,
         LocalDate scheduleDate,
-        LocalTime startTime,
-        LocalTime endTime,
+        Integer startTime,
+        Integer endTime,
         boolean complete,
         String groupName,
         ScheduleType type

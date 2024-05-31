@@ -1,12 +1,10 @@
 package com.tukorea.planding.domain.schedule.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static com.tukorea.planding.domain.schedule.entity.QGroupSchedule.groupSchedule;
@@ -34,14 +32,14 @@ public class ScheduleRepositoryCustomImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<Schedule> findOverlapSchedules(Long userId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public List<Schedule> findOverlapSchedules(Long userId, LocalDate date, Integer startTime, Integer endTime) {
         return queryFactory.selectFrom(schedule)
                 .leftJoin(schedule.personalSchedule, personalSchedule)
                 .leftJoin(schedule.groupSchedule, groupSchedule)
                 .where(
                         schedule.scheduleDate.eq(date)
                                 .and(
-                                        (schedule.startTime.before(endTime).and(schedule.endTime.after(startTime)))
+                                        schedule.startTime.lt(endTime).and(schedule.endTime.gt(startTime))
                                                 .or(schedule.startTime.between(startTime, endTime))
                                                 .or(schedule.endTime.between(startTime, endTime))
                                 )

@@ -4,6 +4,7 @@ import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.entity.ScheduleType;
 import lombok.Builder;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
@@ -14,10 +15,11 @@ public record PersonalScheduleResponse(
         String title,
         String content,
         LocalDate scheduleDate,
-        LocalTime startTime,
-        LocalTime endTime,
+        Integer startTime,
+        Integer endTime,
         boolean complete,
-        ScheduleType type
+        ScheduleType type,
+        DayOfWeek day
 ) {
 
     public static PersonalScheduleResponse from(Schedule schedule) {
@@ -29,6 +31,7 @@ public record PersonalScheduleResponse(
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
                 .complete(schedule.isComplete())
+                .day(schedule.getScheduleDate().getDayOfWeek())
                 .type(ScheduleType.PERSONAL)
                 .build();
     }

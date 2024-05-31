@@ -1,10 +1,8 @@
 package com.tukorea.planding.domain.schedule.repository;
 
 import com.tukorea.planding.domain.schedule.entity.Schedule;
-import com.tukorea.planding.domain.user.entity.User;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface ScheduleRepositoryCustom {
@@ -34,7 +32,7 @@ public interface ScheduleRepositoryCustom {
      * @param endDate   작성한 스케줄의 끝나는 시간
      * @return 중복되는 Schedule
      */
-    List<Schedule> findOverlapSchedules(Long userId, LocalDate date, LocalTime startDate, LocalTime endDate);
+    List<Schedule> findOverlapSchedules(Long userId, LocalDate date, Integer startDate, Integer endDate);
 
     List<Schedule> showTodaySchedule(Long userId);
 

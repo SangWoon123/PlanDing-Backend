@@ -4,6 +4,7 @@ import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.entity.ScheduleType;
 import lombok.Builder;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -14,9 +15,10 @@ public record GroupScheduleResponse(
         String title,
         String content,
         LocalDate scheduleDate,
-        LocalTime startTime,
-        LocalTime endTime,
+        Integer startTime,
+        Integer endTime,
         boolean isComplete,
+        DayOfWeek day,
         ScheduleType type,
         String groupName,
         List<UserScheduleAttendance> userScheduleAttendances
@@ -30,6 +32,7 @@ public record GroupScheduleResponse(
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
                 .isComplete(schedule.isComplete())
+                .day(schedule.getScheduleDate().getDayOfWeek())
                 .type(ScheduleType.GROUP)
                 .groupName(groupName)
                 .userScheduleAttendances(attendances)

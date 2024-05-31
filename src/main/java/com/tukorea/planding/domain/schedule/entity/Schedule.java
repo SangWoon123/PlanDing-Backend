@@ -34,10 +34,10 @@ public class Schedule extends BaseEntity {
     private LocalDate scheduleDate;
 
     @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+    private Integer startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+    private Integer endTime;
 
     @Column(name = "complete", nullable = false)
     private boolean isComplete;
@@ -55,7 +55,7 @@ public class Schedule extends BaseEntity {
     private GroupSchedule groupSchedule;
 
     @Builder
-    public Schedule(String title, String content, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, boolean isComplete, ScheduleType type, PersonalSchedule personalSchedule, GroupSchedule groupSchedule) {
+    public Schedule(String title, String content, LocalDate scheduleDate, Integer startTime, Integer endTime, boolean isComplete, ScheduleType type, PersonalSchedule personalSchedule, GroupSchedule groupSchedule) {
         this.title = title;
         this.content = content;
         this.scheduleDate = scheduleDate;
@@ -67,11 +67,11 @@ public class Schedule extends BaseEntity {
         this.groupSchedule = groupSchedule;
     }
 
-    public void update(String title, String content, LocalTime startTime, LocalTime endTime) {
+    public void update(String title, String content, Integer startTime, Integer endTime) {
         Optional.ofNullable(title).ifPresent(value -> this.title = value);
         Optional.ofNullable(content).ifPresent(value -> this.content = value);
 
-        if (startTime != null && endTime != null && startTime.isAfter(endTime)) {
+        if (startTime != null && endTime != null && startTime > endTime) {
             throw new IllegalArgumentException("startTime은 endTime보다 빨라야 합니다.");
         }
         Optional.ofNullable(startTime).ifPresent(value -> this.startTime = value);
