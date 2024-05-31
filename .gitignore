@@ -42,4 +42,7 @@ application-test.yml
 application-testprod.yml
 docker-compose.yml
 deploy-test-server.sh
+production-server.sh
+Dockerfile.test
+Dockerfile.production
 /src/main/resources/firebase
