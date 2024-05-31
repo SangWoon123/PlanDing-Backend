@@ -18,10 +18,10 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public boolean existsByGroupRoomIdAndUserId(Long groupRoomId, Long userId) {
+    public boolean existsByGroupRoomIdAndUserId(Long groupRoomId, String userCode) {
         return queryFactory.selectFrom(userGroup)
                 .where(userGroup.groupRoom.id.eq(groupRoomId)
-                        .and(userGroup.user.id.eq(userId)))
+                        .and(userGroup.user.userCode.eq(userCode)))
                 .fetchCount() > 0;
     }
 

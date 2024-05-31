@@ -92,7 +92,7 @@ public class GroupScheduleServiceUnitTest {
                 .username("testUser")
                 .build();
 
-        given(userGroupQueryService.checkUserAccessToGroupRoom(anyLong(), anyLong())).willReturn(true);
+        given(userGroupQueryService.checkUserAccessToGroupRoom(anyLong(), any())).willReturn(true);
     }
 
     @Test

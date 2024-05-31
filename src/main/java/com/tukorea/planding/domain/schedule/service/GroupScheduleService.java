@@ -48,7 +48,7 @@ public class GroupScheduleService {
     public ScheduleResponse createGroupSchedule(String groupCode, ScheduleRequest requestSchedule) {
         GroupRoom groupRoom = groupQueryService.getGroupByCode(groupCode);
 
-        checkUserAccessToGroupRoom(groupRoom.getId(), requestSchedule.userId());
+        checkUserAccessToGroupRoom(groupRoom.getId(), requestSchedule.userCode());
 
         GroupSchedule groupSchedule = GroupSchedule.builder()
                 .groupRoom(groupRoom)
@@ -76,7 +76,7 @@ public class GroupScheduleService {
 
     @Transactional(readOnly = true)
     public GroupScheduleResponse getGroupScheduleById(UserInfo userInfo, Long groupRoomId, Long scheduleId) {
-        checkUserAccessToGroupRoom(groupRoomId, userInfo.getId());
+        checkUserAccessToGroupRoom(groupRoomId, userInfo.getUserCode());
 
         GroupRoom groupRoom = groupQueryService.getGroupById(groupRoomId);
         Schedule schedule = scheduleQueryService.findScheduleById(scheduleId);
@@ -88,7 +88,7 @@ public class GroupScheduleService {
 
     @Transactional(readOnly = true)
     public List<GroupScheduleResponse> getSchedulesByGroupRoom(Long groupRoomId, UserInfo userInfo) {
-        checkUserAccessToGroupRoom(groupRoomId, userInfo.getId());
+        checkUserAccessToGroupRoom(groupRoomId, userInfo.getUserCode());
         List<Schedule> schedules = scheduleQueryService.findByGroupRoomId(groupRoomId);
         GroupRoom groupRoom = groupQueryService.getGroupById(groupRoomId);
 
@@ -98,7 +98,7 @@ public class GroupScheduleService {
     }
 
     public ScheduleResponse updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
-        checkUserAccessToGroupRoom(groupRoomId, userInfo.getId());
+        checkUserAccessToGroupRoom(groupRoomId, userInfo.getUserCode());
 
         Schedule schedule = scheduleQueryService.findScheduleById(scheduleId);
         schedule.update(scheduleRequest.title(), scheduleRequest.content(), scheduleRequest.startTime(), scheduleRequest.endTime());
@@ -108,13 +108,13 @@ public class GroupScheduleService {
 
 
     public void deleteScheduleByGroupRoom(Long groupRoomId, Long scheduleId, UserInfo userInfo) {
-        checkUserAccessToGroupRoom(groupRoomId, userInfo.getId());
+        checkUserAccessToGroupRoom(groupRoomId, userInfo.getUserCode());
         scheduleQueryService.deleteById(scheduleId);
     }
 
     // 유저가 그룹룸에 접근할 권리가있는지 확인
-    private void checkUserAccessToGroupRoom(Long groupRoomId, Long userId) {
-        if (!userGroupQueryService.checkUserAccessToGroupRoom(groupRoomId, userId)) {
+    private void checkUserAccessToGroupRoom(Long groupRoomId, String userCode) {
+        if (!userGroupQueryService.checkUserAccessToGroupRoom(groupRoomId, userCode)) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }

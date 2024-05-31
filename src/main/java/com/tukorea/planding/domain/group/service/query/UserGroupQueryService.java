@@ -20,8 +20,8 @@ public class UserGroupQueryService {
         userGroupRepository.save(userGroup);
     }
 
-    public boolean checkUserAccessToGroupRoom(Long groupRoomId, Long userId) {
-        return userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userId);
+    public boolean checkUserAccessToGroupRoom(Long groupRoomId, String userCode) {
+        return userGroupRepository.existsByGroupRoomIdAndUserId(groupRoomId, userCode);
     }
 
     public List<User> findUserByIsConnectionFalse(Long groupRoomId) {

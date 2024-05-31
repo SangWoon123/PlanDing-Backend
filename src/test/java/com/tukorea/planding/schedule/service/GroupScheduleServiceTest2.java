@@ -100,7 +100,7 @@ public class GroupScheduleServiceTest2 {
         when(userGroupQueryService.findUserByIsConnectionFalse(anyLong())).thenReturn(new ArrayList<>());
 
 
-        doNothing().when(userGroupQueryService).checkUserAccessToGroupRoom(anyLong(), anyLong());
+        doNothing().when(userGroupQueryService).checkUserAccessToGroupRoom(anyLong(), any());
 
         ScheduleResponse response = groupScheduleService.createGroupSchedule("testGroup", scheduleRequest);
 
