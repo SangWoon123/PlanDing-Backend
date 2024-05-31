@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.schedule.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
+import com.tukorea.planding.domain.schedule.dto.request.GroupScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.GroupScheduleResponse;
 import com.tukorea.planding.domain.schedule.service.GroupScheduleService;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
@@ -51,8 +52,8 @@ public class GroupScheduleController {
 
     @Operation(summary = "그룹 스케줄: 스케줄 수정")
     @PatchMapping("/api/v1/group-rooms/{groupRoomId}/{scheduleId}")
-    public CommonResponse<ScheduleResponse> updateScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @RequestBody ScheduleRequest scheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
-        ScheduleResponse scheduleResponse = groupScheduleService.updateScheduleByGroupRoom(groupRoomId, scheduleId, scheduleRequest, userInfo);
+    public CommonResponse<ScheduleResponse> updateScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @RequestBody GroupScheduleRequest groupScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
+        ScheduleResponse scheduleResponse = groupScheduleService.updateScheduleByGroupRoom(groupRoomId, scheduleId, groupScheduleRequest, userInfo);
         return CommonUtils.success(scheduleResponse);
     }
 

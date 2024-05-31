@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.schedule.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.domain.schedule.controller.PersonalScheduleController;
+import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
 import com.tukorea.planding.domain.user.mapper.UserMapper;
 import com.tukorea.planding.global.config.security.SecurityConfig;
 import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
@@ -54,7 +55,7 @@ class PersonalScheduleControllerTest {
                 .email("test")
                 .build();
 
-        ScheduleRequest schedule = ScheduleRequest.builder()
+        PersonalScheduleRequest schedule = PersonalScheduleRequest.builder()
                 .title("test")
                 .build();
 

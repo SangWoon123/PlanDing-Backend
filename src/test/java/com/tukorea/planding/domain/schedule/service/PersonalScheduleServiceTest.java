@@ -1,5 +1,6 @@
 package com.tukorea.planding.domain.schedule.service;
 
+import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
@@ -54,7 +55,7 @@ class PersonalScheduleServiceTest {
     private User testUser;
     private Schedule schedule;
     private PersonalSchedule personalSchedule;
-    private ScheduleRequest scheduleRequest;
+    private PersonalScheduleRequest scheduleRequest;
 
 
     @BeforeEach
@@ -62,8 +63,8 @@ class PersonalScheduleServiceTest {
         testUser = new User("test", "profile", "username", Role.USER, SocialType.KAKAO, null, "#test"); // 테스트용 사용자 정보 초기화
         ReflectionTestUtils.setField(testUser, "id", 1L);
         personalSchedule = new PersonalSchedule(testUser);
-        schedule = new Schedule("title", "content", LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0), true, ScheduleType.PERSONAL, personalSchedule, null);
-        scheduleRequest = new ScheduleRequest(1L, "title", "content", LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0));
+        schedule = new Schedule("title", "content", LocalDate.now(), 9, 10, true, ScheduleType.PERSONAL, personalSchedule, null);
+        scheduleRequest = new PersonalScheduleRequest("title", "content", LocalDate.now(), 9, 10);
     }
 
 
@@ -111,6 +112,6 @@ class PersonalScheduleServiceTest {
     @Test
     public void update_스케줄수정시_endTime이startTime보다작을때() {
         //given
-        assertThrows(IllegalArgumentException.class, () -> schedule.update(null, null, LocalTime.of(10, 0), LocalTime.of(9, 10)));
+        assertThrows(IllegalArgumentException.class, () -> schedule.update(null, null, 10, 9));
     }
 }

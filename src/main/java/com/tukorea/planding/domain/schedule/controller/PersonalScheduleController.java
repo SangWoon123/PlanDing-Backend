@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.schedule.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
+import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
 import com.tukorea.planding.domain.schedule.service.PersonalScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
@@ -36,8 +37,8 @@ public class PersonalScheduleController {
 
     @Operation(summary = "개인 스케줄: 생성")
     @PostMapping()
-    public CommonResponse<PersonalScheduleResponse> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody ScheduleRequest scheduleRequest) {
-        PersonalScheduleResponse response = personalScheduleService.createSchedule(userInfo, scheduleRequest);
+    public CommonResponse<PersonalScheduleResponse> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody PersonalScheduleRequest personalScheduleRequest) {
+        PersonalScheduleResponse response = personalScheduleService.createSchedule(userInfo, personalScheduleRequest);
         return CommonUtils.success(response);
     }
 
@@ -58,8 +59,8 @@ public class PersonalScheduleController {
     //TODO 아직 요구사항 미정
     @Operation(summary = "개인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정")
     @PatchMapping("/{schedule_id}")
-    public CommonResponse<PersonalScheduleResponse> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody ScheduleRequest scheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
-        PersonalScheduleResponse scheduleResponse = personalScheduleService.updateSchedule(id, scheduleRequest, userInfo);
+    public CommonResponse<PersonalScheduleResponse> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody PersonalScheduleRequest personalScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
+        PersonalScheduleResponse scheduleResponse = personalScheduleService.updateSchedule(id, personalScheduleRequest, userInfo);
         return CommonUtils.success(scheduleResponse);
     }
 }

@@ -7,6 +7,7 @@ import com.tukorea.planding.domain.group.service.query.UserGroupQueryService;
 import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
 import com.tukorea.planding.domain.notify.entity.NotificationType;
 import com.tukorea.planding.domain.notify.service.NotificationService;
+import com.tukorea.planding.domain.schedule.dto.request.GroupScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.GroupScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
@@ -97,11 +98,11 @@ public class GroupScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public ScheduleResponse updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
+    public ScheduleResponse updateScheduleByGroupRoom(Long groupRoomId, Long scheduleId, GroupScheduleRequest groupScheduleRequest, UserInfo userInfo) {
         checkUserAccessToGroupRoom(groupRoomId, userInfo.getUserCode());
 
         Schedule schedule = scheduleQueryService.findScheduleById(scheduleId);
-        schedule.update(scheduleRequest.title(), scheduleRequest.content(), scheduleRequest.startTime(), scheduleRequest.endTime());
+        schedule.update(groupScheduleRequest.title(), groupScheduleRequest.content(), groupScheduleRequest.startTime(), groupScheduleRequest.endTime());
 
         return ScheduleResponse.from(schedule);
     }

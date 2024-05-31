@@ -1,5 +1,6 @@
 package com.tukorea.planding.domain.schedule.service;
 
+import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
@@ -42,7 +43,7 @@ public class PersonalScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public PersonalScheduleResponse createSchedule(UserInfo userInfo, ScheduleRequest scheduleRequest) {
+    public PersonalScheduleResponse createSchedule(UserInfo userInfo, PersonalScheduleRequest personalScheduleRequest) {
         User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
 
         // 개인 스케줄 생성
@@ -52,11 +53,11 @@ public class PersonalScheduleService {
 
         Schedule newSchedule = Schedule.builder()
                 .personalSchedule(personalSchedule)
-                .title(scheduleRequest.title())
-                .content(scheduleRequest.content())
-                .scheduleDate(scheduleRequest.scheduleDate())
-                .startTime(scheduleRequest.startTime())
-                .endTime(scheduleRequest.endTime())
+                .title(personalScheduleRequest.title())
+                .content(personalScheduleRequest.content())
+                .scheduleDate(personalScheduleRequest.scheduleDate())
+                .startTime(personalScheduleRequest.startTime())
+                .endTime(personalScheduleRequest.endTime())
                 .isComplete(false)
                 .type(ScheduleType.PERSONAL)
                 .build();
@@ -85,7 +86,7 @@ public class PersonalScheduleService {
     }
 
 
-    public PersonalScheduleResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest, UserInfo userInfo) {
+    public PersonalScheduleResponse updateSchedule(Long scheduleId, PersonalScheduleRequest scheduleRequest, UserInfo userInfo) {
         Schedule schedule = scheduleQueryService.findScheduleById(scheduleId);
         schedule.getPersonalSchedule().checkOwnership(userInfo.getId());
         schedule.update(scheduleRequest.title(), scheduleRequest.content(), scheduleRequest.startTime(), scheduleRequest.endTime());
