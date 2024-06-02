@@ -3,10 +3,7 @@ package com.tukorea.planding.global.config.security.jwt;
 
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,11 +57,16 @@ public class JwtTokenHandler {
         try {
             extractAllClaims(token);
             return true;
-        } catch (final JwtException | IllegalArgumentException e) {
-            log.error(e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("Token expired: {}", e.getMessage());
+            return false;
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error("Invalid token: {}", e.getMessage());
             return false;
         }
     }
+
+
 
     private Map<String, Object> createClaims(final Long userId, final String userCode) { // payload
         Map<String, Object> claims = new HashMap<>();

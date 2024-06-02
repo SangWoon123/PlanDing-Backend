@@ -1,6 +1,7 @@
 package com.tukorea.planding.global.config.security;
 
 import com.tukorea.planding.global.UserLogoutHandler;
+import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.tukorea.planding.global.config.security.jwt.JwtAuthenticationFilter;
 import com.tukorea.planding.global.oauth.handler.Oauth2SuccessHandler;
 import com.tukorea.planding.global.oauth.service.CustomOAuth2Service;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final CustomOAuth2Service customOAuth2Service;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
     private final UserLogoutHandler userLogoutHandler;
@@ -48,6 +50,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuth2Service))
                         .successHandler(oauth2SuccessHandler))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logOut -> logOut.addLogoutHandler(userLogoutHandler)
                         .logoutUrl("/logout")
@@ -60,6 +63,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedOriginPattern("*");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
@@ -70,6 +74,7 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 

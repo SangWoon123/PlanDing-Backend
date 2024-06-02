@@ -84,10 +84,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .filter(jwtTokenHandler::validateToken)
                 .orElse(null);
 
-        if (accessToken == null) {
-            handleMissingToken(request, response);
-            return;
-        }
 
         String userCode = jwtTokenHandler.extractClaim(accessToken, claims -> claims.get("code", String.class));
 
@@ -127,23 +123,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Authentication authentication = getAuthentication(userInfo);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
-    private void handleMissingToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.error("Access 토큰이 없습니다.");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-
-        final Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "Unauthorized");
-        body.put("message", "헤더에 액세스토큰이 존재하지 않습니다.");
-        body.put("path", request.getServletPath());
-
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), body);
-    }
-
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
