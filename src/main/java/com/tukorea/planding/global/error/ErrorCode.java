@@ -9,6 +9,21 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     /**
+     * 잘못된 URL Error
+     */
+
+    INVALID_URL("CLIENT-001", "잘못된 URL 입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_REQUEST("CLIENT-002", "잘못된 형식 입니다.", HttpStatus.BAD_REQUEST),
+    INTERNAL_SERVER_ERROR("SERVER-001", "서버 문제 입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+
+
+    /**
+     * JWT Error
+     */
+    INVALID_AUTH_TOKEN("JWT-001", "토큰이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    EXPIRED_AUTH_TOKEN("JWT-002", "만료된 토큰 입니다.", HttpStatus.UNAUTHORIZED),
+
+    /**
      * User Error
      */
     USER_NOT_FOUND("USER-001", "유저가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
@@ -18,6 +33,7 @@ public enum ErrorCode {
      */
     SCHEDULE_NOT_FOUND("SCHEDULE-001", "해당 스케줄은 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_SCHEDULE("SCHEDULE-002", "본 사용자는 스케줄에 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
+    INVALID_SCHEDULE_TIME("SCHEDULE-003", "스케줄 시간을 확인해 주세요.", HttpStatus.BAD_REQUEST),
 
     /**
      * Group Error
