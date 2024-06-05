@@ -85,6 +85,18 @@ jobs:
           docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
       # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+
+
+  approval:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request approval
+        uses: hmarr/auto-approve-action@v2
+        with:
+          github_token: ${{secrets.GIT_TOKEN}}
+          reviewers: 'SangWoon123'
+          
       - name: Slack 알람 발송
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -96,13 +108,3 @@ jobs:
           SLACK_USERNAME: Notification-Bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
-
-  approval:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Request approval
-        uses: hmarr/auto-approve-action@v2
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          reviewers: 'SangWoon123'
