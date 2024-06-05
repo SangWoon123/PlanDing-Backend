@@ -80,9 +80,9 @@ jobs:
           IMAGE_TAG: ${{secrets.IMAGE_TAG}}
           IMAGE_NAME: ${{secrets.IMAGE_NAME}}
         run: |
-          docker build --platform=linux/amd64 -t IMAGE_NAME .
-          docker tag IMAGE_NAME:IMAGE_TAG ECR_REGISTRY/IMAGE_NAME:IMAGE_TAG
-          docker push ECR_REGISTRY/IMAGE_NAME:IMAGE_TAG
+          docker build --platform=linux/amd64 -t $IMAGE_NAME .
+          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
       # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Slack 알람 발송
