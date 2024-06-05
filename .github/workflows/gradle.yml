@@ -91,11 +91,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Request approval
-        uses: hmarr/auto-approve-action@v2
-        with:
-          github_token: ${{secrets.GIT_TOKEN}}
-          reviewers: 'SangWoon123'
+#      - name: Request approval
+#        uses: hmarr/auto-approve-action@v2
+#        with:
+#          github_token: ${{secrets.GIT_TOKEN}}
+#          reviewers: 'SangWoon123'
 
       - name: Slack 알람 발송
         uses: slackapi/slack-github-action@v1.16.0
