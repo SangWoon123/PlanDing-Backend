@@ -91,19 +91,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-#      - name: Request approval
-#        uses: hmarr/auto-approve-action@v2
-#        with:
-#          github_token: ${{secrets.GIT_TOKEN}}
-#          reviewers: 'SangWoon123'
+      #      - name: Request approval
+      #        uses: hmarr/auto-approve-action@v2
+      #        with:
+      #          github_token: ${{secrets.GIT_TOKEN}}
+      #          reviewers: 'SangWoon123'
 
       - name: Slack 알람 발송
-        uses: slackapi/slack-github-action@v1.16.0
-
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: slackapi/slack-github-action@v1.26.0
         if: success()
         with:
           payload: |
@@ -118,3 +113,5 @@ jobs:
                 }
             ]
             }
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
