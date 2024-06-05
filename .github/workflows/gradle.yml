@@ -96,15 +96,25 @@ jobs:
         with:
           github_token: ${{secrets.GIT_TOKEN}}
           reviewers: 'SangWoon123'
-          
+
       - name: Slack 알람 발송
-        uses: rtCamp/action-slack-notify@v2
+        uses: slackapi/slack-github-action@v1.16.0
+
         env:
           SLACK_CHANNEL: general
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: Deployment needs approval.
-          SLACK_TITLE: 빌드 결과 알람
-          SLACK_USERNAME: Notification-Bot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
+        if: success()
+        with:
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "good",
+                  "title": "배포 성공",
+                  "text": "배포가 성공적으로 완료되었습니다 자세한 내용을 보려면 여기를 클릭하세요: ${{ github.event.pull_request.html_url }}",
+                  "footer": "Github Actions",
+                  "ts": ${Math.floor(Date.now()/1000)}
+                }
+            ]
+            }
