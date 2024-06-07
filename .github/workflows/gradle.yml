@@ -73,16 +73,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{secrets.ECR_REGISTRY}}
-          IMAGE_TAG: ${{secrets.IMAGE_TAG}}
-          IMAGE_NAME: ${{secrets.IMAGE_NAME}}
-        run: |
-          docker build --platform=linux/amd64 -t $IMAGE_NAME .
-          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+#      - name: Build, tag, and push image to Amazon ECR
+#        id: build-image
+#        env:
+#          ECR_REGISTRY: ${{secrets.ECR_REGISTRY}}
+#          IMAGE_TAG: ${{secrets.IMAGE_TAG}}
+#          IMAGE_NAME: ${{secrets.IMAGE_NAME}}
+#        run: |
+#          docker build --platform=linux/amd64 -t $IMAGE_NAME .
+#          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+#          docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
       # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
 
@@ -107,7 +107,7 @@ jobs:
                 {
                   "color": "good",
                   "title": "배포 성공",
-                  "text": "배포가 성공적으로 완료되었습니다 자세한 내용을 보려면 여기를 클릭하세요: ${{ github.event.pull_request.html_url }}",
+                  "text": "배포가 성공적으로 완료되었습니다 자세한 내용을 보려면 여기를 클릭하세요: ",
                   "footer": "Github Actions",
                   "ts": ${Math.floor(Date.now()/1000)}
                 }
