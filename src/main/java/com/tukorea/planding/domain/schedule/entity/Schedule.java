@@ -70,10 +70,6 @@ public class Schedule extends BaseEntity {
     public void update(String title, String content, Integer startTime, Integer endTime) {
         Optional.ofNullable(title).ifPresent(value -> this.title = value);
         Optional.ofNullable(content).ifPresent(value -> this.content = value);
-
-        if (startTime != null && endTime != null && startTime > endTime) {
-            throw new IllegalArgumentException("startTime은 endTime보다 빨라야 합니다.");
-        }
         Optional.ofNullable(startTime).ifPresent(value -> this.startTime = value);
         Optional.ofNullable(endTime).ifPresent(value -> this.endTime = value);
     }

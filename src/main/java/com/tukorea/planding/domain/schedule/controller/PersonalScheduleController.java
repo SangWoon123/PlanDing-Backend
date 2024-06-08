@@ -4,19 +4,18 @@ import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
+import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.service.PersonalScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
-import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "PersonalSchedule", description = "개인 스케줄")
@@ -37,7 +36,7 @@ public class PersonalScheduleController {
 
     @Operation(summary = "개인 스케줄: 생성")
     @PostMapping()
-    public CommonResponse<PersonalScheduleResponse> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody PersonalScheduleRequest personalScheduleRequest) {
+    public CommonResponse<PersonalScheduleResponse> createSchedule(@AuthenticationPrincipal UserInfo userInfo, @RequestBody @Valid PersonalScheduleRequest personalScheduleRequest) {
         PersonalScheduleResponse response = personalScheduleService.createSchedule(userInfo, personalScheduleRequest);
         return CommonUtils.success(response);
     }
@@ -59,7 +58,7 @@ public class PersonalScheduleController {
     //TODO 아직 요구사항 미정
     @Operation(summary = "개인 스케줄: 제목,내용,시작시간,끝낼시간 항목 수정")
     @PatchMapping("/{schedule_id}")
-    public CommonResponse<PersonalScheduleResponse> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody PersonalScheduleRequest personalScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
+    public CommonResponse<PersonalScheduleResponse> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody @Valid PersonalScheduleRequest personalScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
         PersonalScheduleResponse scheduleResponse = personalScheduleService.updateSchedule(id, personalScheduleRequest, userInfo);
         return CommonUtils.success(scheduleResponse);
     }

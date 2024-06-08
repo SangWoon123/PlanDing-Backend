@@ -3,13 +3,14 @@ package com.tukorea.planding.domain.schedule.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.schedule.dto.request.GroupScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.response.GroupScheduleResponse;
-import com.tukorea.planding.domain.schedule.service.GroupScheduleService;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
+import com.tukorea.planding.domain.schedule.dto.response.GroupScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.service.GroupScheduleService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class GroupScheduleController {
 
     @MessageMapping("/schedule/{groupCode}") // schedule 경로로 메시지를 보내면
     @SendTo("/sub/schedule/{groupCode}")    // /sub/schedule/{group_code} 을 구독한 유저에게 메시지를 뿌림
-    public CommonResponse<ScheduleResponse> createGroupSchedule(@DestinationVariable String groupCode, ScheduleRequest requestSchedule) {
+    public CommonResponse<ScheduleResponse> createGroupSchedule(@DestinationVariable String groupCode, @Valid ScheduleRequest requestSchedule) {
         return CommonUtils.success(groupScheduleService.createGroupSchedule(groupCode, requestSchedule));
     }
 
@@ -52,7 +53,7 @@ public class GroupScheduleController {
 
     @Operation(summary = "그룹 스케줄: 스케줄 수정")
     @PatchMapping("/api/v1/group-rooms/{groupRoomId}/{scheduleId}")
-    public CommonResponse<ScheduleResponse> updateScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @RequestBody GroupScheduleRequest groupScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
+    public CommonResponse<ScheduleResponse> updateScheduleByGroupRoom(@PathVariable Long groupRoomId, @PathVariable Long scheduleId, @RequestBody @Valid GroupScheduleRequest groupScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
         ScheduleResponse scheduleResponse = groupScheduleService.updateScheduleByGroupRoom(groupRoomId, scheduleId, groupScheduleRequest, userInfo);
         return CommonUtils.success(scheduleResponse);
     }
