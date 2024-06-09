@@ -88,7 +88,7 @@ public class ScheduleRepositoryTest {
         scheduleRepository.saveAll(schedules);
 
         // when
-        List<Schedule> result = scheduleRepository.findOverlapSchedules(testUser.getId(), LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(10, 0));
+        List<Schedule> result = scheduleRepository.findOverlapSchedules(testUser.getId(), LocalDate.now(), 8, 10);
 
         // then
         assertThat(result).isNotEmpty();
