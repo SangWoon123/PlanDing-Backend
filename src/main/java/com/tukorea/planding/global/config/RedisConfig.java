@@ -16,13 +16,13 @@ public class RedisConfig {
     private final RedisProperties redisProperties;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory(){
-        return new LettuceConnectionFactory(redisProperties.getHost(),redisProperties.getPort());
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
     @Bean
-    public RedisTemplate<String,?> redisTemplate() {
-        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
