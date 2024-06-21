@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserNotificationSettingRepository extends JpaRepository<Long, UserNotificationSetting> {
+public interface UserNotificationSettingRepository extends JpaRepository<UserNotificationSetting, Long> {
     Optional<UserNotificationSetting> findByUser(User user);
 }

@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserNotificationSettingService {
 
-    private UserNotificationSettingRepository userNotificationSettingRepository;
-    private UserQueryService userQueryService;
+    private final UserNotificationSettingRepository userNotificationSettingRepository;
+    private final UserQueryService userQueryService;
 
     @Transactional
     public void updateScheduleNotificationSetting(String userCode, boolean enabled, int minutesBefore) {
