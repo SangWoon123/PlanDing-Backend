@@ -3,6 +3,7 @@ package com.tukorea.planding.domain.user.service;
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.service.RedisGroupInviteService;
+import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
 import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
@@ -36,6 +37,11 @@ public class UserService {
 
     @Transactional
     public User createUserFromRequest(AndroidLoginRequest androidLoginRequest) {
+        UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
+                .scheduleNotificationEnabled(true)
+                .groupScheduleNotificationEnabled(true)
+                .build();
+
         String userCode = generateUniqueUserCode();
         User user = User.builder()
                 .socialId(androidLoginRequest.socialId())
@@ -45,6 +51,7 @@ public class UserService {
                 .profileImage(androidLoginRequest.profileImage())
                 .userCode(userCode)
                 .role(Role.USER)
+                .userSetting(defaultSetting)
                 .build();
 
         return userQueryService.save(user);

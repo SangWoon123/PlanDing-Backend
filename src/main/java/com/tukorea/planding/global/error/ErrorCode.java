@@ -58,7 +58,12 @@ public enum ErrorCode {
     /**
      * Group-Schedule-ATTENDANCE Error
      */
-    INVALID_ATTENDANCE_STATUS("ATTENDANCE-001", "올바르지 않은 상태값입니다.", HttpStatus.NOT_FOUND);
+    INVALID_ATTENDANCE_STATUS("ATTENDANCE-001", "올바르지 않은 상태값입니다.", HttpStatus.NOT_FOUND),
+
+    /**
+     * User Alert Setting
+     */
+    SETTING_NOT_FOUND("NOTIFICATION-001", "설정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
 
     private final String errorCode;

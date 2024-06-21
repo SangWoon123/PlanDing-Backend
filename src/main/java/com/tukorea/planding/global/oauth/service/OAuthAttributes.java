@@ -1,5 +1,6 @@
 package com.tukorea.planding.global.oauth.service;
 
+import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
 import com.tukorea.planding.global.oauth.details.Role;
 import com.tukorea.planding.global.oauth.userInfo.KakaoOAuth2UserInfo;
 
@@ -35,6 +36,11 @@ public class OAuthAttributes {
     }
 
     public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo, String userCode) {
+        UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
+                .scheduleNotificationEnabled(true)
+                .groupScheduleNotificationEnabled(true)
+                .build();
+
         return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getOAuth2Id())
@@ -43,6 +49,7 @@ public class OAuthAttributes {
                 .profileImage(oauth2UserInfo.getProfileImage())
                 .role(Role.USER)
                 .userCode(userCode)
+                .userSetting(defaultSetting)
                 .build();
     }
 }
