@@ -41,7 +41,7 @@ public class OAuthAttributes {
                 .groupScheduleNotificationEnabled(true)
                 .build();
 
-        return User.builder()
+        User user = User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getOAuth2Id())
                 .email(oauth2UserInfo.getEmail())
@@ -51,5 +51,8 @@ public class OAuthAttributes {
                 .userCode(userCode)
                 .userSetting(defaultSetting)
                 .build();
+
+        defaultSetting.updateUser(user);
+        return user;
     }
 }

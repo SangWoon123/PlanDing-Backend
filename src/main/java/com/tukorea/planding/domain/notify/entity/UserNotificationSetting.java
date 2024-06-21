@@ -30,6 +30,10 @@ public class UserNotificationSetting {
         this.groupScheduleNotificationEnabled = groupScheduleNotificationEnabled;
     }
 
+    public void updateUser(User user) {
+        this.user = user;
+    }
+
     public void updateScheduleNotificationEnabled(boolean scheduleNotificationEnabled) {
         this.scheduleNotificationEnabled = scheduleNotificationEnabled;
     }

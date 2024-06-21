@@ -54,6 +54,8 @@ public class UserService {
                 .userSetting(defaultSetting)
                 .build();
 
+        defaultSetting.updateUser(user);
+
         return userQueryService.save(user);
     }
 
