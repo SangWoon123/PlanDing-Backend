@@ -2,9 +2,6 @@ package com.tukorea.planding.domain.user.entity;
 
 import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.UserGroup;
-import com.tukorea.planding.domain.notify.entity.Notification;
-import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
-import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.global.audit.BaseEntity;
 import com.tukorea.planding.global.oauth.details.Role;
 import jakarta.persistence.*;
@@ -52,16 +49,10 @@ public class User extends BaseEntity {
     private final Set<UserGroup> userGroup = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Notification> notificationList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<GroupFavorite> groupFavorites = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private UserNotificationSetting userSetting;
-
     @Builder
-    public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode, UserNotificationSetting userSetting) {
+    public User(String email, String profileImage, String username, Role role, SocialType socialType, String socialId, String userCode) {
         this.email = email;
         this.profileImage = profileImage;
         this.username = username;
@@ -69,8 +60,9 @@ public class User extends BaseEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.userCode = userCode;
-        this.userSetting = userSetting;
     }
+
+
 
 
     public static String createCode() {

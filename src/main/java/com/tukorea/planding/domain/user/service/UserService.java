@@ -4,6 +4,7 @@ import com.tukorea.planding.domain.group.entity.GroupFavorite;
 import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.service.RedisGroupInviteService;
 import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
+import com.tukorea.planding.domain.notify.repository.UserNotificationSettingRepository;
 import com.tukorea.planding.domain.schedule.service.ScheduleQueryService;
 import com.tukorea.planding.domain.user.dto.AndroidLoginRequest;
 import com.tukorea.planding.domain.user.dto.ProfileResponse;
@@ -24,6 +25,7 @@ public class UserService {
 
     private final UserQueryService userQueryService;
     private final RedisGroupInviteService redisGroupInviteService;
+    private final UserNotificationSettingRepository userNotificationSettingRepository;
 
 
     @Transactional(readOnly = true)
@@ -37,10 +39,6 @@ public class UserService {
 
     @Transactional
     public User createUserFromRequest(AndroidLoginRequest androidLoginRequest) {
-        UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
-                .scheduleNotificationEnabled(true)
-                .groupScheduleNotificationEnabled(true)
-                .build();
 
         String userCode = generateUniqueUserCode();
         User user = User.builder()
@@ -51,12 +49,19 @@ public class UserService {
                 .profileImage(androidLoginRequest.profileImage())
                 .userCode(userCode)
                 .role(Role.USER)
-                .userSetting(defaultSetting)
                 .build();
 
-        defaultSetting.updateUser(user);
+        User savedUser = userQueryService.save(user);
 
-        return userQueryService.save(user);
+        UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
+                .user(savedUser)
+                .scheduleNotificationEnabled(true)
+                .groupScheduleNotificationEnabled(true)
+                .build();
+
+        userNotificationSettingRepository.save(defaultSetting);
+
+        return savedUser;
     }
 
     //TODO 즐겨찾는 그룹, 그룹 요청

@@ -36,12 +36,7 @@ public class OAuthAttributes {
     }
 
     public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo, String userCode) {
-        UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
-                .scheduleNotificationEnabled(true)
-                .groupScheduleNotificationEnabled(true)
-                .build();
-
-        User user = User.builder()
+        return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getOAuth2Id())
                 .email(oauth2UserInfo.getEmail())
@@ -49,10 +44,14 @@ public class OAuthAttributes {
                 .profileImage(oauth2UserInfo.getProfileImage())
                 .role(Role.USER)
                 .userCode(userCode)
-                .userSetting(defaultSetting)
                 .build();
+    }
 
-        defaultSetting.updateUser(user);
-        return user;
+    public UserNotificationSetting toNotificationSetting(User user) {
+        return UserNotificationSetting.builder()
+                .user(user)
+                .scheduleNotificationEnabled(true)
+                .groupScheduleNotificationEnabled(true)
+                .build();
     }
 }
