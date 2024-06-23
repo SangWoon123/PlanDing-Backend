@@ -15,23 +15,17 @@ public class UserNotificationSetting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userCode;
 
     private boolean scheduleNotificationEnabled;
 
     private boolean groupScheduleNotificationEnabled;
 
     @Builder
-    public UserNotificationSetting(User user, boolean scheduleNotificationEnabled, boolean groupScheduleNotificationEnabled) {
-        this.user = user;
+    public UserNotificationSetting(String userCode, boolean scheduleNotificationEnabled, boolean groupScheduleNotificationEnabled) {
+        this.userCode = userCode;
         this.scheduleNotificationEnabled = scheduleNotificationEnabled;
         this.groupScheduleNotificationEnabled = groupScheduleNotificationEnabled;
-    }
-
-    public void updateUser(User user) {
-        this.user = user;
     }
 
     public void updateScheduleNotificationEnabled(boolean scheduleNotificationEnabled) {

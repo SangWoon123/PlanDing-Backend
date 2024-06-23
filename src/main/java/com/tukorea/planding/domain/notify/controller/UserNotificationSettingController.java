@@ -28,9 +28,8 @@ public class UserNotificationSettingController {
     @Operation(description = "개인 스케줄 알림 설정을 업데이트한다")
     @PutMapping("/schedule-notifications")
     public void updateScheduleNotificationSetting(@AuthenticationPrincipal UserInfo userInfo,
-                                                  @RequestParam boolean enabled,
-                                                  @RequestParam int minutesBefore) {
-        userNotificationSettingService.updateScheduleNotificationSetting(userInfo.getUserCode(), enabled, minutesBefore);
+                                                  @RequestParam boolean enabled) {
+        userNotificationSettingService.updateScheduleNotificationSetting(userInfo.getUserCode(), enabled);
     }
 
     @Operation(description = "그룹 스케줄 알림 설정을 업데이트한다")

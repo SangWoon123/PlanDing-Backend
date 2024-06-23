@@ -21,9 +21,7 @@ public class UserNotificationSettingService {
     private final UserQueryService userQueryService;
 
     public NotificationSettingResponse getNotificationSetting(UserInfo userInfo) {
-        User user = userQueryService.getUserByUserCode(userInfo.getUserCode());
-
-        UserNotificationSetting setting = userNotificationSettingRepository.findByUser(user)
+        UserNotificationSetting setting = userNotificationSettingRepository.findByUserCode(userInfo.getUserCode())
                 .orElseThrow(() -> new BusinessException(ErrorCode.SETTING_NOT_FOUND));
 
         return NotificationSettingResponse.builder()
@@ -33,19 +31,15 @@ public class UserNotificationSettingService {
     }
 
 
-    public void updateScheduleNotificationSetting(String userCode, boolean enabled, int minutesBefore) {
-        User user = userQueryService.getUserByUserCode(userCode);
-
-        UserNotificationSetting setting = userNotificationSettingRepository.findByUser(user)
+    public void updateScheduleNotificationSetting(String userCode, boolean enabled) {
+        UserNotificationSetting setting = userNotificationSettingRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SETTING_NOT_FOUND));
 
         setting.updateScheduleNotificationEnabled(enabled);
     }
 
     public void updateGroupScheduleNotificationSetting(String userCode, boolean enabled) {
-        User user = userQueryService.getUserByUserCode(userCode);
-
-        UserNotificationSetting setting = userNotificationSettingRepository.findByUser(user)
+        UserNotificationSetting setting = userNotificationSettingRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SETTING_NOT_FOUND));
 
         setting.updateGroupScheduleNotificationEnabled(enabled);

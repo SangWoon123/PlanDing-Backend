@@ -49,7 +49,7 @@ public class OAuthAttributes {
 
     public UserNotificationSetting toNotificationSetting(User user) {
         return UserNotificationSetting.builder()
-                .user(user)
+                .userCode(user.getUserCode())
                 .scheduleNotificationEnabled(true)
                 .groupScheduleNotificationEnabled(true)
                 .build();

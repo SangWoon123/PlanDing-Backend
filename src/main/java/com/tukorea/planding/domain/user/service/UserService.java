@@ -54,7 +54,7 @@ public class UserService {
         User savedUser = userQueryService.save(user);
 
         UserNotificationSetting defaultSetting = UserNotificationSetting.builder()
-                .user(savedUser)
+                .userCode(userCode)
                 .scheduleNotificationEnabled(true)
                 .groupScheduleNotificationEnabled(true)
                 .build();

@@ -40,9 +40,7 @@ public class NotificationService {
 
     // 개인 스케줄 알림 코드
     public void sendPersonalNotification(String userCode, NotificationDTO request) {
-        User user = userQueryService.getUserByUserCode(userCode);
-
-        UserNotificationSetting setting = userNotificationSettingRepository.findByUser(user)
+        UserNotificationSetting setting = userNotificationSettingRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SETTING_NOT_FOUND));
 
         if (!setting.isScheduleNotificationEnabled()) {

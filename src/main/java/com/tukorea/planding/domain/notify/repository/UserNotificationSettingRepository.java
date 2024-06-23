@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserNotificationSettingRepository extends JpaRepository<UserNotificationSetting, Long> {
-    Optional<UserNotificationSetting> findByUser(User user);
+    Optional<UserNotificationSetting> findByUserCode(String userCode);
 }
