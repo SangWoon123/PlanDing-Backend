@@ -1,7 +1,6 @@
 package com.tukorea.planding.domain.schedule.service;
 
 import com.tukorea.planding.domain.schedule.dto.request.PersonalScheduleRequest;
-import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
 import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
@@ -28,6 +27,7 @@ public class PersonalScheduleService {
     private final ScheduleQueryService scheduleQueryService;
     private final UserQueryService userQueryService;
     private final PersonalScheduleRepository personalScheduleRepository;
+
 
     // 메인페이지
     public List<ScheduleResponse> getAllSchedule(UserInfo userInfo, int weekOffset) {
@@ -67,9 +67,9 @@ public class PersonalScheduleService {
 
         personalScheduleRepository.save(personalSchedule);
 
-        Schedule save = scheduleQueryService.save(newSchedule);
+        Schedule schedule = scheduleQueryService.save(newSchedule);
 
-        return PersonalScheduleResponse.from(save);
+        return PersonalScheduleResponse.from(schedule);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package com.tukorea.planding.domain.group.service;
 
-import com.tukorea.planding.domain.group.dto.GroupInviteEvent;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteAcceptResponse;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
@@ -8,7 +7,7 @@ import com.tukorea.planding.domain.group.entity.GroupRoom;
 import com.tukorea.planding.domain.group.entity.UserGroup;
 import com.tukorea.planding.domain.group.service.query.GroupQueryService;
 import com.tukorea.planding.domain.group.service.query.UserGroupQueryService;
-import com.tukorea.planding.domain.notify.service.NotificationService;
+import com.tukorea.planding.domain.notify.service.NotificationEventHandler;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.domain.user.service.UserQueryService;
@@ -27,7 +26,7 @@ public class GroupInviteService {
     private final UserQueryService userQueryService;
     private final GroupQueryService groupQueryService;
     private final UserGroupQueryService userGroupQueryService;
-    private final NotificationService notificationService;
+    private final NotificationEventHandler eventHandler;
     private final RedisGroupInviteService redisGroupInviteService;
 
 
@@ -55,7 +54,7 @@ public class GroupInviteService {
 
         redisGroupInviteService.createInvitation(groupInviteRequest.userCode(), groupInviteMessageResponse);
 
-        notificationService.notifyInvitation(groupInviteRequest.userCode(), group.getName());
+        eventHandler.notifyInvitation(groupInviteRequest.userCode(), group.getName());
 
         return groupInviteMessageResponse;
     }

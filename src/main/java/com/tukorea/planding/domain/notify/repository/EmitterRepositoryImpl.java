@@ -6,6 +6,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -31,6 +32,10 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
         // 전송 실패한 Emitter들을 제거합니다.
         deadEmitters.forEach(this::deleteById);
+    }
+
+    public Optional<SseEmitter> findById(String memberId) {
+        return Optional.ofNullable(emitters.get(memberId));
     }
 
     @Override
