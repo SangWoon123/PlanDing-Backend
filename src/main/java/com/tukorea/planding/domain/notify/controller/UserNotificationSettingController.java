@@ -3,7 +3,7 @@ package com.tukorea.planding.domain.notify.controller;
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
 import com.tukorea.planding.domain.notify.dto.NotificationSettingResponse;
-import com.tukorea.planding.domain.notify.service.UserNotificationSettingService;
+import com.tukorea.planding.domain.notify.service.setting.UserNotificationSettingService;
 import com.tukorea.planding.domain.user.dto.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

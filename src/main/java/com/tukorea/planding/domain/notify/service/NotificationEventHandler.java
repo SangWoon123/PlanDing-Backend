@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationEventHandler {
 
-    private final SseEmitterService sseEmitterService;
     private final ApplicationEventPublisher eventPublisher;
     private final RedisMessageService redisMessageService;
 
@@ -29,8 +28,6 @@ public class NotificationEventHandler {
 
         // 구독 발행
         redisMessageService.publish(event.getUserCode(), request);
-//        sseEmitterService.send(request);
-
     }
 
     @EventListener
@@ -44,7 +41,6 @@ public class NotificationEventHandler {
                 .build();
 
         redisMessageService.publish(event.getUserCode(), request);
-//        sseEmitterService.send(request);
     }
 
     // 그룹 초대 알림 코드

@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.notify.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tukorea.planding.domain.notify.dto.NotificationDTO;
+import com.tukorea.planding.domain.notify.service.sse.SseEmitterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;

@@ -1,4 +1,4 @@
-package com.tukorea.planding.domain.notify.repository;
+package com.tukorea.planding.domain.notify.repository.setting;
 
 import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
 import com.tukorea.planding.domain.user.entity.User;

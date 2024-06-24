@@ -1,11 +1,7 @@
-package com.tukorea.planding.domain.notify.service;
+package com.tukorea.planding.domain.notify.service.sse;
 
 import com.tukorea.planding.domain.notify.dto.NotificationDTO;
-import com.tukorea.planding.domain.notify.dto.NotificationScheduleRequest;
-import com.tukorea.planding.domain.notify.entity.Notification;
 import com.tukorea.planding.domain.notify.repository.EmitterRepositoryImpl;
-import com.tukorea.planding.domain.user.entity.User;
-import com.tukorea.planding.domain.user.service.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -13,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -24,12 +18,12 @@ public class SseEmitterService {
 
     private final EmitterRepositoryImpl emitterRepository;
 
-    public SseEmitter createEmitter(String userCode) {
-        return emitterRepository.save(userCode, new SseEmitter(DEFAULT_TIMEOUT));
+    public SseEmitter createEmitter(String emitterKey) {
+        return emitterRepository.save(emitterKey, new SseEmitter(DEFAULT_TIMEOUT));
     }
 
-    public void deleteEmitter(String userCode) {
-        emitterRepository.deleteById(userCode);
+    public void deleteEmitter(String emitterKey) {
+        emitterRepository.deleteById(emitterKey);
     }
 
     public void sendNotificationToClient(String emitterKey, NotificationDTO notificationDto) {

@@ -8,6 +8,7 @@ import com.tukorea.planding.domain.schedule.repository.PersonalScheduleRepositor
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,26 +24,20 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ScheduleNotificationScheduler {
 
-    private final NotificationService sseEmitterService;
-    private final PersonalScheduleRepository personalScheduleRepository;
-
+    private final ScheduleNotificationService scheduleNotificationService;
+    private final NotificationService notificationService;
 
     @Scheduled(fixedRate = 60000)  // 1분마다 실행
     @Transactional
     public void sendScheduleNotifications() {
-        LocalDate now = LocalDate.now();
-        List<PersonalSchedule> schedules = personalScheduleRepository.findSchedulesForNextDay(now);
 
-        for (PersonalSchedule schedule : schedules) {
-            sseEmitterService.sendPersonalNotification(schedule.getUser().getUserCode(),
-                    NotificationDTO.builder()
-                            .userCode(schedule.getUser().getUserCode())
-                            .message("test")
-                            .notificationType(NotificationType.PERSONAL_SCHEDULE)
-                            .build());
+        Set<ZSetOperations.TypedTuple<Object>> dueNotifications = scheduleNotificationService.getDueNotifications();
 
-            log.info("Notification sent for schedule: " + schedule.getId());
-
+        for (ZSetOperations.TypedTuple<Object> tuple : dueNotifications) {
+            NotificationDTO notification = (NotificationDTO) tuple.getValue();
+            notificationService.sendPersonalNotification(notification.getUserCode(), notification);
+            scheduleNotificationService.removeNotification(notification);
         }
     }
+
 }

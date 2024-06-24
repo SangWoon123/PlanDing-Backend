@@ -13,7 +13,7 @@ public class RedisMessageService {
 
     private static final String CHANNEL_PREFIX = "notification.user.";
     private final RedisMessageListenerContainer container;
-    private final NotificationSubscriber subscriber; // 따로 구현한 Subscriber
+    private final NotificationSubscriber subscriber;
     private final RedisTemplate<String, Object> redisTemplate;
 
     // 채널 구독

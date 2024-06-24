@@ -1,7 +1,7 @@
 package com.tukorea.planding.global.oauth.service;
 
 import com.tukorea.planding.domain.notify.entity.UserNotificationSetting;
-import com.tukorea.planding.domain.notify.repository.UserNotificationSettingRepository;
+import com.tukorea.planding.domain.notify.repository.setting.UserNotificationSettingRepository;
 import com.tukorea.planding.domain.user.repository.UserRepository;
 import com.tukorea.planding.domain.user.entity.SocialType;
 import com.tukorea.planding.domain.user.entity.User;
