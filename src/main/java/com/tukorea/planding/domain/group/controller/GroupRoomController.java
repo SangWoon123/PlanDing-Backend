@@ -62,4 +62,11 @@ public class GroupRoomController {
         groupRoomService.deleteGroup(userInfo, groupId);
         return CommonUtils.success("그룹삭제 완료.");
     }
+
+    @Operation(summary = "그룹 나가기")
+    @DeleteMapping("/leave/{groupId}")
+    public CommonResponse<?> leaveGroup(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
+        groupRoomService.leaveGroup(userInfo, groupId);
+        return CommonUtils.success("그룹 나가기 완료.");
+    }
 }

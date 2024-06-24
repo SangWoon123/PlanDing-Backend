@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class GroupRoomService {
 
@@ -88,6 +89,17 @@ public class GroupRoomService {
         return users.stream()
                 .map(GroupUserResponse::toGroupUserResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void leaveGroup(UserInfo userInfo, Long groupId) {
+        GroupRoom groupRoom = groupQueryService.getGroupById(groupId);
+        UserGroup userGroup = userGroupQueryService.findByUserIdAndGroupId(userInfo.getId(), groupId);
+
+        if (groupRoom.getOwner().equals(userInfo.getUserCode())) {
+            groupQueryService.delete(groupRoom);
+        } else {
+            userGroupQueryService.delete(userGroup);
+        }
     }
 
     private GroupResponse toGroupResponse(GroupRoom groupRoom) {

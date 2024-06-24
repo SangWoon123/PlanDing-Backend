@@ -27,4 +27,12 @@ public class UserGroupQueryService {
     public List<User> findUserByIsConnectionFalse(Long groupRoomId) {
         return userGroupRepository.findUserByIsConnectionFalse(groupRoomId);
     }
+
+    public UserGroup findByUserIdAndGroupId(Long userId, Long groupRoomId) {
+        return userGroupRepository.findUserByGroupId(userId, groupRoomId);
+    }
+
+    public void delete(UserGroup userGroup) {
+        userGroupRepository.delete(userGroup);
+    }
 }
