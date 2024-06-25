@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,7 @@ public class GroupRoomService {
     public List<GroupResponse> getAllGroupRoomByUser(UserInfo userInfo) {
         List<GroupRoom> groupRooms = groupQueryService.findGroupsByUserId(userInfo.getId());
         return groupRooms.stream()
+                .sorted(Comparator.comparing(GroupRoom::getCreatedDate).reversed())
                 .map(this::toGroupResponse)
                 .collect(Collectors.toList());
     }
