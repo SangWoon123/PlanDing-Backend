@@ -3,6 +3,7 @@ package com.tukorea.planding.domain.schedule.service;
 import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
 import com.tukorea.planding.domain.schedule.dto.response.PersonalScheduleResponse;
 import com.tukorea.planding.domain.schedule.dto.response.ScheduleResponse;
+import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 import com.tukorea.planding.domain.schedule.repository.ScheduleRepository;
 import com.tukorea.planding.global.error.BusinessException;
@@ -20,7 +21,6 @@ public class ScheduleQueryService {
 
     private final ScheduleRepository scheduleRepository;
 
-
     public List<ScheduleResponse> findOverlapSchedule(Long userId, ScheduleRequest scheduleRequest) {
         List<Schedule> overlapSchedules = scheduleRepository.findOverlapSchedules(userId, scheduleRequest.scheduleDate(), scheduleRequest.startTime(), scheduleRequest.endTime());
         return overlapSchedules.stream()
@@ -30,6 +30,10 @@ public class ScheduleQueryService {
 
     public List<Schedule> findWeeklyScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId) {
         return scheduleRepository.findWeeklyScheduleByUser(startDate, endDate, userId);
+    }
+
+    public List<Schedule> findWeeklyPersonalScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId) {
+        return scheduleRepository.findWeeklyPersonalScheduleByUser(startDate, endDate, userId);
     }
 
     public Schedule findScheduleById(Long scheduleId) {

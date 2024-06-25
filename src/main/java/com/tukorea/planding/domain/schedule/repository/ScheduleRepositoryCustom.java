@@ -1,5 +1,6 @@
 package com.tukorea.planding.domain.schedule.repository;
 
+import com.tukorea.planding.domain.schedule.entity.PersonalSchedule;
 import com.tukorea.planding.domain.schedule.entity.Schedule;
 
 import java.time.LocalDate;
@@ -14,6 +15,8 @@ public interface ScheduleRepositoryCustom {
      * @return List<Schedule>
      */
     List<Schedule> findWeeklyScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId);
+
+    List<Schedule> findWeeklyPersonalScheduleByUser(LocalDate startDate, LocalDate endDate, Long userId);
 
     /**
      * 스케줄을 작성할때 작성한 스케줄과 겹치는 스케줄 조회

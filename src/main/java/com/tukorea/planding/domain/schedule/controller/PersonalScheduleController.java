@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "PersonalSchedule", description = "개인 스케줄")
@@ -60,6 +61,15 @@ public class PersonalScheduleController {
     @PatchMapping("/{schedule_id}")
     public CommonResponse<PersonalScheduleResponse> updateSchedule(@PathVariable(name = "schedule_id") Long id, @RequestBody @Valid PersonalScheduleRequest personalScheduleRequest, @AuthenticationPrincipal UserInfo userInfo) {
         PersonalScheduleResponse scheduleResponse = personalScheduleService.updateSchedule(id, personalScheduleRequest, userInfo);
+        return CommonUtils.success(scheduleResponse);
+    }
+
+    @Operation(summary = "개인스케줄 날짜설정")
+    @GetMapping("/week/{startDate}/{endDate}")
+    public CommonResponse<List<PersonalScheduleResponse>> getWeekSchedule(@PathVariable(name = "startDate") LocalDate startDate,
+                                                                          @PathVariable(name = "endDate") LocalDate endDate
+            , @AuthenticationPrincipal UserInfo userInfo) {
+        List<PersonalScheduleResponse> scheduleResponse = personalScheduleService.getWeekSchedule(startDate, endDate, userInfo);
         return CommonUtils.success(scheduleResponse);
     }
 }
