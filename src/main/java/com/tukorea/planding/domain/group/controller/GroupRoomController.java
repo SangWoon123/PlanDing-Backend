@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
+import com.tukorea.planding.domain.chat.service.ChatRoomFacadeService;
 import com.tukorea.planding.domain.group.dto.request.GroupCreateRequest;
 import com.tukorea.planding.domain.group.dto.request.GroupUpdateRequest;
 import com.tukorea.planding.domain.group.dto.response.GroupResponse;
@@ -25,6 +26,7 @@ import java.util.List;
 public class GroupRoomController {
 
     private final GroupRoomService groupRoomService;
+    private final ChatRoomFacadeService chatRoomFacadeService;
 
     @Operation(summary = "메인페이지 API", description = "내 그룹 가져오기")
     @GetMapping()
@@ -45,7 +47,7 @@ public class GroupRoomController {
     public CommonResponse<GroupResponse> createGroupRoom(@AuthenticationPrincipal UserInfo userInfo,
                                                          @RequestPart(value = "request") GroupCreateRequest createGroupRoom,
                                                          @RequestPart(value = "thumbnail") MultipartFile thumbnailFile) {
-        GroupResponse groupResponse = groupRoomService.createGroupRoom(userInfo, createGroupRoom, thumbnailFile);
+        GroupResponse groupResponse = chatRoomFacadeService.createGroupRoomWithChat(userInfo, createGroupRoom, thumbnailFile);
         return CommonUtils.success(groupResponse);
     }
 
@@ -64,9 +66,9 @@ public class GroupRoomController {
     }
 
     @Operation(summary = "그룹 나가기")
-    @DeleteMapping("/leave/{groupId}")
-    public CommonResponse<?> leaveGroup(@AuthenticationPrincipal UserInfo userInfo, @PathVariable Long groupId) {
-        groupRoomService.leaveGroup(userInfo, groupId);
+    @DeleteMapping("/leave/{groupCode}")
+    public CommonResponse<?> leaveGroup(@AuthenticationPrincipal UserInfo userInfo, @PathVariable String groupCode) {
+        chatRoomFacadeService.leaveGroup(userInfo, groupCode);
         return CommonUtils.success("그룹 나가기 완료.");
     }
 }

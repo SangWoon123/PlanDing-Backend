@@ -2,6 +2,7 @@ package com.tukorea.planding.domain.group.controller;
 
 import com.tukorea.planding.common.CommonResponse;
 import com.tukorea.planding.common.CommonUtils;
+import com.tukorea.planding.domain.chat.service.ChatRoomFacadeService;
 import com.tukorea.planding.domain.group.dto.request.GroupInviteRequest;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteAcceptResponse;
 import com.tukorea.planding.domain.group.dto.response.GroupInviteMessageResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/invitation")
 public class GroupInviteController {
     private final GroupInviteService groupInviteService;
+    private final ChatRoomFacadeService chatRoomFacadeService;
 
     @Operation(summary = "유저에게 초대를 보낸다")
     @PostMapping()
@@ -31,7 +33,7 @@ public class GroupInviteController {
     @Operation(summary = "초대를 수락한다")
     @GetMapping("/accept/{groupId}/{code}")
     public CommonResponse<GroupInviteAcceptResponse> accept(@AuthenticationPrincipal UserInfo userInfo, @PathVariable(name = "groupId") Long groupId, @PathVariable(name = "code") String code) {
-        GroupInviteAcceptResponse response = groupInviteService.acceptInvitation(userInfo, code, groupId);
+        GroupInviteAcceptResponse response = chatRoomFacadeService.acceptInvitationAndChatRoom(userInfo, code, groupId);
         return CommonUtils.success(response);
     }
 

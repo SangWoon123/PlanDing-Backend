@@ -1,16 +1,13 @@
 package com.tukorea.planding.domain.schedule.entity;
 
-import com.tukorea.planding.domain.group.entity.GroupRoom;
-import com.tukorea.planding.domain.schedule.dto.request.ScheduleRequest;
-import com.tukorea.planding.domain.user.entity.User;
 import com.tukorea.planding.global.audit.BaseEntity;
-import com.tukorea.planding.global.error.BusinessException;
-import com.tukorea.planding.global.error.ErrorCode;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Optional;
 
 @Entity
